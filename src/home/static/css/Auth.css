@@ -1,0 +1,235 @@
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem 2.5rem;
+  /* Giảm padding dọc */
+  width: 100%;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #2d3748;
+  /* Đổi màu chữ mặc định sang màu tối */
+}
+
+.auth-container h1 {
+  margin-bottom: 1rem;
+  /* Giảm khoảng cách dưới tiêu đề */
+  font-size: 2.25rem;
+  /* Giảm nhẹ kích thước tiêu đề */
+  font-weight: 600;
+  color: #8b5cf6;
+  /* Đổi màu tiêu đề sang màu tím */
+}
+
+.auth-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  text-align: left;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #4a5568;
+  /* Đổi màu nhãn sang màu tối */
+}
+
+.input-group input {
+  padding: 0.8rem 1rem;
+  border-radius: 20px;
+  /* độ cong */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: #fff;
+  /* Đổi nền sang màu trắng */
+  color: #1a202c;
+  /* Đổi màu chữ trong input sang màu tối */
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 100%;
+  /* Đảm bảo input chiếm toàn bộ chiều rộng của wrapper */
+  box-sizing: border-box;
+  /* Đảm bảo padding không làm tăng kích thước */
+}
+
+.input-group input::placeholder {
+  color: #718096;
+  /* Đổi màu placeholder sang màu tối hơn */
+}
+
+.input-group input:focus {
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
+}
+
+.password-wrapper {
+  position: relative;
+  /* Đảm bảo wrapper chiếm toàn bộ chiều rộng của cha nó (.input-group) */
+  width: 100%;
+}
+
+.password-wrapper input {
+  /* Thêm padding bên phải để chữ không bị icon đè lên */
+  padding-right: 45px;
+}
+
+.password-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  /* Điều chỉnh khoảng cách icon với lề phải */
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #555;
+  /* Tùy chỉnh màu icon */
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.remember-me label {
+  color: #6b46c1;
+  cursor: pointer;
+  user-select: none;
+  /* Ngăn chọn văn bản khi nhấp */
+}
+
+.remember-me input[type="checkbox"] {
+  cursor: pointer;
+}
+
+/* Forgot Password Link Styles */
+.forgot-password a {
+  color: #6b46c1;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* Button Styles */
+.auth-button {
+  padding: 0.8rem;
+  margin-top: 1rem;
+  border-radius: 20px;
+  border: none;
+  background-color: #8b5cf6;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+  background-color: #7c3aed;
+}
+
+/* Separator Styles */
+.separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #a0aec0;
+  margin: 1rem 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.separator:not(:empty)::before {
+  margin-right: 0.5em;
+}
+
+.separator:not(:empty)::after {
+  margin-left: 0.5em;
+}
+
+.separator span {
+  color: #4a5568;
+  /* Đổi màu chữ của separator sang màu tối */
+}
+
+/* Google Login Button Styles */
+.google-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.7rem;
+  border-radius: 20px;
+  border: 1px solid #cbd5e0;
+  background-color: #fff;
+  color: #2d3748;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  width: 100%;
+}
+
+.google-login-button:hover {
+  background-color: #f7fafc;
+  border-color: #a0aec0;
+}
+
+.switch-auth {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #4a5568;
+  /* Đổi màu văn bản sang màu tối */
+}
+
+.switch-auth a {
+  color: #6b46c1;
+  /* Giữ màu tím nhưng đậm hơn */
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.switch-auth a:hover {
+  text-decoration: underline;
+}
+
+/* Video Background Styles */
+#background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -100;
+  object-fit: cover;
+  /* Đảm bảo video lấp đầy không gian, cắt bớt nếu cần */
+}
