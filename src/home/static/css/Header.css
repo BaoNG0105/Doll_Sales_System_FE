@@ -19,6 +19,13 @@
     max-width: 1280px;
     margin: 0 auto;
     height: 60px;
+    width: 100%;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
 }
 
 .site-name a {
@@ -39,7 +46,7 @@
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 500;
-    transition: color 0.3s, transform 0.2s;
+    transition: color 0.3s, text-shadow 0.3s;
     padding-bottom: 5px;
     position: relative;
 }
@@ -63,7 +70,50 @@
 
 .nav-links a:hover {
     color: #f0f8ff;
+    text-shadow: 0 0 10px rgb(255, 255, 255);
     /* AliceBlue on hover */
+}
+
+/* Search section */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 30px;
+    padding: 0.5rem 2.5rem 0.5rem 1rem;
+    color: white;
+    font-size: 0.9rem;
+    width: 200px;
+    transition: all 0.4s ease-in-out;
+    box-shadow: 0 0 0px rgba(255, 255, 255, 0.3);
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.search-input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.3);
+    width: 250px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+}
+
+.search-button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 0.25rem;
 }
 
 .header-actions {
@@ -88,16 +138,18 @@
 .user-action {
     font-size: 1rem;
     font-weight: 500;
-    border: 1px solid white;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 0.5rem 1rem;
-    border-radius: 20px;
-    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+    border-radius: 30px;
+    transition: all 0.4s ease-in-out;
 }
 
 .user-action:hover {
     background-color: rgba(255, 255, 255, 0.2);
     color: white;
     transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
 
 .cart-icon {
@@ -106,5 +158,8 @@
 }
 
 .cart-icon:hover {
-    transform: scale(1.2);
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
 }
