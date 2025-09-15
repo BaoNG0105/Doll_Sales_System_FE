@@ -5,7 +5,9 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 // import App from './App.jsx'
 import Login from './home/templates/login.jsx';
 import Register from './home/templates/register.jsx';
-import AuthLayout from './home/components/AuthLayout.jsx';
+import AuthLayout from './home/layout/AuthLayout.jsx';
+import Header from './home/components/Header.jsx';
+// import MainLayout from './home/layout/MainLayout.jsx';
 
 const router = createBrowserRouter([
   //Home page (Default)
@@ -42,6 +44,13 @@ const router = createBrowserRouter([
         element: <Register />,
       },
     ],
+  },
+
+  {
+    path: "header",
+    element: (
+      <Header />
+    ),
   },
 
 ])
