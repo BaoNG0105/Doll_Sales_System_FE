@@ -8,6 +8,7 @@ import Register from './home/templates/register.jsx';
 import AuthLayout from './home/layout/AuthLayout.jsx';
 import MainLayout from './home/layout/MainLayout.jsx';
 import Home from './home/templates/Home.jsx';
+import Dolls from './home/templates/Dolls.jsx';
 
 const router = createBrowserRouter([
   //Home page (Default)
@@ -18,6 +19,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/dolls",
+        element: <Dolls />,
       },
     ],
   },

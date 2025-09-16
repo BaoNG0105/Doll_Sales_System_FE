@@ -131,11 +131,11 @@
 .product-card {
     flex: 0 0 280px; /* Do not grow, do not shrink, base width 280px */
     background: white;
-    border-radius: 10px;
+    border-radius: 50px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    padding: 1.5rem;
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden; /* Ensure content respects border-radius */
 }
 
 .product-card:hover {
@@ -143,13 +143,28 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.12);
 }
 
+.product-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-card p {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #87ceeb;
+    margin-bottom: 1rem;
+}
+
 .product-card img {
     width: 100%;
     height: 400px;
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+    display: block; /* Remove any extra space below the image */
 }
+
+.product-card-content {
+    padding: 1.5rem;
+}   
 
 /* Product Navigation */
 .product-nav {
@@ -199,18 +214,6 @@
 
 .dot.active {
     background-color: #333;
-}
-
-.product-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-}
-
-.product-card p {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #87ceeb;
-    margin-bottom: 1rem;
 }
 
 /* General Button Styles */
