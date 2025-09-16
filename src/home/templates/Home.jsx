@@ -10,12 +10,12 @@ import Tiger from '../static/img/tiger.png';
 
 // Sample product data
 const products = [
-  { id: 1, name: 'Dog', price: '120.000đ', image: Dog },
-  { id: 2, name: 'Snake', price: '150.000đ', image: Snake },
-  { id: 3, name: 'Monkey', price: '130.000đ', image: Monkey },
-  { id: 4, name: 'Pig', price: '180.000đ', image: Pig },
-  { id: 5, name: 'Rabbit', price: '200.000đ', image: Rabbit },
-  { id: 6, name: 'Tiger', price: '190.000đ', image: Tiger },
+  { id: 1, name: 'Dog', price: '120.000', image: Dog },
+  { id: 2, name: 'Snake', price: '150.000', image: Snake },
+  { id: 3, name: 'Monkey', price: '130.000', image: Monkey },
+  { id: 4, name: 'Pig', price: '180.000', image: Pig },
+  { id: 5, name: 'Rabbit', price: '200.000', image: Rabbit },
+  { id: 6, name: 'Tiger', price: '190.000', image: Tiger },
 ];
 
 function Home() {
@@ -127,11 +127,13 @@ function Home() {
             <div className="product-slider" ref={sliderRef}>
               {products.map((product) => (
                 <div key={product.id} className="product-card">
-                  <img src={product.image} alt={product.name} />
+                <img src={product.image} alt={product.name} />
+                <div className="product-card-content">
                   <h3>{product.name}</h3>
-                  <p>Chỉ từ {product.price}</p>
-                  <button className="btn-primary">View Detail</button>
+                  <p>{product.price} VNĐ</p>
+                  <button className="btn-primary">Add to Cart</button>
                 </div>
+              </div>
               ))}
             </div>
           </div>
