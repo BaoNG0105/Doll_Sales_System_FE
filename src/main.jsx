@@ -12,29 +12,39 @@ import Home from './home/templates/Home.jsx';
 import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
 import Emotion from './home/templates/Emotion.jsx';
+import Profile from './home/templates/Profile.jsx';
 
 const router = createBrowserRouter([
-  //Home page (Default)
   {
     path: "/",
     element: <MainLayout />,
     children: [
+      // Home page
       {
         path: "/",
         element: <Home />,
       },
+      // Menu page
       {
         path: "/products",
         element: <Menu />,
       },
+      // Dolls library page
       {
         path: "/dolls",
         element: <Dolls />,
       },
+      // Emotion library page
       {
         path: "/emotion",
         element: <Emotion />,
       },
+      // Profile page
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      // 404 Not Found page
       {
         path: "*",
         element: <Error />,
