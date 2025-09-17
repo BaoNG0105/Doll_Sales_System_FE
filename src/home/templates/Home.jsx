@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../static/css/Home.css';
 import aboutImage from '../static/img/about.png';
 import Dog from '../static/img/dog.png';
@@ -106,7 +107,9 @@ function Home() {
         <div className="hero-content">
           <h1>Welcome to Our Doll Store</h1>
           <p>Discover a world of beautifully crafted dolls for every occasion.</p>
-          <button className="shop-now-btn">Shop Now</button>
+          <Link to="/products">
+            <button className="shop-now-btn">Shop Now</button>
+          </Link>
         </div>
       </section>
 
@@ -117,7 +120,9 @@ function Home() {
           <p>
             At DOLL WORLD, we believe in the power of play. Our dolls are crafted with love and care, designed to inspire imagination and create lasting memories. Each doll has a unique story waiting to be told.
           </p>
+          <Link to="/about">
           <button className="btn-secondary">Learn More</button>
+          </Link>
         </div>
         <div className="about-image">
           <img src={aboutImage} alt="About Us" />
