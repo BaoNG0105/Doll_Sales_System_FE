@@ -1,0 +1,124 @@
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Set to full viewport height */
+    text-align: center;
+    padding: 6rem 2rem 2rem; /* Add top padding to offset header */
+    font-family: 'system-ui', sans-serif;
+    color: #333;
+    overflow: hidden;
+    box-sizing: border-box; /* Ensure padding is included in height calculation */
+}
+
+.error-container {
+    max-width: 600px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-title {
+    font-size: 12rem;
+    font-weight: 900;
+    margin: 0;
+    line-height: 1;
+    color: #87ceeb;
+    animation: glitch 1s linear infinite;
+}
+
+/* Glitch effect animation */
+@keyframes glitch {
+  2%,64% {
+    transform: translate(2px,0) skew(0deg);
+  }
+  4%,60% {
+    transform: translate(-2px,0) skew(0deg);
+  }
+  62% {
+    transform: translate(0,0) skew(5deg); 
+  }
+}
+
+.error-title:before,
+.error-title:after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+}
+
+.error-title:before {
+  left: 3px;
+  text-shadow: -2px 0 #ff00c1;
+  animation: noise-anim-2 3s linear infinite alternate-reverse, glitch 1s linear infinite;
+}
+
+.error-title:after {
+  left: -3px;
+  text-shadow: -2px 0 #00fff9, 2px 2px #ff00c1;
+  animation: noise-anim 2s linear infinite alternate-reverse, glitch 1s linear infinite;
+}
+
+@keyframes noise-anim {
+  0% { clip-path: inset(20% 0 70% 0); }
+  20% { clip-path: inset(90% 0 5% 0); }
+  40% { clip-path: inset(45% 0 45% 0); }
+  60% { clip-path: inset(10% 0 85% 0); }
+  80% { clip-path: inset(80% 0 10% 0); }
+  100% { clip-path: inset(30% 0 60% 0); }
+}
+
+@keyframes noise-anim-2 {
+  0% { clip-path: inset(85% 0 5% 0); }
+  20% { clip-path: inset(10% 0 80% 0); }
+  40% { clip-path: inset(60% 0 30% 0); }
+  60% { clip-path: inset(30% 0 65% 0); }
+  80% { clip-path: inset(90% 0 2% 0); }
+  100% { clip-path: inset(50% 0 40% 0); }
+}
+
+
+.error-subtitle {
+    font-size: 2.5rem;
+    margin-top: 1rem;
+    font-weight: 700;
+    color: #4a5568;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: #718096;
+    margin-top: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.error-home-link {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    background-color: #87ceeb;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.error-home-link:hover {
+    background-color: #76bada;
+    transform: scale(1.05);
+}

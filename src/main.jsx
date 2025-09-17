@@ -7,7 +7,9 @@ import Login from './home/templates/login.jsx';
 import Register from './home/templates/register.jsx';
 import AuthLayout from './home/layout/AuthLayout.jsx';
 import MainLayout from './home/layout/MainLayout.jsx';
+import Error from './home/templates/Error.jsx';
 import Home from './home/templates/Home.jsx';
+import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
 import Emotion from './home/templates/Emotion.jsx';
 
@@ -22,12 +24,20 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/products",
+        element: <Menu />,
+      },
+      {
         path: "/dolls",
         element: <Dolls />,
       },
       {
         path: "/emotion",
         element: <Emotion />,
+      },
+      {
+        path: "*",
+        element: <Error />,
       },
     ],
   },
