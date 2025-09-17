@@ -94,10 +94,19 @@ function Home() {
     <div className="home-page">
       {/* Hero Section */}
       <section className="hero-section">
+        <div className="video-background">
+          <iframe
+            src="https://www.youtube.com/embed/ZKoPbJqWOt0?autoplay=1&mute=1&loop=1&playlist=ZKoPbJqWOt0&controls=0&showinfo=0&modestbranding=1&rel=0"
+            title="YouTube video player"
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
+            allowFullScreen>
+          </iframe>
+        </div>
         <div className="hero-content">
-          <h1>Welcome to DOLL WORLD</h1>
-          <p>Discover a magical collection of dolls for every story.</p>
-          <button className="hero-button">Shop Now</button>
+          <h1>Welcome to Our Doll Store</h1>
+          <p>Discover a world of beautifully crafted dolls for every occasion.</p>
+          <button className="shop-now-btn">Shop Now</button>
         </div>
       </section>
 
@@ -127,13 +136,13 @@ function Home() {
             <div className="product-slider" ref={sliderRef}>
               {products.map((product) => (
                 <div key={product.id} className="product-card">
-                <img src={product.image} alt={product.name} />
-                <div className="product-card-content">
-                  <h3>{product.name}</h3>
-                  <p>{product.price} VNĐ</p>
-                  <button className="btn-primary">Add to Cart</button>
+                  <img src={product.image} alt={product.name} />
+                  <div className="product-card-content">
+                    <h3>{product.name}</h3>
+                    <p>{product.price} VNĐ</p>
+                    <button className="btn-primary">Add to Cart</button>
+                  </div>
                 </div>
-              </div>
               ))}
             </div>
           </div>
@@ -142,10 +151,12 @@ function Home() {
           <button className="nav-arrow" onClick={() => scroll('left')} disabled={activeIndex === 0}>
             &lt;
           </button>
+          <div className="pagination-container">
           <div className="pagination-dots">
             {Array.from({ length: dotsCount }).map((_, index) => (
               <span key={index} className={`dot ${index === activeIndex ? 'active' : ''}`}></span>
             ))}
+          </div>
           </div>
           <button className="nav-arrow" onClick={() => scroll('right')} disabled={activeIndex === dotsCount - 1}>
             &gt;

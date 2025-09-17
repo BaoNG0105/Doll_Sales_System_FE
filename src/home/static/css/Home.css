@@ -5,32 +5,54 @@
 /* Hero Section */
 .hero-section {
     position: relative;
-    height: 70vh;
+    height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: white;
-    background: url('../img/poster.png') no-repeat center center/cover;
-}
+    overflow: hidden; /* Ẩn phần video tràn ra ngoài */
+  }
 
-.hero-section::before {
+  .video-background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    z-index: -1; /* Đặt video phía sau nội dung */
+    pointer-events: none; /* Ngăn tương tác với video */
+  }
+  
+  .video-background iframe {
+    width: 100vw; /* Chiều rộng của viewport */
+    height: 56.25vw; /* Tỷ lệ 16:9 (9 / 16 * 100) */
+    min-width: 177.77vh; /* Tỷ lệ 16:9 */
+    min-height: 100vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .hero-section::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Black overlay with 50% opacity */
-    z-index: 1;
-}
+    background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ để làm tối video */
+    z-index: 0;
+  }
 
-.hero-content {
+  .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 1; /* Đảm bảo nội dung nằm trên lớp phủ và video */
     max-width: 800px;
     padding: 2rem;
-}
+  }
 
 .hero-content h1 {
     font-size: 3.5rem;
@@ -44,20 +66,25 @@
     margin-bottom: 2rem;
 }
 
-.hero-button {
+.shop-now-btn {
     padding: 0.8rem 2rem;
     font-size: 1.1rem;
     font-weight: 600;
     color: white;
-    background-color: #87ceeb;
-    border: none;
+    /* --- Glassmorphism Effect --- */
+    background: rgba(255, 255, 255, 0.2); /* Nền trắng mờ */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%); /* For Safari */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Viền mờ */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    /* --- End Glassmorphism --- */
     border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
+    transition: background-color 0.3s, transform 0.3s, background 0.3s;
 }
 
-.hero-button:hover {
-    background-color: #76bada;
+.shop-now-btn:hover {
+    background: rgba(255, 255, 255, 0.3); /* Tăng độ sáng khi hover */
     transform: scale(1.05);
 }
 
@@ -199,22 +226,43 @@
     cursor: not-allowed;
 }
 
+.pagination-container {
+    /* ----- Hiệu ứng Glassmorphism ----- */
+    background: rgba(190, 190, 190, 0.25); /* Màu nền trắng mờ */
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%); /* Hỗ trợ cho Safari */
+    
+    /* ----- Hình dạng và Bố cục ----- */
+    border-radius: 50px; /* Bo góc tròn lớn để tạo hình viên thuốc */
+    padding: 0.75rem 1.5rem; /* Khoảng đệm bên trong */
+    display: inline-flex; /* Giúp container co lại vừa với nội dung */
+    
+    /* ----- Hiệu ứng nổi và Viền ----- */
+    border: 1px solid rgba(209, 213, 219, 0.3); /* Viền mờ nhẹ */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); /* Đổ bóng mềm mại */
+}
+
+/* Giữ nguyên CSS cho các dấu chấm của bạn */
 .pagination-dots {
     display: flex;
-    gap: 0.5rem;
+    align-items: center; /* Căn giữa các dấu chấm theo chiều dọc */
+    gap: 0.75rem; /* Tăng khoảng cách để dễ nhìn hơn */
 }
 
 .dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background-color: #ccc;
-    transition: background-color 0.3s;
+    background-color: rgba(0, 0, 0, 0.2); /* Màu chấm tối hơn một chút và có độ trong */
+    transition: all 0.3s ease;
 }
 
+/* Thay đổi màu nền của dot.active để nổi bật hơn */
 .dot.active {
-    background-color: #333;
+    background-color: #87ceeb; /* Màu blue sky cho chấm đang hoạt động */
+    transform: scale(1.2); /* Phóng to một chút để tạo điểm nhấn */
 }
+
 
 /* General Button Styles */
 .btn-primary, .btn-secondary {
@@ -236,12 +284,17 @@
 }
 
 .btn-secondary {
-    background-color: transparent;
     color: #333;
-    border: 1px solid #333;
+    /* --- Glassmorphism Effect --- */
+    background: rgba(0, 0, 0, 0.05); /* Nền đen rất mờ */
+    backdrop-filter: blur(10px) saturate(180%);
+    -webkit-backdrop-filter: blur(10px) saturate(180%); /* For Safari */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Viền đen mờ */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ */
 }
 
 .btn-secondary:hover {
-    background-color: #333;
-    color: white;
+    background: rgba(140, 140, 140, 0.1); /* Tăng độ đậm khi hover */
+    color: #87ceeb; /* Làm màu chữ đậm hơn một chút */
+    transform: scale(1.05);
 }
