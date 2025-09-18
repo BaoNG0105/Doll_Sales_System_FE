@@ -12,6 +12,8 @@ import Home from './home/templates/Home.jsx';
 import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
 import Emotion from './home/templates/Emotion.jsx';
+import Profile from './home/templates/Profile.jsx';
+import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
 
 const router = createBrowserRouter([
   {
