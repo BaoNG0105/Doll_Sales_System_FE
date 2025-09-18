@@ -12,7 +12,6 @@ import Home from './home/templates/Home.jsx';
 import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
 import Emotion from './home/templates/Emotion.jsx';
-import Profile from './home/templates/Profile.jsx';
 
 const router = createBrowserRouter([
   {
@@ -75,6 +74,12 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  //Admin Page
+  {
+    path: "/dashboard",
+    element: <Adminlayouts />,
+  }
 
 ])
 
