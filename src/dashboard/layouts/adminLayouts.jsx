@@ -1,3 +1,5 @@
+import "../../dashboard/static/css/dashboard.css";
+// Adminlayouts.jsx — React + Ant Design (JavaScript)
 import React, { useState } from "react";
 import {
   LaptopOutlined,
@@ -5,31 +7,46 @@ import {
   UserOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  SearchOutlined,
 } from "@ant-design/icons";
 import { Avatar, Breadcrumb, Button, Input, Layout, Menu, theme } from "antd";
-
 const { Header, Content, Sider } = Layout;
 
-const topNav = ["Dashboard", "Orders", "Settings"].map((label, i) => ({
-  key: String(i + 1),
-  label,
-}));
+// Top menu đã bỏ, giữ side menu
+const sideNav = [
+  {
+    key: "admin",
+    icon: <UserOutlined />,
+    label: "Admin",
+    children: [
+      { key: "admin-1", label: "Product Management (CRUD toys, emotions)" },
+      { key: "admin-2", label: "Feedback Management" },
+      { key: "admin-3", label: "Order Management (set status)" },
+    ],
+  },
+  {
+    key: "manager",
+    icon: <LaptopOutlined />,
+    label: "Manager",
+    children: [
+      { key: "manager-1", label: "User Management (customer, admin)" },
+      { key: "manager-2", label: "Revenue Tracking & Sales Dashboard" },
+      { key: "manager-3", label: "Warranty & Return Policy Setup" },
+    ],
+  },
+  {
+    key: "staff",
+    icon: <NotificationOutlined />,
+    label: "Staff",
+    children: [
+      { key: "staff-1", label: "View Assigned Orders" },
+      { key: "staff-2", label: "View Order Details" },
+      { key: "staff-3", label: "Update Order Status" },
+      { key: "staff-4", label: "Cash on Delivery (COD) Management" },
+    ],
+  },
+];
 
-const sideNav = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-  (Icon, i) => {
-    const key = `sub${i + 1}`;
-    return {
-      key,
-      icon: <Icon />,
-      label: `Menu ${i + 1}`,
-      children: Array.from({ length: 4 }).map((_, j) => {
-        const subKey = i * 4 + j + 1;
-        return { key: String(subKey), label: `Option ${subKey}` };
-      }),
-    };
-  }
-);
+
 
 export default function Adminlayouts() {
   const {
@@ -38,79 +55,27 @@ export default function Adminlayouts() {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <Layout style={{ minHeight: "100vh", background: "#f6f7fb" }}>
-      {/* Header */}
-      <Header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 100,
-          height: 64,
-          display: "flex",
-          alignItems: "center",
-          gap: 16,
-          padding: "0 16px",
-          background: "linear-gradient(90deg,#0ea5e9,#6366f1)",
-          boxShadow: "0 6px 20px rgba(14,165,233,.25)",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
-            style={{
-              width: 36,
-              height: 36,
-              display: "grid",
-              placeItems: "center",
-              borderRadius: 10,
-              background: "rgba(255,255,255,.2)",
-              backdropFilter: "blur(4px)",
-              color: "white",
-            }}
-          >
-            🧸
-          </div>
-          <span style={{ color: "#fff", fontWeight: 700, fontSize: 18 }}>
-            Doll Admin
-          </span>
-        </div>
-
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={["1"]}
-          items={topNav}
-          style={{ flex: 1, minWidth: 0, background: "transparent" }}
-        />
-
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Input
-            allowClear
-            prefix={<SearchOutlined />}
-            placeholder="Search…"
-            style={{ borderRadius: 999, maxWidth: 220 }}
-          />
-          <Avatar size={36} style={{ background: "#2b90ff" }}>
-            L
-          </Avatar>
+    <Layout className="admin">
+      {/* Header tối giản: chỉ còn brand bên trái */}
+      <Header className="admin__header admin__header--minimal">
+        <div className="admin__brand">
+          <div className="admin__logo">🧸</div>
+          <span className="admin__brandText">Doll Admin</span>
         </div>
       </Header>
 
-      {/* Main Body */}
-      <Layout style={{ minHeight: "calc(100vh - 64px)" }}>
+      <Layout className="admin__body">
+        {/* Sidebar */}
         <Sider
+          className="admin__sider"
           width={240}
           collapsible
           collapsed={collapsed}
           onCollapse={setCollapsed}
           breakpoint="lg"
           theme="light"
-          style={{
-            borderRight: "1px solid #eef1f6",
-            background: "#fff",
-            minHeight: "calc(100vh - 64px)",
-          }}
         >
-          <div style={{ padding: "10px 12px" }}>
+          <div className="admin__siderTop">
             <Button
               size="small"
               type="text"
@@ -120,70 +85,46 @@ export default function Adminlayouts() {
           </div>
 
           <Menu
+            className="admin__sideMenu"
             mode="inline"
             defaultSelectedKeys={["1"]}
             defaultOpenKeys={["sub1"]}
             items={sideNav}
-            style={{
-              height: "calc(100vh - 100px)",
-              borderInlineEnd: 0,
-              padding: "8px 8px 16px",
-            }}
           />
+
+          {/* Logo/mascot dưới cùng sidebar */}
+          <div className="admin__siderBottom">
+            <div className="charBadge">
+              <span className="charBadge__emoji">🧸</span>
+            </div>
+            {!collapsed && <div className="charBadge__label">Doll Mascot</div>}
+          </div>
         </Sider>
 
-        <Layout style={{ background: "#f6f7fb", flex: 1, minWidth: 0, display: "flex", justifyContent: "center" }}>
-          <div style={{ width: "100%", padding: "24px 16px 0 16px" }}>
-            <Breadcrumb
-              items={[{ title: "Home" }, { title: "List" }, { title: "App" }]}
-              style={{ margin: "16px 0", color: "#64748b" }}
-            />
+        {/* Khu nội dung */}
+        <Layout className="admin__contentWrap">
+          <Breadcrumb
+            items={[{ title: "Home" }, { title: "List" }, { title: "App" }]}
+            className="admin__breadcrumb"
+          />
 
-            <Content
-              style={{
-                padding: 24,
-                background: "#fff",
-                borderRadius: 16,
-                minHeight: 280,
-                boxShadow: "0 10px 30px rgba(2,6,23,.07)",
-                maxWidth: 1200, // Chỉ đặt maxWidth ở đây
-                margin: "0 auto", // Căn giữa Content
-                width: "100%",
-              }}
-            >
-              {/* Dashboard cards */}
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                  gap: 16,
-                  marginBottom: 16,
-                }}
-              >
-                {[
-                  { title: "Revenue", value: "12,000,000 VND" },
-                  { title: "Orders", value: "150" },
-                  { title: "Best Seller", value: "Doll Elsa" },
-                ].map((c) => (
-                  <div
-                    key={c.title}
-                    style={{
-                      background: "#f8fafc",
-                      borderRadius: 12,
-                      padding: 16,
-                      border: "1px solid #eef1f6",
-                    }}
-                  >
-                    <div style={{ color: "#64748b", fontSize: 13 }}>{c.title}</div>
-                    <div style={{ fontSize: 22, fontWeight: 700, marginTop: 6 }}>
-                      {c.value}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              Content
-            </Content>
-          </div>
+          <Content className="admin__content">
+            {/* Dashboard cards */}
+            <div className="admin__cards">
+              {[
+                { title: "Revenue", value: "12,000,000 VND" },
+                { title: "Orders", value: "150" },
+                { title: "Best Seller", value: "Doll Elsa" },
+              ].map((c) => (
+                <div key={c.title} className="card card--kpi">
+                  <div className="card__label">{c.title}</div>
+                  <div className="card__value">{c.value}</div>
+                </div>
+              ))}
+            </div>
+
+            <div className="admin__placeholder">Content</div>
+          </Content>
         </Layout>
       </Layout>
     </Layout>

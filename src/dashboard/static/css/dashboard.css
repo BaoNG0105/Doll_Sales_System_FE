@@ -1,0 +1,91 @@
+:root {
+  --bg-app: #f6f7fb;
+  --bg-card: #ffffff;
+  --bg-soft: #f8fafc;
+  --text: #0f172a;   /* slate-900 */
+  --muted: #64748b;  /* slate-500 */
+  --border: #eef1f6;
+  --shadow: 0 10px 30px rgba(2, 6, 23, 0.07);
+  --gradA: #0ea5e9;  /* sky-500 */
+  --gradB: #6366f1;  /* indigo-500 */
+}
+
+/* Reset/guards */
+html, body, #root { width: 100%; height: 100%; }
+.ant-layout { width: 100%; }
+
+/* App shell */
+.admin { min-height: 100vh; background: var(--bg-app); }
+
+/* Header tối giản */
+.admin__header {
+  position: sticky; top: 0; z-index: 100;
+  height: 64px; display: flex; align-items: center; gap: 16px; padding: 0 16px;
+  background: linear-gradient(90deg, var(--gradA), var(--gradB));
+  box-shadow: 0 6px 20px rgba(14, 165, 233, .25);
+}
+.admin__header--minimal { justify-content: flex-start; gap: 12px; }
+.admin__brand { display: flex; align-items: center; gap: 10px; }
+.admin__logo { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; background: rgba(255,255,255,.2); color: #fff; backdrop-filter: blur(4px); }
+.admin__brandText { color: #fff; font-weight: 700; font-size: 18px; }
+
+/* Body area */
+.admin__body { min-height: calc(100vh - 64px); }
+
+/* Sider */
+.admin__sider { border-right: 1px solid var(--border) !important; background: #fff !important; min-height: calc(100vh - 64px); }
+.admin__siderTop { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+
+/* Make sider children a column so bottom stays at bottom */
+.admin__sider .ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.admin__sideMenu {
+  flex: 1;                 /* take remaining space */
+  height: auto;            /* let it grow */
+  border-inline-end: 0 !important;
+  padding: 8px 8px 16px;
+  overflow: auto;
+}
+
+/* Bottom mascot area */
+.admin__siderBottom {
+  border-top: 1px solid var(--border);
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.charBadge {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, rgba(14,165,233,.15), rgba(99,102,241,.15));
+  box-shadow: var(--shadow);
+}
+.charBadge__emoji { font-size: 20px; line-height: 1; }
+.charBadge__label { color: var(--muted); font-size: 12px; }
+.ant-layout-sider-collapsed .admin__siderBottom { justify-content: center; }
+
+/* Content */
+.admin__contentWrap { background: var(--bg-app) !important; flex: 1; min-width: 0; padding: 0 16px; }
+.admin__breadcrumb { margin: 16px 0; color: var(--muted); }
+.admin__content { padding: 24px; background: var(--bg-card); border-radius: 16px; min-height: 280px; box-shadow: var(--shadow); width: 100%; }
+
+/* Cards */
+.admin__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+@media (max-width: 1200px) { .admin__cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 680px)  { .admin__cards { grid-template-columns: 1fr; } }
+.card { background: var(--bg-soft); border-radius: 12px; padding: 16px; border: 1px solid var(--border); }
+.card__label { color: var(--muted); font-size: 13px; }
+.card__value { font-size: 22px; font-weight: 700; margin-top: 6px; }
+
+/* Placeholder */
+.admin__placeholder { color: var(--muted); }
+
+/* Subtle focus ring */
+.ant-input:focus, .ant-input-focused, .ant-btn:focus {
+  box-shadow: 0 0 0 3px rgba(99,102,241,.25);
+}
