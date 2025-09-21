@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Bungee&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 .home-page {
     color: #333;
 }
@@ -24,16 +27,11 @@
     z-index: -1; /* Đặt video phía sau nội dung */
     pointer-events: none; /* Ngăn tương tác với video */
   }
-  
-  .video-background iframe {
-    width: 100vw; /* Chiều rộng của viewport */
-    height: 56.25vw; /* Tỷ lệ 16:9 (9 / 16 * 100) */
-    min-width: 177.77vh; /* Tỷ lệ 16:9 */
-    min-height: 100vh;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+  .video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .hero-section::before {
@@ -49,24 +47,69 @@
 
   .hero-content {
     position: relative;
-    z-index: 1; /* Đảm bảo nội dung nằm trên lớp phủ và video */
+    z-index: 2; /* Đảm bảo nội dung nằm trên lớp phủ và video */
     max-width: 800px;
     padding: 2rem;
   }
 
-.hero-content h1 {
+  .hero-content h1 {
+    font-family: 'Bungee', cursive;
+    font-weight: 400;
     font-size: 3.5rem;
     margin-bottom: 1rem;
-    font-weight: 700;
+    /* Animation */
+    opacity: 0; /* Bắt đầu ẩn */
+    animation: fadeInUp 1s ease-out 0.5s forwards; /* name duration timing-function delay fill-mode */
+}
+
+/* Keyframes for text animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .hero-content p {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 400;
     color: #cccccc;
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
+    margin: 0 auto 2rem; /* Center the element for width animation */
+    
+    /* Typing Effect Styles */
+    display: inline-block; /* Or block, needed for width animation */
+    overflow: hidden; /* Ensures the text is not seen until the animation starts */
+    border-right: .15em solid orange; /* The typewriter cursor */
+    white-space: nowrap; /* Keeps the content on a single line */
+    letter-spacing: .1em; /* Adjust as needed */
+    
+    /* The animation */
+    /* The number of steps should ideally match the number of characters */
+    animation: 
+      typing 3.5s steps(68, end) 1.5s forwards, /* Typing animation with a delay */
+      blink-caret .75s step-end infinite;
+    
+    /* Start with zero width */
+    width: 0;
 }
 
-.shop-now-btn {
+/* Keyframes for typing effect */
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+  
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: orange; }
+  }
+
+  .shop-now-btn {
     padding: 0.8rem 2rem;
     font-size: 1.1rem;
     font-weight: 600;
@@ -81,6 +124,10 @@
     border-radius: 25px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s, background 0.3s;
+    
+    /* Animation */
+    opacity: 0; /* Bắt đầu ẩn */
+    animation: fadeInUp 1s ease-out 5.1s forwards; /* Bắt đầu sau 5.1s */
 }
 
 .shop-now-btn:hover {
@@ -97,11 +144,30 @@
     padding: 5rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
+}
+
+.about-content,
+.about-image {
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.8s ease;
 }
 
 .about-content {
-    text-align: left;
+    transform: translateX(-100%);
+    opacity: 0;
 }
+
+.about-image {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.about-section.is-visible .about-content,
+.about-section.is-visible .about-image {
+    transform: translateX(0);
+    opacity: 1;
+}
+
 
 .about-content h2 {
     font-size: 2.5rem;
@@ -127,7 +193,6 @@
 .product-section {
     padding: 5rem 0;
     text-align: center;
-    background-color: #f9f9f9;
 }
 
 .product-section h2 {
@@ -147,6 +212,7 @@
     padding: 1rem;
     overflow-x: auto;
     /* Enables horizontal scrolling */
+    scroll-snap-type: x mandatory; /* Snap to items */
     scrollbar-width: none; /* For Firefox */
     -ms-overflow-style: none; /* For Internet Explorer and Edge */
 }
@@ -156,7 +222,8 @@
 }
 
 .product-card {
-    flex: 0 0 280px; /* Do not grow, do not shrink, base width 280px */
+    flex: 0 0 calc((100% - 3rem) / 3); /* Show 3 cards, accounting for 2 gaps of 1.5rem each */
+    scroll-snap-align: start; /* Snap alignment */    
     background: white;
     border-radius: 50px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.08);
