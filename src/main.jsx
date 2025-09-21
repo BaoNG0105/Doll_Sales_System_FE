@@ -9,36 +9,45 @@ import AuthLayout from './home/layout/AuthLayout.jsx';
 import MainLayout from './home/layout/MainLayout.jsx';
 import Error from './home/templates/Error.jsx';
 import Home from './home/templates/Home.jsx';
-import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
-import Emotion from './home/templates/Emotion.jsx';
+import Characters from './home/templates/Characters.jsx';
+import Profile from './home/templates/Profile.jsx';
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
 import DollsManager from './dashboard/templates/dollsManager.jsx';
 import FeedbackManager from './dashboard/templates/feedbackManager.jsx';
 import OrdersManager from './dashboard/templates/orderManager.jsx';
 
 const router = createBrowserRouter([
-  //Home page (Default)
   {
     path: "/",
     element: <MainLayout />,
     children: [
+      // Home page
       {
         path: "/",
         element: <Home />,
       },
-      {
-        path: "/products",
-        element: <Menu />,
-      },
+      // Menu page
+      // {
+      //   path: "/products",
+      //   element: <Menu />,
+      // },
+      // Dolls library page
       {
         path: "/dolls",
         element: <Dolls />,
       },
+      // Emotion library page
       {
-        path: "/emotion",
-        element: <Emotion />,
+        path: "/characters",
+        element: <Characters />,
       },
+      // Profile page
+      {
+        path: "/profile",
+        element: <Profile />,
+      },
+      // 404 Not Found page
       {
         path: "*",
         element: <Error />,

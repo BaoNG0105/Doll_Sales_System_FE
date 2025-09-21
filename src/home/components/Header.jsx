@@ -13,7 +13,7 @@ function Header() {
           <nav className="nav-links">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/dolls">Dolls</NavLink>
-            <NavLink to="/emotion">Emotion</NavLink>
+            <NavLink to="/characters">Characters</NavLink>
             <NavLink to="/about">About</NavLink>
             <NavLink to="/contact">Contact</NavLink>
           </nav>
@@ -28,7 +28,6 @@ function Header() {
           <div className="header-actions">
             <Link to="/login" className="user-action">
               <FaUser />
-              <span>Login</span>
             </Link>
             <Link to="/cart" className="cart-icon">
               <FaShoppingCart size={24} />
