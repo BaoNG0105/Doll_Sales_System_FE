@@ -136,13 +136,8 @@
 }
 
 .user-action {
-    font-size: 1rem;
-    font-weight: 500;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    padding: 0.5rem 1rem;
-    border-radius: 30px;
-    transition: all 0.4s ease-in-out;
+    font-size: 1.5rem;
+    transition: transform 0.3s;
 }
 
 .user-action:hover {

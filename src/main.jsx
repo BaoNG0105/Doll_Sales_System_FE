@@ -9,9 +9,8 @@ import AuthLayout from './home/layout/AuthLayout.jsx';
 import MainLayout from './home/layout/MainLayout.jsx';
 import Error from './home/templates/Error.jsx';
 import Home from './home/templates/Home.jsx';
-import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
-import Emotion from './home/templates/Emotion.jsx';
+import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
 
@@ -26,10 +25,10 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       // Menu page
-      {
-        path: "/products",
-        element: <Menu />,
-      },
+      // {
+      //   path: "/products",
+      //   element: <Menu />,
+      // },
       // Dolls library page
       {
         path: "/dolls",
@@ -37,8 +36,8 @@ const router = createBrowserRouter([
       },
       // Emotion library page
       {
-        path: "/emotion",
-        element: <Emotion />,
+        path: "/characters",
+        element: <Characters />,
       },
       // Profile page
       {

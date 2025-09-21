@@ -8,6 +8,8 @@ import Monkey from '../static/img/monkey.png';
 import Pig from '../static/img/pig.png';
 import Rabbit from '../static/img/rabbit.png';
 import Tiger from '../static/img/tiger.png';
+import backgroundVideo from '../static/video/poster.mp4';
+
 
 // Sample product data
 const products = [
@@ -96,19 +98,16 @@ function Home() {
       {/* Hero Section */}
       <section className="hero-section">
         <div className="video-background">
-          <iframe
-            src="https://www.youtube.com/embed/ZKoPbJqWOt0?autoplay=1&mute=1&loop=1&playlist=ZKoPbJqWOt0&controls=0&showinfo=0&modestbranding=1&rel=0"
-            title="YouTube video player"
-            frameBorder="0"
-            allow="autoplay; encrypted-media"
-            allowFullScreen>
-          </iframe>
+          <video autoPlay loop muted playsInline>
+            <source src={backgroundVideo} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
         <div className="hero-content">
           <h1>Welcome to Our Doll Store</h1>
           <p>Discover a world of beautifully crafted dolls for every occasion.</p>
           <Link to="/products">
-            <button className="shop-now-btn">Shop Now</button>
+            <button className="shop-now-btn">Build your Doll</button>
           </Link>
         </div>
       </section>
@@ -121,7 +120,7 @@ function Home() {
             At DOLL WORLD, we believe in the power of play. Our dolls are crafted with love and care, designed to inspire imagination and create lasting memories. Each doll has a unique story waiting to be told.
           </p>
           <Link to="/about">
-          <button className="btn-secondary">Learn More</button>
+            <button className="btn-secondary">Learn More</button>
           </Link>
         </div>
         <div className="about-image">
@@ -157,11 +156,11 @@ function Home() {
             &lt;
           </button>
           <div className="pagination-container">
-          <div className="pagination-dots">
-            {Array.from({ length: dotsCount }).map((_, index) => (
-              <span key={index} className={`dot ${index === activeIndex ? 'active' : ''}`}></span>
-            ))}
-          </div>
+            <div className="pagination-dots">
+              {Array.from({ length: dotsCount }).map((_, index) => (
+                <span key={index} className={`dot ${index === activeIndex ? 'active' : ''}`}></span>
+              ))}
+            </div>
           </div>
           <button className="nav-arrow" onClick={() => scroll('right')} disabled={activeIndex === dotsCount - 1}>
             &gt;
