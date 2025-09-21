@@ -6,58 +6,62 @@
   --muted: #64748b;  /* slate-500 */
   --border: #eef1f6;
   --shadow: 0 10px 30px rgba(2, 6, 23, 0.07);
-  --gradA: #0ea5e9;  /* sky-500 */
-  --gradB: #6366f1;  /* indigo-500 */
+
+  /* Header + Table màu skyblue */
+  --head-bg: #87ceeb;
+  --table-bg: #87ceeb;
+
+  /* dashboard accents (giữ lại đỏ cho button, tiêu đề panel) */
+  --panel-dk: #1f2430;
+  --panel-dk-2: #1a1f2b;
+  --panel-glow: 0 8px 28px rgba(239,68,68,.12);
+  --accent-red: #ef4444;
+  --accent-red-600: #dc2626;
+  --accent-red-soft: rgba(239,68,68,.15);
+  --text-strong: #f3f4f6;
 }
 
-/* Reset/guards */
+/* Resets / guards */
 html, body, #root { width: 100%; height: 100%; }
 .ant-layout { width: 100%; }
 
 /* App shell */
 .admin { min-height: 100vh; background: var(--bg-app); }
 
-/* Header tối giản */
+/* Header (minimal, skyblue) */
 .admin__header {
   position: sticky; top: 0; z-index: 100;
   height: 64px; display: flex; align-items: center; gap: 16px; padding: 0 16px;
-  background: linear-gradient(90deg, var(--gradA), var(--gradB));
+  background: var(--head-bg);
   box-shadow: 0 6px 20px rgba(14, 165, 233, .25);
 }
 .admin__header--minimal { justify-content: flex-start; gap: 12px; }
 .admin__brand { display: flex; align-items: center; gap: 10px; }
 .admin__logo { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; background: rgba(255,255,255,.2); color: #fff; backdrop-filter: blur(4px); }
-.admin__brandText { color: #fff; font-weight: 700; font-size: 18px; }
+.admin__brandText { color: #0f172a; font-weight: 700; font-size: 18px; }
 
-/* Body area */
+/* Body */
 .admin__body { min-height: calc(100vh - 64px); }
 
 /* Sider */
 .admin__sider { border-right: 1px solid var(--border) !important; background: #fff !important; min-height: calc(100vh - 64px); }
 .admin__siderTop { padding: 10px 12px; border-bottom: 1px solid var(--border); }
 
-/* Make sider children a column so bottom stays at bottom */
+/* make bottom stick to bottom */
 .admin__sider .ant-layout-sider-children {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  display: flex; flex-direction: column; height: 100%;
 }
-
 .admin__sideMenu {
-  flex: 1;                 /* take remaining space */
-  height: auto;            /* let it grow */
+  flex: 1; height: auto;
   border-inline-end: 0 !important;
   padding: 8px 8px 16px;
   overflow: auto;
 }
-
-/* Bottom mascot area */
+/* bottom mascot */
 .admin__siderBottom {
   border-top: 1px solid var(--border);
   padding: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: flex; align-items: center; gap: 10px;
 }
 .charBadge {
   width: 40px; height: 40px; border-radius: 12px;
@@ -69,23 +73,104 @@ html, body, #root { width: 100%; height: 100%; }
 .charBadge__label { color: var(--muted); font-size: 12px; }
 .ant-layout-sider-collapsed .admin__siderBottom { justify-content: center; }
 
-/* Content */
+/* Content wrap */
 .admin__contentWrap { background: var(--bg-app) !important; flex: 1; min-width: 0; padding: 0 16px; }
 .admin__breadcrumb { margin: 16px 0; color: var(--muted); }
 .admin__content { padding: 24px; background: var(--bg-card); border-radius: 16px; min-height: 280px; box-shadow: var(--shadow); width: 100%; }
 
-/* Cards */
-.admin__cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
-@media (max-width: 1200px) { .admin__cards { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 680px)  { .admin__cards { grid-template-columns: 1fr; } }
-.card { background: var(--bg-soft); border-radius: 12px; padding: 16px; border: 1px solid var(--border); }
-.card__label { color: var(--muted); font-size: 13px; }
-.card__value { font-size: 22px; font-weight: 700; margin-top: 6px; }
+/* Title */
+.dashTitle h1 {
+  margin: 0 0 14px;
+  font-size: 22px;
+  color: #000000;   /* chữ đen */
+  text-shadow: none; /* bỏ bóng chữ nếu muốn rõ nét */
+}
 
-/* Placeholder */
-.admin__placeholder { color: var(--muted); }
 
-/* Subtle focus ring */
+/* Panels (đổi sang xanh trời nhạt) */
+.panel {
+  background: #87ceeb;                 /* xanh trời nhạt */
+  border: 1px solid #6bbad8;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(135,206,235,.3);
+  padding: 16px;
+  margin-bottom: 16px;
+  color: #0f172a;                      /* chữ đen cho dễ đọc */
+}
+
+.panel__header h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #0f172a;                      /* tiêu đề cũng dùng chữ tối */
+}
+
+.muted {
+  margin: 4px 0 0;
+  color: #1e3a5f;                      /* màu xanh đậm hơn cho text phụ */
+  font-size: 12px;
+}
+
+/* Search row */
+.searchRow{ display:flex; gap:10px; }
+.searchRow__input .ant-input{
+  height: 40px;
+  background: #161a22;
+  color: #e5e7eb;
+  border: 1px solid rgba(239,68,68,.25);
+}
+.btn-accent{
+  height: 40px;
+  background: var(--accent-red);
+  border: 1px solid var(--accent-red-600);
+  color: #fff;
+  border-radius: 8px;
+}
+.btn-accent:hover{ background: var(--accent-red-600) !important; color:#fff !important; }
+.btn-rounded{ border-radius: 999px; }
+
+/* Table */
+.tableWrap{ margin-top: 12px; }
+.table{
+  width:100%;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* row gaps */
+  color: #0f172a; /* chữ tối */
+}
+.table thead th{
+  font-weight:700; font-size:12px; letter-spacing:.4px;
+  color:#0f172a;
+  text-align:left; padding:10px 14px;
+}
+.table tbody tr{
+  background: var(--table-bg);        /* skyblue */
+  border: 1px solid #6bbad8;
+  box-shadow: 0 6px 18px rgba(135, 206, 235, .3);
+}
+.table tbody td{ padding:14px; border-top:1px solid rgba(255,255,255,.05); }
+.table tbody tr td:first-child{ border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+.table tbody tr td:last-child{  border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+
+/* Avatar */
+.avatar{
+  width:40px; height:40px; border-radius:50%;
+  object-fit:cover; display:block;
+  border: 2px solid rgba(255,255,255,.6);
+  box-shadow: 0 2px 10px rgba(135, 206, 235, .4);
+}
+
+/* Small action buttons in table */
+.btn-pill{
+  height:32px; min-width:32px; padding:0 10px;
+  border-radius:10px; border: none;
+  color:#111827; font-weight:700;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.btn-edit{ background:#f59e0b; }
+.btn-edit:hover{ background:#d97706; color:#111827; }
+.btn-danger{ background:#ef4444; color:#fff; }
+.btn-danger:hover{ background:#dc2626; color:#fff; }
+
+/* Focus ring */
 .ant-input:focus, .ant-input-focused, .ant-btn:focus {
-  box-shadow: 0 0 0 3px rgba(99,102,241,.25);
+  box-shadow: 0 0 0 3px rgba(135, 206, 235, .4);
 }

@@ -13,6 +13,9 @@ import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
 import Emotion from './home/templates/Emotion.jsx';
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
+import DollsManager from './dashboard/templates/dollsManager.jsx';
+import FeedbackManager from './dashboard/templates/feedbackManager.jsx';
+import OrdersManager from './dashboard/templates/orderManager.jsx';
 
 const router = createBrowserRouter([
   //Home page (Default)
@@ -68,11 +71,16 @@ const router = createBrowserRouter([
   },
 
   //Admin Page
-  {
+
+ {
     path: "/dashboard",
     element: <Adminlayouts />,
-  }
-
+    children: [
+      { path: "dollsManager", element: <DollsManager /> },
+      { path: "feedback", element: <FeedbackManager /> },
+      { path: "orders", element: <OrdersManager /> },
+    ],
+  },
 ])
 
 createRoot(document.getElementById('root')).render(
