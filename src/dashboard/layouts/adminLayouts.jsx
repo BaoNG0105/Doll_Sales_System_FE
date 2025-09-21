@@ -8,19 +8,21 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
-import { Avatar, Breadcrumb, Button, Input, Layout, Menu, theme } from "antd";
+import { Button, Layout, Menu, theme } from "antd";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+
 const { Header, Content, Sider } = Layout;
 
-// Top menu đã bỏ, giữ side menu
+/* SideNav: Admin / Manager / Staff (English) */
 const sideNav = [
   {
     key: "admin",
     icon: <UserOutlined />,
     label: "Admin",
     children: [
-      { key: "admin-1", label: "Product Management (CRUD toys, emotions)" },
+      { key: "admin-1", label: "Dolls Management" },
       { key: "admin-2", label: "Feedback Management" },
-      { key: "admin-3", label: "Order Management (set status)" },
+      { key: "admin-3", label: "Order Management" },
     ],
   },
   {
@@ -28,7 +30,7 @@ const sideNav = [
     icon: <LaptopOutlined />,
     label: "Manager",
     children: [
-      { key: "manager-1", label: "User Management (customer, admin)" },
+      { key: "manager-1", label: "User Management" },
       { key: "manager-2", label: "Revenue Tracking & Sales Dashboard" },
       { key: "manager-3", label: "Warranty & Return Policy Setup" },
     ],
@@ -46,17 +48,39 @@ const sideNav = [
   },
 ];
 
-
-
 export default function Adminlayouts() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // sync chọn menu theo URL (đơn giản)
+  const selectedKey =
+    location.pathname.includes("/dashboard/dollsManager") ? "admin-1" : "";
+
+  // điều hướng khi click menu
+  const onMenuClick = (e) => {
+    switch (e.key) {
+      case "admin-1":
+        navigate("/dashboard/dollsManager");
+        break;
+      case "admin-2":
+        navigate("/dashboard/feedback"); // tạo route khi bạn có trang này
+        break;
+      case "admin-3":
+        navigate("/dashboard/orders");   // tạo route khi bạn có trang này
+        break;
+      default:
+        // các mục khác bạn map thêm nếu cần
+        break;
+    }
+  };
 
   return (
     <Layout className="admin">
-      {/* Header tối giản: chỉ còn brand bên trái */}
+      {/* Header minimal: only brand on the left */}
       <Header className="admin__header admin__header--minimal">
         <div className="admin__brand">
           <div className="admin__logo">🧸</div>
@@ -87,12 +111,13 @@ export default function Adminlayouts() {
           <Menu
             className="admin__sideMenu"
             mode="inline"
-            defaultSelectedKeys={["1"]}
-            defaultOpenKeys={["sub1"]}
+            selectedKeys={[selectedKey]}
+            defaultOpenKeys={["admin"]}
             items={sideNav}
+            onClick={onMenuClick}
           />
 
-          {/* Logo/mascot dưới cùng sidebar */}
+          {/* Mascot at the bottom of the sider */}
           <div className="admin__siderBottom">
             <div className="charBadge">
               <span className="charBadge__emoji">🧸</span>
@@ -101,29 +126,10 @@ export default function Adminlayouts() {
           </div>
         </Sider>
 
-        {/* Khu nội dung */}
+        {/* Main content: chỉ còn Outlet để render trang con */}
         <Layout className="admin__contentWrap">
-          <Breadcrumb
-            items={[{ title: "Home" }, { title: "List" }, { title: "App" }]}
-            className="admin__breadcrumb"
-          />
-
           <Content className="admin__content">
-            {/* Dashboard cards */}
-            <div className="admin__cards">
-              {[
-                { title: "Revenue", value: "12,000,000 VND" },
-                { title: "Orders", value: "150" },
-                { title: "Best Seller", value: "Doll Elsa" },
-              ].map((c) => (
-                <div key={c.title} className="card card--kpi">
-                  <div className="card__label">{c.title}</div>
-                  <div className="card__value">{c.value}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="admin__placeholder">Content</div>
+            <Outlet />
           </Content>
         </Layout>
       </Layout>
