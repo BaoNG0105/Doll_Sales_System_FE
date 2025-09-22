@@ -1,4 +1,4 @@
-import {NavLink, Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import { FaShoppingCart, FaUser, FaSearch } from 'react-icons/fa';
 import '../static/css/Header.css';
 
@@ -11,8 +11,16 @@ function Header() {
             <Link to="/">DOLL WORLD</Link>
           </div>
           <nav className="nav-links">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/dolls">Dolls</NavLink>
+            <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>Home</NavLink>
+            <div className="nav-item-dropdown">
+              <NavLink to="/dolls" className={({ isActive }) => `nav-link-dropdown ${isActive ? 'active' : ''}`}>
+                Dolls
+              </NavLink>
+              <div className="dropdown-menu">
+                <Link to="/dolls/labubu">Labubu</Link>
+                <Link to="/dolls/babythree">Babythree</Link>
+              </div>
+            </div>
             <NavLink to="/characters">Characters</NavLink>
             <NavLink to="/about">About</NavLink>
             <NavLink to="/contact">Contact</NavLink>
@@ -20,7 +28,7 @@ function Header() {
         </div>
         <div className="header-right">
           <div className="search-container">
-            <input type="text" placeholder="Search a product ..." className="search-input"/>
+            <input type="text" placeholder="Search a product ..." className="search-input" />
             <button className="search-button">
               <FaSearch />
             </button>
