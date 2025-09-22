@@ -192,7 +192,7 @@ function Home() {
           <h1>Welcome to Doll World</h1>
           <p>Discover a world of beautifully crafted dolls for every occasion.</p>
           <Link to="/products">
-            <button className="shop-now-btn">Build your Doll</button>
+            <button className="shop-now-btn">Shop now</button>
           </Link>
         </div>
       </section>

@@ -5,13 +5,13 @@
 /* Hero Section */
 .dolls-hero-section {
     position: relative;
-    height: 70vh;
+    height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: white;
-    background: url('../img/dolls.png') no-repeat center center/cover;
+    background: no-repeat center center/cover;
     margin-top: -35px; /* Offset the margin from MainLayout */
 }
 

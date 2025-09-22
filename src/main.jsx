@@ -9,7 +9,10 @@ import AuthLayout from './home/layout/AuthLayout.jsx';
 import MainLayout from './home/layout/MainLayout.jsx';
 import Error from './home/templates/Error.jsx';
 import Home from './home/templates/Home.jsx';
+import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
+import Labubu from './home/templates/Labubu.jsx';
+import Babythree from './home/templates/Babythree.jsx';
 import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
@@ -28,16 +31,25 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       // Menu page
-      // {
-      //   path: "/products",
-      //   element: <Menu />,
-      // },
-      // Dolls library page
+      {
+        path: "/products",
+        element: <Menu />,
+      },
+      // Trang chọn loại doll
       {
         path: "/dolls",
         element: <Dolls />,
       },
-      // Emotion library page
+      // Trang chi tiết từng loại doll
+      {
+        path: "/dolls/labubu",
+        element: <Labubu />,
+      },
+      {
+        path: "/dolls/babythree",
+        element: <Babythree />,
+      },
+      // Characters library page
       {
         path: "/characters",
         element: <Characters />,
