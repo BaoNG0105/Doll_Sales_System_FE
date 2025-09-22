@@ -9,6 +9,7 @@ import AuthLayout from './home/layout/AuthLayout.jsx';
 import MainLayout from './home/layout/MainLayout.jsx';
 import Error from './home/templates/Error.jsx';
 import Home from './home/templates/Home.jsx';
+import Menu from './home/templates/Menu.jsx';
 import Dolls from './home/templates/Dolls.jsx';
 import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
@@ -28,10 +29,10 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       // Menu page
-      // {
-      //   path: "/products",
-      //   element: <Menu />,
-      // },
+      {
+        path: "/products",
+        element: <Menu />,
+      },
       // Dolls library page
       {
         path: "/dolls",
