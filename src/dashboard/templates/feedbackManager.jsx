@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Button, Space, Popconfirm, message } from "antd";
+import { Table, Button, Popconfirm, message } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 
 export default function FeedbackManager() {
@@ -52,13 +52,17 @@ export default function FeedbackManager() {
   ];
 
   return (
-    <div>
-      <h1>Feedback Management</h1>
+    <div className="panel" style={{ padding: 16 }}>
+      <div className="panel__header">
+        <h2>Feedback Management</h2>
+      </div>
+
       <Table
         rowKey="id"
         columns={columns}
         dataSource={data}
         pagination={{ pageSize: 5 }}
+        size="middle"
       />
     </div>
   );
