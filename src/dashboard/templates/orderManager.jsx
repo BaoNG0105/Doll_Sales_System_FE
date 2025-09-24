@@ -1,35 +1,15 @@
 import React, { useState } from "react";
-import { Table, Tag, Button, Select, message } from "antd";
+import { Table, Select, message } from "antd";
 
 export default function OrdersManager() {
   const [orders, setOrders] = useState([
-    {
-      id: 101,
-      customer: "hoangnam123",
-      product: "Dog Doll",
-      price: "120.000đ",
-      status: "Pending",
-    },
-    {
-      id: 102,
-      customer: "namht7",
-      product: "Rabbit Doll",
-      price: "200.000đ",
-      status: "Shipped",
-    },
-    {
-      id: 103,
-      customer: "aaaaa5432",
-      product: "Tiger Doll",
-      price: "190.000đ",
-      status: "Delivered",
-    },
+    { id: 101, customer: "hoangnam123", product: "Dog Doll", price: "120.000đ", status: "Pending" },
+    { id: 102, customer: "namht7", product: "Rabbit Doll", price: "200.000đ", status: "Shipped" },
+    { id: 103, customer: "aaaaa5432", product: "Tiger Doll", price: "190.000đ", status: "Delivered" },
   ]);
 
   const updateStatus = (id, status) => {
-    const next = orders.map((o) =>
-      o.id === id ? { ...o, status } : o
-    );
+    const next = orders.map((o) => (o.id === id ? { ...o, status } : o));
     setOrders(next);
     message.success(`Order ${id} updated to ${status}`);
   };
@@ -59,13 +39,17 @@ export default function OrdersManager() {
   ];
 
   return (
-    <div>
-      <h1>Order Management</h1>
+    <div className="panel" style={{ padding: 16 }}>
+      <div className="panel__header">
+        <h2>Order Management</h2>
+      </div>
+
       <Table
         rowKey="id"
         columns={columns}
         dataSource={orders}
         pagination={{ pageSize: 5 }}
+        size="middle"
       />
     </div>
   );

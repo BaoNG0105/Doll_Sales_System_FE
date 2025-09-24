@@ -33,7 +33,7 @@ function colorFromString(str = "") {
   return `hsl(${hue}deg 70% 45%)`;
 }
 
-/* -------- Demo data (có thể thay bằng API) -------- */
+/* -------- Demo data -------- */
 const seedProducts = [
   { id: 1, name: "Dog Doll",    description: "Cute and cuddly for all ages.",           price: "120.000đ", image: "" },
   { id: 2, name: "Snake Doll",  description: "Friendly doll with a charming smile.",    price: "150.000đ", image: "" },
@@ -96,25 +96,21 @@ export default function DollsManager({ initial = seedProducts, onChange }) {
     { title: "PRICE", dataIndex: "price", width: 120 },
     {
       title: "ACTIONS",
-      width: 170,
+      width: 120,
       render: (_, r) => (
         <Space>
           <Button
             className="btn-pill btn-edit"
             icon={<EditOutlined />}
             onClick={() => handleEdit(r)}
-          >
-            Edit
-          </Button>
+          />
           <Popconfirm
             title="Delete this product?"
             okText="Delete"
             okButtonProps={{ danger: true }}
             onConfirm={() => handleDelete(r.id)}
           >
-            <Button className="btn-pill btn-danger" icon={<DeleteOutlined />}>
-              Del
-            </Button>
+            <Button className="btn-pill btn-danger" icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       ),
