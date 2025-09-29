@@ -1,15 +1,17 @@
 import "../../dashboard/static/css/dashboard.css";
 // Adminlayouts.jsx — React + Ant Design (JavaScript)
-import React from "react";
+import React, { useState } from "react";
 import {
   LaptopOutlined,
   UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   DashboardOutlined,
   DollarOutlined,
   ShoppingCartOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme, Row, Col, Card, Statistic } from "antd";
+import { Button, Layout, Menu, theme, Row, Col, Card, Statistic } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   PieChart,
@@ -36,13 +38,11 @@ const sideNav = [
   },
 
   // Nhóm Admin
-  { key: "admin-title", label: "— Admin —", type: "group" },
   { key: "admin-1", icon: <UserOutlined />, label: "Dolls Management" },
   { key: "admin-2", icon: <UserOutlined />, label: "Feedback Management" },
   { key: "admin-3", icon: <UserOutlined />, label: "Order Management" },
 
-  // Nhóm Manager
-  { key: "manager-title", label: "— Manager —", type: "group" },
+  // Nhóm Manager~
   { key: "manager-1", icon: <LaptopOutlined />, label: "User Management" },
   {
     key: "manager-2",
@@ -74,6 +74,7 @@ export default function Adminlayouts() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -215,7 +216,26 @@ export default function Adminlayouts() {
 
       <Layout className="admin__body">
         {/* Sidebar */}
-        <Sider className="admin__sider" width={240} theme="light">
+        <Sider
+          className="admin__sider"
+          width={240}
+          collapsible
+          collapsed={collapsed}
+          onCollapse={setCollapsed}
+          breakpoint="lg"
+          theme="light"
+          trigger={null}   // ✨ ẩn icon thu gọn mặc định ở góc dưới
+        >
+          {/* Nút toggle custom đặt ở trên */}
+          <div className="admin__siderTop">
+            <Button
+              size="small"
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+            />
+          </div>
+
           <Menu
             className="admin__sideMenu"
             mode="inline"
@@ -229,7 +249,7 @@ export default function Adminlayouts() {
             <div className="charBadge">
               <span className="charBadge__emoji">🧸</span>
             </div>
-            <div className="charBadge__label">Doll Mascot</div>
+            {!collapsed && <div className="charBadge__label">Doll Mascot</div>}
           </div>
         </Sider>
 
