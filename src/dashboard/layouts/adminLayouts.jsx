@@ -1,17 +1,15 @@
 import "../../dashboard/static/css/dashboard.css";
 // Adminlayouts.jsx — React + Ant Design (JavaScript)
-import React, { useState } from "react";
+import React from "react";
 import {
   LaptopOutlined,
   UserOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
   DashboardOutlined,
   DollarOutlined,
   ShoppingCartOutlined,
   TeamOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme, Row, Col, Card, Statistic } from "antd";
+import { Layout, Menu, theme, Row, Col, Card, Statistic } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   PieChart,
@@ -29,32 +27,32 @@ import {
 
 const { Header, Content, Sider } = Layout;
 
-/* SideNav: Dashboard / Admin / Manager */
+/* SideNav: Dashboard / Admin / Manager (phẳng, không collapse) */
 const sideNav = [
   {
     key: "dashboard",
     icon: <DashboardOutlined />,
     label: "Dashboard Overview",
   },
+
+  // Nhóm Admin
+  { key: "admin-title", label: "— Admin —", type: "group" },
+  { key: "admin-1", icon: <UserOutlined />, label: "Dolls Management" },
+  { key: "admin-2", icon: <UserOutlined />, label: "Feedback Management" },
+  { key: "admin-3", icon: <UserOutlined />, label: "Order Management" },
+
+  // Nhóm Manager
+  { key: "manager-title", label: "— Manager —", type: "group" },
+  { key: "manager-1", icon: <LaptopOutlined />, label: "User Management" },
   {
-    key: "admin",
-    icon: <UserOutlined />,
-    label: "Admin",
-    children: [
-      { key: "admin-1", label: "Dolls Management" },
-      { key: "admin-2", label: "Feedback Management" },
-      { key: "admin-3", label: "Order Management" },
-    ],
+    key: "manager-2",
+    icon: <DollarOutlined />,
+    label: "Revenue Tracking & Sales Dashboard",
   },
   {
-    key: "manager",
-    icon: <LaptopOutlined />,
-    label: "Manager",
-    children: [
-      { key: "manager-1", label: "User Management" },
-      { key: "manager-2", label: "Revenue Tracking & Sales Dashboard" },
-      { key: "manager-3", label: "Warranty & Return Policy Setup" },
-    ],
+    key: "manager-3",
+    icon: <ShoppingCartOutlined />,
+    label: "Warranty & Return Policy Setup",
   },
 ];
 
@@ -76,7 +74,6 @@ export default function Adminlayouts() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -144,12 +141,20 @@ export default function Adminlayouts() {
         </Col>
         <Col span={8}>
           <Card>
-            <Statistic title="Orders" value={152} prefix={<ShoppingCartOutlined />} />
+            <Statistic
+              title="Orders"
+              value={152}
+              prefix={<ShoppingCartOutlined />}
+            />
           </Card>
         </Col>
         <Col span={8}>
           <Card>
-            <Statistic title="Active Users" value={320} prefix={<TeamOutlined />} />
+            <Statistic
+              title="Active Users"
+              value={320}
+              prefix={<TeamOutlined />}
+            />
           </Card>
         </Col>
       </Row>
@@ -183,7 +188,10 @@ export default function Adminlayouts() {
                   label
                 >
                   {categoryData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -207,29 +215,11 @@ export default function Adminlayouts() {
 
       <Layout className="admin__body">
         {/* Sidebar */}
-        <Sider
-          className="admin__sider"
-          width={240}
-          collapsible
-          collapsed={collapsed}
-          onCollapse={setCollapsed}
-          breakpoint="lg"
-          theme="light"
-        >
-          <div className="admin__siderTop">
-            <Button
-              size="small"
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-            />
-          </div>
-
+        <Sider className="admin__sider" width={240} theme="light">
           <Menu
             className="admin__sideMenu"
             mode="inline"
             selectedKeys={[selectedKey]}
-            defaultOpenKeys={["admin", "manager"]}
             items={sideNav}
             onClick={onMenuClick}
           />
@@ -239,7 +229,7 @@ export default function Adminlayouts() {
             <div className="charBadge">
               <span className="charBadge__emoji">🧸</span>
             </div>
-            {!collapsed && <div className="charBadge__label">Doll Mascot</div>}
+            <div className="charBadge__label">Doll Mascot</div>
           </div>
         </Sider>
 
@@ -249,8 +239,8 @@ export default function Adminlayouts() {
             className="admin__content"
             style={{ background: colorBgContainer }}
           >
-            {/* Nếu ở /dashboard thì render báo cáo, còn route con thì render Outlet */}
-            {location.pathname === "/dashboard"
+            {location.pathname === "/dashboard" ||
+            location.pathname === "/dashboard/"
               ? renderDashboardContent()
               : <Outlet />}
           </Content>
