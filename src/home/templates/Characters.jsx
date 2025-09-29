@@ -4,9 +4,9 @@ import '../static/css/Characters.css';
 // Dữ liệu sản phẩm mẫu (sử dụng lại ảnh từ trang Dolls để minh họa)
 import J97 from '../static/img/j97.jpg';
 import SonTung from '../static/img/sontung.jpg';
-import Linh from '../static/img/linh.png';
-import Khoa from '../static/img/khoa.png';
-import Bao from '../static/img/bao.png';
+import Linh from '../static/img/Linh.png';
+import Khoa from '../static/img/Khoa.png';
+import Bao from '../static/img/Bao.png';
 
 const products = [
   { id: 1, name: 'AI Linh Nguyen', description: 'I am Linh, a curious Ph.D. student who loves experimenting in the lab and is passionate about making new scientific discoveries.', price: '135.000đ', image: Linh },
