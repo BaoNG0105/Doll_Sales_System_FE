@@ -15,9 +15,9 @@ import backgroundVideo from '../static/video/poster.mp4';
 // Import character images
 import J97 from '../static/img/j97.jpg';
 import SonTung from '../static/img/sontung.jpg';
-import Linh from '../static/img/Linh.png';
+import Linh from '../static/img/linh.png';
 import Khoa from '../static/img/khoa.png';
-import Bao from '../static/img/Bao.png';
+import Bao from '../static/img/bao.png';
 
 
 // Sample product data
