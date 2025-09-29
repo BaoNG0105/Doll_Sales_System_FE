@@ -16,7 +16,7 @@ const products = [
   { id: 5, name: 'AI Son Tung M-TP', description: 'Bá tước Saint Toine Emtippy', price: '2.000.000.000đ', image: SonTung },
 ];
 
-function Emotion() {
+function Characters() {
   return (
     <div className="emotion-page">
       {/* Hero Section */}
@@ -50,4 +50,4 @@ function Emotion() {
   );
 }
 
-export default Emotion;
+export default Characters;
