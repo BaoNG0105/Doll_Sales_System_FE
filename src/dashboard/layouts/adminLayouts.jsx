@@ -39,7 +39,7 @@ const sideNav = [
 
   // Nhóm Admin
   { key: "admin-1", icon: <UserOutlined />, label: "Dolls Management" },
-  { key: "admin-2", icon: <UserOutlined />, label: "Feedback Management" },
+  // { key: "admin-2", icon: <UserOutlined />, label: "Feedback Management" },
   { key: "admin-3", icon: <UserOutlined />, label: "Order Management" },
 
   // Nhóm Manager~
