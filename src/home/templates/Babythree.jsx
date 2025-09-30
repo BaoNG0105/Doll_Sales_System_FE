@@ -1,5 +1,6 @@
 import React from 'react';
 import '../static/css/Dolls.css';
+import { Link } from 'react-router-dom';
 
 import BabythreeImage from '../static/img/babythrees.png';
 
@@ -37,18 +38,18 @@ function Babythree() {
       <section className="products-grid-container">
         <div className="products-grid">
           {products.map((product) => (
-            <div key={product.id} className="doll-product-card">
-              <img className="doll-product-image" src={product.image} alt={product.name}/>
-              <div className="doll-product-info">
-                <h3 className="doll-product-name">{product.name}</h3>
-                <p className="doll-product-description">{product.description}</p>
-                <p className="doll-product-price">{product.price}</p>
-                <div className="doll-card-buttons">
+            <Link to={`/dolls/${product.id}`} key={product.id} className="emotion-product-card">
+              <img className="emotion-product-image" src={product.image} alt={product.name} />
+              <div className="emotion-product-info">
+                <h3 className="emotion-product-name">{product.name}</h3>
+                <p className="emotion-product-description">{product.description}</p>
+                <p className="emotion-product-price">{product.price}</p>
+                <div className="emotion-card-buttons">
                   <button className="add-to-cart-btn">Add to Cart</button>
                   <button className="buy-now-btn">Buy Now</button>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

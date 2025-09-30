@@ -14,19 +14,27 @@
     align-items: flex-start;
 }
 
+/* Product Image Gallery */
 .product-image-gallery {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    overflow: hidden; /* Ẩn phần ảnh bị tràn ra ngoài khi zoom */
+    border-radius: 10px; /* Bo góc cho vùng chứa ảnh */
 }
 
 .main-product-image {
     width: 100%;
-    height: auto;
-    max-height: 550px;
+    height: 500px;
     object-fit: cover;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease; /* Làm cho hiệu ứng zoom mượt hơn */
+    cursor: zoom-in;
+}
+
+.product-image-gallery:hover .main-product-image {
+    transform: scale(1.2); /* Phóng to ảnh lên 120% */
 }
 
 .product-info {
@@ -41,19 +49,6 @@
     margin: 0 0 0.5rem;
 }
 
-.product-rating {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    color: #f5a623;
-}
-
-.rating-value {
-    font-weight: 600;
-    color: #4a4a4a;
-}
-
 .product-price {
     font-size: 2rem;
     font-weight: bold;
@@ -65,9 +60,10 @@
     font-size: 1rem;
     line-height: 1.6;
     color: #666;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
 }
 
+/* Color Selector */
 .color-selector {
     margin-bottom: 2rem;
 }
@@ -75,13 +71,21 @@
 .color-selector label {
     font-weight: 600;
     font-size: 1rem;
-    display: block;
     margin-bottom: 0.75rem;
+    display: block;
+    color: #333;
 }
 
-.color-swatches {
+.selected-color-name {
+    font-weight: normal;
+    color: #555;
+    text-transform: capitalize;
+}
+
+.color-options {
     display: flex;
     gap: 0.75rem;
+    align-items: center;
 }
 
 .color-swatch {
@@ -89,10 +93,27 @@
     height: 32px;
     border-radius: 50%;
     cursor: pointer;
-    border: 2px solid transparent;
-    transition: transform 0.2s, border-color 0.2s;
-    padding: 2px;
-    background-clip: content-box;
+    border: 2px solid #e0e0e0;
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 0;
+    background-clip: content-box; /* Ensures border is outside the color */
+}
+
+.color-swatch:hover {
+    transform: scale(1.1);
+}
+
+.color-swatch.active {
+    border-color: #87ceeb;
+    box-shadow: 0 0 0 2px #87ceeb;
+}
+
+.color-swatch[style*="#ffffff"], .color-swatch[style*="#fff"] {
+    border-color: #ccc;
+}
+
+.color-swatch[style*="#ffffff"].active, .color-swatch[style*="#fff"].active {
+    border-color: #87ceeb;
 }
 
 .quantity-selector {
@@ -208,4 +229,29 @@
 .back-to-shop-link:hover {
     background-color: #76bada;
     transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .product-detail-container {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 480px) {
+    .product-name {
+        font-size: 2rem;
+    }
+
+    .product-price {
+        font-size: 1.5rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons button {
+        width: 100%;
+        justify-content: center;
+    }
 }

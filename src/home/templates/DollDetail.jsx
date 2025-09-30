@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FaShoppingCart, FaPlus, FaMinus, FaStar, FaStarHalfAlt } from 'react-icons/fa';
+import { FaShoppingCart, FaPlus, FaMinus } from 'react-icons/fa';
 import '../static/css/DollDetail.css';
 
 // --- Mock Data ---
@@ -15,15 +15,15 @@ import Labubu2 from '../static/img/labubu2.jpg';
 import Labubu3 from '../static/img/labubu3.jpg';
 
 const dollProducts = [
-  { id: 1, name: 'Dog Doll', description: 'A cute and cuddly dog doll, perfect for all ages.', price: '120.000đ', image: Dog, rating: 4.5 },
-  { id: 2, name: 'Snake Doll', description: 'A friendly snake doll with a charming smile.', price: '150.000đ', image: Snake, rating: 4.0 },
-  { id: 3, name: 'Monkey Doll', description: 'A playful monkey doll that brings endless fun.', price: '130.000đ', image: Monkey, rating: 5.0 },
-  { id: 4, name: 'Pig Doll', description: 'A soft and squishy pig doll for cozy hugs.', price: '180.000đ', image: Pig, rating: 4.5 },
-  { id: 5, name: 'Rabbit Doll', description: 'An adorable rabbit doll with long, floppy ears.', price: '200.000đ', image: Rabbit, rating: 5.0 },
-  { id: 6, name: 'Tiger Doll', description: 'A brave tiger doll for adventurous playtime.', price: '190.000đ', image: Tiger, rating: 4.0 },
-  { id: 7, name: 'Labubu Ver1', description: 'A cute and cuddly doll, perfect for all ages.', price: '120.000đ', image: Labubu1, rating: 4.8 },
-  { id: 8, name: 'Labubu Ver2', description: 'A friendly doll with a charming smile.', price: '150.000đ', image: Labubu2, rating: 4.7 },
-  { id: 9, name: 'Labubu Ver3', description: 'A playful doll that brings endless fun.', price: '130.000đ', image: Labubu3, rating: 4.9 },
+    { id: 1, name: 'Dog Doll', description: 'A cute and cuddly dog doll, perfect for all ages.', price: '120.000đ', image: Dog, rating: 4.5, colors: [{ name: 'brown', hex: '#8B4513' }, { name: 'white', hex: '#FFFFFF' }, { name: 'black', hex: '#000000' }] },
+    { id: 2, name: 'Snake Doll', description: 'A friendly snake doll with a charming smile.', price: '150.000đ', image: Snake, rating: 4.0, colors: [{ name: 'green', hex: '#228B22' }, { name: 'yellow', hex: '#FFD700' }] },
+    { id: 3, name: 'Monkey Doll', description: 'A playful monkey doll that brings endless fun.', price: '130.000đ', image: Monkey, rating: 5.0 },
+    { id: 4, name: 'Pig Doll', description: 'A soft and squishy pig doll for cozy hugs.', price: '180.000đ', image: Pig, rating: 4.5, colors: [{ name: 'pink', hex: '#FFC0CB' }, { name: 'light-brown', hex: '#D2B48C' }] },
+    { id: 5, name: 'Rabbit Doll', description: 'An adorable rabbit doll with long, floppy ears.', price: '200.000đ', image: Rabbit, rating: 5.0, colors: [{ name: 'white', hex: '#FFFFFF' }, { name: 'grey', hex: '#808080' }] },
+    { id: 6, name: 'Tiger Doll', description: 'A brave tiger doll for adventurous playtime.', price: '190.000đ', image: Tiger, rating: 4.0 },
+    { id: 7, name: 'Labubu Ver1', description: 'A cute and cuddly doll, perfect for all ages.', price: '120.000đ', image: Labubu1, rating: 4.8, colors: [{ name: 'blue', hex: '#ADD8E6' }, { name: 'pink', hex: '#FFC0CB' }] },
+    { id: 8, name: 'Labubu Ver2', description: 'A friendly doll with a charming smile.', price: '150.000đ', image: Labubu2, rating: 4.7 },
+    { id: 9, name: 'Labubu Ver3', description: 'A playful doll that brings endless fun.', price: '130.000đ', image: Labubu3, rating: 4.9 },
 ];
 
 
@@ -45,7 +45,16 @@ const ProductRating = ({ rating }) => {
 function DollDetail() {
     const { id } = useParams();
     const [quantity, setQuantity] = useState(1);
+    const [selectedColor, setSelectedColor] = useState(null);
     const product = dollProducts.find(p => p.id === parseInt(id));
+
+    useEffect(() => {
+        if (product && product.colors && product.colors.length > 0) {
+            setSelectedColor(product.colors[0]);
+        } else {
+            setSelectedColor(null);
+        }
+    }, [product]);
 
     if (!product) {
         return (
@@ -64,18 +73,35 @@ function DollDetail() {
     return (
         <div className="product-detail-page">
             <div className="product-detail-container">
+                {/* Product Image Gallery */}
                 <div className="product-image-gallery">
                     <img src={product.image} alt={product.name} className="main-product-image" />
                 </div>
-
+                {/* Product Info Section */}
                 <div className="product-info">
                     <h1 className="product-name">{product.name}</h1>
-                    <ProductRating rating={product.rating} />
-                    <p className="product-price">{product.price}</p>
                     <p className="product-description-short">{product.description}</p>
-
+                    <p className="product-price">{product.price}</p>
+                    {selectedColor && (
+                        <div className="color-selector">
+                            {/* <label>
+                                Color: <span className="selected-color-name">{selectedColor.name}</span>
+                            </label> */}
+                            <div className="color-options">
+                                {product.colors.map((color) => (
+                                    <button
+                                        key={color.name}
+                                        className={`color-swatch ${selectedColor.name === color.name ? 'active' : ''}`}
+                                        style={{ backgroundColor: color.hex }}
+                                        onClick={() => setSelectedColor(color)}
+                                        aria-label={`Select color ${color.name}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     <div className="quantity-selector">
-                        <label htmlFor="quantity">Quantity:</label>
+                        {/* <label htmlFor="quantity">Quantity:</label> */}
                         <div className="quantity-input-wrapper">
                             <button className="quantity-btn" onClick={() => handleQuantityChange(-1)}><FaMinus /></button>
                             <input
