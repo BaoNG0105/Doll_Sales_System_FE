@@ -230,6 +230,7 @@
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
     overflow: hidden; /* Ensure content respects border-radius */
+    text-decoration: none; /* Remove underline from links */
 }
 
 .product-card:hover {

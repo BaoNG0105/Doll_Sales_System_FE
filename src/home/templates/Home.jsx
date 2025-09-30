@@ -225,6 +225,7 @@ function Home() {
         >
           <div className="product-slider" ref={productSliderRef}>
             {products.map((product) => (
+              <Link to={`/dolls/${product.id}`} key={product.id} className="product-card">
               <div key={product.id} className="product-card">
                 <img src={product.image} alt={product.name} />
                 <div className="product-card-content">
@@ -233,6 +234,7 @@ function Home() {
                   <button className="btn-primary">Add to Cart</button>
                 </div>
               </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -263,6 +265,7 @@ function Home() {
         >
           <div className="product-slider" ref={charSliderRef}>
             {characters.map((character) => (
+              <Link to={`/characters/${character.id}`} key={character.id} className="product-card">   
               <div key={character.id} className="product-card">
                 <img src={character.image} alt={character.name} />
                 <div className="product-card-content">
@@ -271,6 +274,7 @@ function Home() {
                   <button className="btn-primary">Add to Cart</button>
                 </div>
               </div>
+              </Link>
             ))}
           </div>
         </div>
