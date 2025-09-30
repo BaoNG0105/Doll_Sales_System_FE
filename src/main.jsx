@@ -2,7 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-// import App from './App.jsx'
+
+// Home
 import Login from './home/templates/Login.jsx';
 import Register from './home/templates/Register.jsx';
 import AuthLayout from './home/layout/AuthLayout.jsx';
@@ -15,13 +16,16 @@ import Labubu from './home/templates/Labubu.jsx';
 import Babythree from './home/templates/Babythree.jsx';
 import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
+import DollDetail from './home/templates/DollDetail.jsx';
+
+// Admin
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
 import DollsManager from './dashboard/templates/dollsManager.jsx';
 import FeedbackManager from './dashboard/templates/feedbackManager.jsx';
 import OrdersManager from './dashboard/templates/orderManager.jsx';
 import UserManager from './dashboard/templates/userManager.jsx';
 import RevenueTracking from './dashboard/templates/revenueTracking.jsx';
-import WarrantyPolicy from './dashboard/templates/warrantyPolicy.jsx';  
+import WarrantyPolicy from './dashboard/templates/warrantyPolicy.jsx';
 
 const router = createBrowserRouter([
   {
@@ -56,6 +60,11 @@ const router = createBrowserRouter([
       {
         path: "/characters",
         element: <Characters />,
+      },
+      // Product Detail page
+      {
+        path: "/dolls/:id",
+        element: <DollDetail />,
       },
       // Profile page
       {
@@ -96,18 +105,18 @@ const router = createBrowserRouter([
 
   //Admin Page
 
-{
-  path: "/dashboard",
-  element: <Adminlayouts />,
-  children: [
-    { path: "dollsManager", element: <DollsManager /> },
-    { path: "users", element: <UserManager /> },
-    { path: "feedback", element: <FeedbackManager /> },
-    { path: "orders", element: <OrdersManager /> },
-    { path: "revenue", element: <RevenueTracking /> },       // 👈 mới
-    { path: "warranty", element: <WarrantyPolicy /> },       // 👈 mới
-  ],
-}
+  {
+    path: "/dashboard",
+    element: <Adminlayouts />,
+    children: [
+      { path: "dollsManager", element: <DollsManager /> },
+      { path: "users", element: <UserManager /> },
+      { path: "feedback", element: <FeedbackManager /> },
+      { path: "orders", element: <OrdersManager /> },
+      { path: "revenue", element: <RevenueTracking /> },       // 👈 mới
+      { path: "warranty", element: <WarrantyPolicy /> },       // 👈 mới
+    ],
+  }
 
 
 ])
