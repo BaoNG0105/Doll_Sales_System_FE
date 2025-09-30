@@ -17,6 +17,7 @@ import Babythree from './home/templates/Babythree.jsx';
 import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
 import DollDetail from './home/templates/DollDetail.jsx';
+import CharacterDetail from './home/templates/CharacterDetail.jsx';
 
 // Admin
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
@@ -56,15 +57,20 @@ const router = createBrowserRouter([
         path: "/dolls/babythree",
         element: <Babythree />,
       },
+      // Doll Detail page
+      {
+        path: "/dolls/:id",
+        element: <DollDetail />,
+      },
       // Characters library page
       {
         path: "/characters",
         element: <Characters />,
       },
-      // Product Detail page
+      // Character Detail page
       {
-        path: "/dolls/:id",
-        element: <DollDetail />,
+        path: "/characters/:id",
+        element: <CharacterDetail />,
       },
       // Profile page
       {

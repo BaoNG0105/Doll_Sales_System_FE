@@ -1,5 +1,6 @@
 import React from 'react';
 import '../static/css/Characters.css';
+import { Link } from 'react-router-dom';
 
 // Dữ liệu sản phẩm mẫu (sử dụng lại ảnh từ trang Dolls để minh họa)
 import J97 from '../static/img/j97.jpg';
@@ -31,6 +32,7 @@ function Characters() {
       <section className="products-grid-container">
         <div className="products-grid">
           {products.map((product) => (
+            <Link to={`/characters/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <div key={product.id} className="emotion-product-card">
               <img className="emotion-product-image" src={product.image} alt={product.name} />
               <div className="emotion-product-info">
@@ -43,6 +45,7 @@ function Characters() {
                 </div>
               </div>
             </div>
+            </Link>
           ))}
         </div>
       </section>
