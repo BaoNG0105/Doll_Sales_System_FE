@@ -176,6 +176,10 @@ function Home() {
     }
   };
 
+  const handleScrollDown = () => {
+    aboutSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
 
   return (
     <div className="home-page">
@@ -193,6 +197,11 @@ function Home() {
           <Link to="/products">
             <button className="shop-now-btn">Shop now</button>
           </Link>
+        </div>
+        <div className="scroll-down-container" onClick={handleScrollDown}>
+          <div className="mouse-icon">
+            <div className="wheel"></div>
+          </div>
         </div>
       </section>
 

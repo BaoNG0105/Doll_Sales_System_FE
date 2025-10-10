@@ -14,52 +14,59 @@
     justify-content: center;
     text-align: center;
     color: white;
-    overflow: hidden; /* Ẩn phần video tràn ra ngoài */
-  }
+    overflow: hidden;
+    /* Ẩn phần video tràn ra ngoài */
+}
 
-  .video-background {
+.video-background {
     position: absolute;
     top: 50%;
     left: 50%;
     width: 100%;
     height: 100%;
     transform: translate(-50%, -50%);
-    z-index: -1; /* Đặt video phía sau nội dung */
-    pointer-events: none; /* Ngăn tương tác với video */
-  }
+    z-index: -1;
+    /* Đặt video phía sau nội dung */
+    pointer-events: none;
+    /* Ngăn tương tác với video */
+}
 
-  .video-background video {
+.video-background video {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
+}
 
-  .hero-section::before {
+.hero-section::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ để làm tối video */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Lớp phủ để làm tối video */
     z-index: 0;
-  }
+}
 
-  .hero-content {
+.hero-content {
     position: relative;
-    z-index: 2; /* Đảm bảo nội dung nằm trên lớp phủ và video */
+    z-index: 2;
+    /* Đảm bảo nội dung nằm trên lớp phủ và video */
     max-width: 800px;
     padding: 2rem;
-  }
+}
 
-  .hero-content h1 {
+.hero-content h1 {
     font-family: 'Bungee', cursive;
     font-weight: 400;
     font-size: 3.5rem;
     margin-bottom: 1rem;
     /* Animation */
-    opacity: 0; /* Bắt đầu ẩn */
-    animation: fadeInUp 1s ease-out 0.5s forwards; /* name duration timing-function delay fill-mode */
+    opacity: 0;
+    /* Bắt đầu ẩn */
+    animation: fadeInUp 1s ease-out 0.5s forwards;
+    /* name duration timing-function delay fill-mode */
 }
 
 /* Keyframes for text animation */
@@ -68,6 +75,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -79,60 +87,122 @@
     font-size: 1.5rem;
     font-weight: 400;
     color: #cccccc;
-    margin: 0 auto 2rem; /* Center the element for width animation */
-    
+    margin: 0 auto 2rem;
+    /* Center the element for width animation */
+
     /* Typing Effect Styles */
-    display: inline-block; /* Or block, needed for width animation */
-    overflow: hidden; /* Ensures the text is not seen until the animation starts */
-    border-right: .15em solid orange; /* The typewriter cursor */
-    white-space: nowrap; /* Keeps the content on a single line */
-    letter-spacing: .1em; /* Adjust as needed */
-    
+    display: inline-block;
+    /* Or block, needed for width animation */
+    overflow: hidden;
+    /* Ensures the text is not seen until the animation starts */
+    border-right: .15em solid orange;
+    /* The typewriter cursor */
+    white-space: nowrap;
+    /* Keeps the content on a single line */
+    letter-spacing: .1em;
+    /* Adjust as needed */
+
     /* The animation */
     /* The number of steps should ideally match the number of characters */
-    animation: 
-      typing 3.5s steps(68, end) 1.5s forwards, /* Typing animation with a delay */
-      blink-caret .75s step-end infinite;
-    
+    animation:
+        typing 3.5s steps(68, end) 1.5s forwards,
+        /* Typing animation with a delay */
+        blink-caret .75s step-end infinite;
+
     /* Start with zero width */
     width: 0;
 }
 
 /* Keyframes for typing effect */
 @keyframes typing {
-    from { width: 0 }
-    to { width: 100% }
-  }
-  
-  @keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: orange; }
-  }
+    from {
+        width: 0
+    }
 
-  .shop-now-btn {
+    to {
+        width: 100%
+    }
+}
+
+@keyframes blink-caret {
+
+    from,
+    to {
+        border-color: transparent
+    }
+
+    50% {
+        border-color: orange;
+    }
+}
+
+.shop-now-btn {
     padding: 0.8rem 2rem;
     font-size: 1.1rem;
     font-weight: 600;
     color: white;
-    /* --- Glassmorphism Effect --- */
-    background: rgba(255, 255, 255, 0.2); /* Nền trắng mờ */
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%); /* For Safari */
-    border: 1px solid rgba(255, 255, 255, 0.3); /* Viền mờ */
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
-    /* --- End Glassmorphism --- */
+    background-color: #87ceeb;
+    /* Blue Sky color */
+    border: none;
     border-radius: 25px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s, background 0.3s;
-    
+    transition: background-color 0.3s, transform 0.3s;
+
     /* Animation */
-    opacity: 0; /* Bắt đầu ẩn */
-    animation: fadeInUp 1s ease-out 5.1s forwards; /* Bắt đầu sau 5.1s */
+    opacity: 0;
+    /* Bắt đầu ẩn */
+    animation: fadeInUp 1s ease-out 5.1s forwards;
+    /* Bắt đầu sau 5.1s */
 }
 
 .shop-now-btn:hover {
-    background: rgba(255, 255, 255, 0.3); /* Tăng độ sáng khi hover */
+    background-color: #76bada;
+    /* Darker shade for hover */
     transform: scale(1.05);
+}
+
+/* Scroll Down Icon */
+@keyframes scroll-wheel {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+}
+
+.scroll-down-container {
+    position: absolute;
+    bottom: 3.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: pointer;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 6s forwards;
+    /* Appear after the button */
+}
+
+.mouse-icon {
+    width: 24px;
+    height: 40px;
+    border: 2px solid white;
+    border-radius: 12px;
+    position: relative;
+}
+
+.wheel {
+    width: 4px;
+    height: 8px;
+    background: white;
+    border-radius: 2px;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    margin-left: -2px;
+    animation: scroll-wheel 2s infinite;
 }
 
 /* About Section */
@@ -144,7 +214,8 @@
     padding: 5rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
-    overflow-x: hidden; /* Prevent horizontal scrollbar during animation */
+    overflow-x: hidden;
+    /* Prevent horizontal scrollbar during animation */
 }
 
 .about-content,
@@ -186,7 +257,7 @@
     width: 100%;
     height: auto;
     border-radius: 10px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* Product Section */
@@ -212,30 +283,38 @@
     padding: 1rem;
     overflow-x: auto;
     /* Enables horizontal scrolling */
-    scroll-snap-type: x mandatory; /* Snap to items */
-    scrollbar-width: none; /* For Firefox */
-    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+    scroll-snap-type: x mandatory;
+    /* Snap to items */
+    scrollbar-width: none;
+    /* For Firefox */
+    -ms-overflow-style: none;
+    /* For Internet Explorer and Edge */
 }
 
 .product-slider::-webkit-scrollbar {
-    display: none; /* For Chrome, Safari, and Opera */
+    display: none;
+    /* For Chrome, Safari, and Opera */
 }
 
 .product-card {
-    flex: 0 0 calc((100% - 3rem) / 3); /* Show 3 cards, accounting for 2 gaps of 1.5rem each */
-    scroll-snap-align: start; /* Snap alignment */    
+    flex: 0 0 calc((100% - 3rem) / 3);
+    /* Show 3 cards, accounting for 2 gaps of 1.5rem each */
+    scroll-snap-align: start;
+    /* Snap alignment */
     background: white;
     border-radius: 50px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
-    overflow: hidden; /* Ensure content respects border-radius */
-    text-decoration: none; /* Remove underline from links */
+    overflow: hidden;
+    /* Ensure content respects border-radius */
+    text-decoration: none;
+    /* Remove underline from links */
 }
 
 .product-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
 }
 
 .product-card h3 {
@@ -254,12 +333,13 @@
     width: 100%;
     height: 400px;
     object-fit: cover;
-    display: block; /* Remove any extra space below the image */
+    display: block;
+    /* Remove any extra space below the image */
 }
 
 .product-card-content {
     padding: 1.5rem;
-}   
+}
 
 /* Product Navigation */
 .product-nav {
@@ -281,7 +361,8 @@
     align-items: center;
     justify-content: center;
     transition: color 0.3s, transform 0.3s;
-    padding: 0 1rem; /* Add some horizontal space */
+    padding: 0 1rem;
+    /* Add some horizontal space */
 }
 
 .nav-arrow:hover:not(:disabled) {
@@ -296,44 +377,57 @@
 
 .pagination-container {
     /* ----- Hiệu ứng Glassmorphism ----- */
-    background: rgba(190, 190, 190, 0.25); /* Màu nền trắng mờ */
+    background: rgba(190, 190, 190, 0.25);
+    /* Màu nền trắng mờ */
     backdrop-filter: blur(12px) saturate(180%);
-    -webkit-backdrop-filter: blur(12px) saturate(180%); /* Hỗ trợ cho Safari */
-    
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    /* Hỗ trợ cho Safari */
+
     /* ----- Hình dạng và Bố cục ----- */
-    border-radius: 50px; /* Bo góc tròn lớn để tạo hình viên thuốc */
-    padding: 0.75rem 1.5rem; /* Khoảng đệm bên trong */
-    display: inline-flex; /* Giúp container co lại vừa với nội dung */
-    
+    border-radius: 50px;
+    /* Bo góc tròn lớn để tạo hình viên thuốc */
+    padding: 0.75rem 1.5rem;
+    /* Khoảng đệm bên trong */
+    display: inline-flex;
+    /* Giúp container co lại vừa với nội dung */
+
     /* ----- Hiệu ứng nổi và Viền ----- */
-    border: 1px solid rgba(209, 213, 219, 0.3); /* Viền mờ nhẹ */
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1); /* Đổ bóng mềm mại */
+    border: 1px solid rgba(209, 213, 219, 0.3);
+    /* Viền mờ nhẹ */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+    /* Đổ bóng mềm mại */
 }
 
 /* Giữ nguyên CSS cho các dấu chấm của bạn */
 .pagination-dots {
     display: flex;
-    align-items: center; /* Căn giữa các dấu chấm theo chiều dọc */
-    gap: 0.75rem; /* Tăng khoảng cách để dễ nhìn hơn */
+    align-items: center;
+    /* Căn giữa các dấu chấm theo chiều dọc */
+    gap: 0.75rem;
+    /* Tăng khoảng cách để dễ nhìn hơn */
 }
 
 .dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.2); /* Màu chấm tối hơn một chút và có độ trong */
+    background-color: rgba(0, 0, 0, 0.2);
+    /* Màu chấm tối hơn một chút và có độ trong */
     transition: all 0.3s ease;
 }
 
 /* Thay đổi màu nền của dot.active để nổi bật hơn */
 .dot.active {
-    background-color: #87ceeb; /* Màu blue sky cho chấm đang hoạt động */
-    transform: scale(1.2); /* Phóng to một chút để tạo điểm nhấn */
+    background-color: #87ceeb;
+    /* Màu blue sky cho chấm đang hoạt động */
+    transform: scale(1.2);
+    /* Phóng to một chút để tạo điểm nhấn */
 }
 
 
 /* General Button Styles */
-.btn-primary, .btn-secondary {
+.btn-primary,
+.btn-secondary {
     padding: 0.7rem 1.5rem;
     border-radius: 20px;
     font-weight: 600;
@@ -352,17 +446,15 @@
 }
 
 .btn-secondary {
-    color: #333;
-    /* --- Glassmorphism Effect --- */
-    background: rgba(0, 0, 0, 0.05); /* Nền đen rất mờ */
-    backdrop-filter: blur(10px) saturate(180%);
-    -webkit-backdrop-filter: blur(10px) saturate(180%); /* For Safari */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Viền đen mờ */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* Đổ bóng nhẹ */
+    background-color: #87ceeb;
+    /* Blue Sky color */
+    color: white;
+    border: none;
 }
 
 .btn-secondary:hover {
-    background: rgba(140, 140, 140, 0.1); /* Tăng độ đậm khi hover */
-    color: #87ceeb; /* Làm màu chữ đậm hơn một chút */
+    background-color: #76bada;
+    /* Darker shade for hover */
+    color: white;
     transform: scale(1.05);
 }
