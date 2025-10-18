@@ -1,36 +1,62 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
-import '../static/css/DollDetail.css'; // Reusing doll detail styles
-import '../static/css/CharacterDetail.css'; // Adding specific styles for character detail
-
-// --- Mock Data ---
-import J97 from '../static/img/j97.jpg';
-import SonTung from '../static/img/sontung.jpg';
-import Linh from '../static/img/Linh.png';
-import Khoa from '../static/img/Khoa.png';
-import Bao from '../static/img/Bao.png';
-
-const characterProducts = [
-  { id: 1, name: 'AI Linh Nguyen', description: 'I am Linh, a curious Ph.D. student who loves experimenting in the lab and is passionate about making new scientific discoveries.', price: '135.000đ/month', image: Linh },
-  { id: 2, name: 'AI Khoa Cao', description: 'My name is Khoa, a dedicated Fullstack Developer who enjoys solving complex problems and bringing ideas to life through code.', price: '175.000đ/month', image: Khoa },
-  { id: 3, name: 'AI Bao', description: ' I am Bao, an adventurous astronaut with a dream of exploring new frontiers and planting our flag among the stars.', price: '100.000đ/month', image: Bao },
-  { id: 4, name: 'AI Jack-J97', description: 'Tôi không có bỏ con...', price: '5.000.000đ/month', image: J97 },
-  { id: 5, name: 'AI Son Tung M-TP', description: 'Bá tước Saint Toine Emtippy', price: '2.000.000.000đ/month', image: SonTung },
-];
-
-const subscriptionOptions = [
-    { label: '1 Month', value: '1-month' },
-    { label: '3 Months', value: '3-months' },
-    { label: '1 Year', value: '1-year' },
-];
+import { getCharacterById, getCharacterPackagesByCharacterId } from '../api/api.character.js'; // Import the API functions
+import '../static/css/CharacterDetail.css';
 
 function CharacterDetail() {
     const { id } = useParams();
-    const [selectedOption, setSelectedOption] = useState(subscriptionOptions[0].value);
-    const product = characterProducts.find(p => p.id === parseInt(id));
+    const [character, setCharacter] = useState(null);
+    const [packages, setPackages] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedPackage, setSelectedPackage] = useState(null); // State for the selected package object
 
-    if (!product) {
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                const [characterData, packagesData] = await Promise.all([
+                    getCharacterById(id),
+                    getCharacterPackagesByCharacterId(id)
+                ]);
+                
+                setCharacter(characterData);
+
+                const validPackages = Array.isArray(packagesData.data) ? packagesData.data : [];
+                setPackages(validPackages);
+
+                if (validPackages.length > 0) {
+                    setSelectedOption(validPackages[0].packageId);
+                }
+
+            } catch (err) {
+                setError(err);
+                console.error(`Failed to fetch data for character with id ${id}:`, err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
+    // Effect to update the selected package object when the option changes
+    useEffect(() => {
+        if (selectedOption && packages.length > 0) {
+            const foundPackage = packages.find(pkg => pkg.packageId === selectedOption);
+            setSelectedPackage(foundPackage);
+        } else {
+            setSelectedPackage(null);
+        }
+    }, [selectedOption, packages]);
+
+    if (loading) {
+        return <div className="product-detail-page"><h2>Loading...</h2></div>;
+    }
+
+    if (error || !character) {
         return (
             <div className="product-detail-page product-not-found">
                 <h2>Character Not Found</h2>
@@ -45,28 +71,38 @@ function CharacterDetail() {
             <div className="product-detail-container">
                 {/* Product Image Gallery */}
                 <div className="product-image-gallery">
-                    <img src={product.image} alt={product.name} className="main-product-image" />
+                    <img src={character.image} alt={character.name} className="main-product-image" />
                 </div>
                 {/* Product Info Section */}
                 <div className="product-info">
-                    <h1 className="product-name">{product.name}</h1>
-                    <p className="product-description-short">{product.description}</p>
-                    <p className="product-price">{product.price}</p>
+                    <h1 className="product-name">{character.name}</h1>
+                    <p className="product-description-short"><strong>Age:</strong> {character.ageRange}</p>
+                    <p className="product-description-short"><strong>Personality:</strong> {character.personality}</p>
+                    <p className="product-description-short">{character.description}</p>
                     
                     <div className="subscription-selector">
                         <label>Choose Package:</label>
                         <div className="subscription-options">
-                            {subscriptionOptions.map((option) => (
+                            {packages.map((pkg) => (
                                 <button
-                                    key={option.value}
-                                    className={`subscription-btn ${selectedOption === option.value ? 'active' : ''}`}
-                                    onClick={() => setSelectedOption(option.value)}
+                                    key={pkg.packageId}
+                                    className={`subscription-btn ${selectedOption === pkg.packageId ? 'active' : ''}`}
+                                    onClick={() => setSelectedOption(pkg.packageId)}
                                 >
-                                    {option.label}
+                                    {pkg.name}
                                 </button>
                             ))}
                         </div>
                     </div>
+
+                    {/* Display Price of Selected Package */}
+                    {selectedPackage && (
+                        <div className="product-price-container">
+                            <span className="product-price">
+                                {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(selectedPackage.price)}
+                            </span>
+                        </div>
+                    )}
 
                     <div className="action-buttons">
                         <button className="add-to-cart-detail-btn">
