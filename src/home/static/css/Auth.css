@@ -211,24 +211,25 @@
 /* Google Login Button Styles */
 .google-login-button {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 0.7rem;
-  border-radius: 20px;
-  border: 1px solid #cbd5e0;
-  background-color: #fff;
-  color: #2d3748;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.3s, border-color 0.3s;
+  align-items: center;
   width: 100%;
+  padding: 10px;
+  background-color: #4285F4; /* Google Blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
 }
 
 .google-login-button:hover {
-  background-color: #f7fafc;
-  border-color: #a0aec0;
+  background-color: #357ae8;
+}
+
+.google-icon {
+  margin-right: 10px;
 }
 
 .switch-auth {
