@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../static/css/Home.css';
 import aboutImage from '../static/img/about.png';
+//api
+import { getCharacters } from '../api/api.character.js';
 
 // Import doll images
 import Dog from '../static/img/dog.png';
@@ -11,13 +13,6 @@ import Pig from '../static/img/pig.png';
 import Rabbit from '../static/img/rabbit.png';
 import Tiger from '../static/img/tiger.png';
 import backgroundVideo from '../static/video/poster.mp4';
-
-// Import character images
-import J97 from '../static/img/j97.jpg';
-import SonTung from '../static/img/sontung.jpg';
-import Linh from '../static/img/Linh.png';
-import Khoa from '../static/img/Khoa.png';
-import Bao from '../static/img/Bao.png';
 
 // Sample product data
 const products = [
@@ -29,15 +24,6 @@ const products = [
   { id: 6, name: 'Tiger', price: '190.000', image: Tiger },
 ];
 
-// Sample character data from Characters.jsx
-const characters = [
-  { id: 1, name: 'AI Linh Nguyen', price: '135.000', image: Linh },
-  { id: 2, name: 'AI Khoa Cao', price: '175.000', image: Khoa },
-  { id: 3, name: 'AI Bao', price: '100.000', image: Bao },
-  { id: 4, name: 'AI Jack-J97', price: '5.000.000', image: J97 },
-  { id: 5, name: 'AI Son Tung M-TP', price: '2.000.000.000', image: SonTung },
-];
-
 function Home() {
   // State and Refs for Product Slider
   const productSliderRef = useRef(null);
@@ -47,6 +33,7 @@ function Home() {
 
   // State and Refs for Character Slider
   const charSliderRef = useRef(null);
+  const [characters, setCharacters] = useState([]); // State for characters from API
   const [charActiveIndex, setCharActiveIndex] = useState(0);
   const [charDotsCount, setCharDotsCount] = useState(0);
   const [isCharHovering, setIsCharHovering] = useState(false);
@@ -54,6 +41,21 @@ function Home() {
   // State and Ref for About Section Animation
   const aboutSectionRef = useRef(null);
   const [isAboutVisible, setIsAboutVisible] = useState(false);
+
+  // --- FETCH CHARACTERS FROM API ---
+  useEffect(() => {
+    const fetchCharacters = async () => {
+      try {
+        const data = await getCharacters();
+        if (Array.isArray(data)) {
+          setCharacters(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch characters for home page:", error);
+      }
+    };
+    fetchCharacters();
+  }, []);
 
   // --- LOGIC FOR ABOUT SECTION ANIMATION ---
   useEffect(() => {
@@ -235,14 +237,14 @@ function Home() {
           <div className="product-slider" ref={productSliderRef}>
             {products.map((product) => (
               <Link to={`/dolls/${product.id}`} key={product.id} className="product-card">
-              <div key={product.id} className="product-card">
-                <img src={product.image} alt={product.name} />
-                <div className="product-card-content">
-                  <h3>{product.name}</h3>
-                  <p>{product.price} VNĐ</p>
-                  <button className="btn-primary">Add to Cart</button>
+                <div key={product.id} className="product-card">
+                  <img src={product.image} alt={product.name} />
+                  <div className="product-card-content">
+                    <h3>{product.name}</h3>
+                    <p>{product.price} VNĐ</p>
+                    <button className="btn-primary">Add to Cart</button>
+                  </div>
                 </div>
-              </div>
               </Link>
             ))}
           </div>
@@ -274,15 +276,15 @@ function Home() {
         >
           <div className="product-slider" ref={charSliderRef}>
             {characters.map((character) => (
-              <Link to={`/characters/${character.id}`} key={character.id} className="product-card">   
-              <div key={character.id} className="product-card">
-                <img src={character.image} alt={character.name} />
-                <div className="product-card-content">
-                  <h3>{character.name}</h3>
-                  <p>{character.price} VNĐ</p>
-                  <button className="btn-primary">Add to Cart</button>
+              <Link to={`/characters/${character.characterId}`} key={character.characterId} className="product-card">
+                <div className="product-card">
+                  <img src={character.image} alt={character.name} />
+                  <div className="product-card-content">
+                    <h3>{character.name}</h3>
+                    {/* Price is removed as it's not available on the main character object */}
+                    <button className="btn-primary">View Details</button>
+                  </div>
                 </div>
-              </div>
               </Link>
             ))}
           </div>
