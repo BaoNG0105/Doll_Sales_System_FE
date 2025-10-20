@@ -260,56 +260,70 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Add new keyframes for the infinite scroll */
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* Move the slider to the left by the width of the first set of items */
+    transform: translateX(-50%);
+  }
+}
+
 /* Product Section */
 .product-section {
     padding: 5rem 0;
-    text-align: center;
+    overflow: hidden;
+    text-align: center; /* Canh giữa nội dung, bao gồm cả thẻ h2 */
 }
 
 .product-section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
 }
 
 .product-slider-container {
-    overflow-x: hidden;
-    max-width: 1200px;
-    margin: 0 auto;
+  overflow-x: hidden;
+  max-width: 1200px;
+  margin: 0 auto;
+  /* Add a mask for a fade-out effect at the edges */
+  -webkit-mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
+}
+
+/* Pause animation on hover */
+.product-slider-container:hover .product-slider {
+  animation-play-state: paused;
 }
 
 .product-slider {
-    display: flex;
-    gap: 1.5rem;
-    padding: 1rem;
-    overflow-x: auto;
-    /* Enables horizontal scrolling */
-    scroll-snap-type: x mandatory;
-    /* Snap to items */
-    scrollbar-width: none;
-    /* For Firefox */
-    -ms-overflow-style: none;
-    /* For Internet Explorer and Edge */
+  display: flex;
+  gap: 1.5rem;
+  /* The width is doubled to accommodate two sets of items */
+  width: calc(200% + 1.5rem * var(--product-count)); /* Adjust width based on item count */
+  
+  /* Apply the animation */
+  animation: infinite-scroll 40s linear infinite;
 }
 
 .product-slider::-webkit-scrollbar {
-    display: none;
-    /* For Chrome, Safari, and Opera */
+  display: none; /* For Chrome, Safari, and Opera */
 }
 
 .product-card {
-    flex: 0 0 calc((100% - 3rem) / 3);
-    /* Show 3 cards, accounting for 2 gaps of 1.5rem each */
-    scroll-snap-align: start;
-    /* Snap alignment */
-    background: white;
-    border-radius: 50px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    text-align: center;
-    transition: transform 0.3s, box-shadow 0.3s;
-    overflow: hidden;
-    /* Ensure content respects border-radius */
-    text-decoration: none;
-    /* Remove underline from links */
+  width: 350px; 
+  flex-shrink: 0; /* <-- THÊM DÒNG NÀY */
+  scroll-snap-align: start; 
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+  overflow: hidden; 
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .product-card:hover {
@@ -458,3 +472,4 @@
     color: white;
     transform: scale(1.05);
 }
+
