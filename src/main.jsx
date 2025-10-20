@@ -11,9 +11,8 @@ import MainLayout from './home/layout/MainLayout.jsx';
 import Error from './home/templates/Error.jsx';
 import Home from './home/templates/Home.jsx';
 import Menu from './home/templates/Menu.jsx';
-import Dolls from './home/templates/Dolls.jsx';
-import Labubu from './home/templates/Labubu.jsx';
-import Babythree from './home/templates/Babythree.jsx';
+import DollType from './home/templates/DollType.jsx';
+import DollModel from './home/templates/DollModel.jsx';
 import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
 import DollDetail from './home/templates/DollDetail.jsx';
@@ -45,21 +44,15 @@ const router = createBrowserRouter([
       },
       // Trang chọn loại doll
       {
-        path: "/dolls",
-        element: <Dolls />,
-      },
-      // Trang chi tiết từng loại doll
-      {
-        path: "/dolls/labubu",
-        element: <Labubu />,
+        path: "/doll-type",
+        element: <DollType />,
       },
       {
-        path: "/dolls/babythree",
-        element: <Babythree />,
+        path: "/doll-type/:id",
+        element: <DollModel />,
       },
-      // Doll Detail page
       {
-        path: "/dolls/:id",
+        path: "/doll-detail/:id",
         element: <DollDetail />,
       },
       // Characters library page

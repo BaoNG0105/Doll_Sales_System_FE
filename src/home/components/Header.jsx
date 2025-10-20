@@ -12,15 +12,7 @@ function Header() {
           </div>
           <nav className="nav-links">
             <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>Home</NavLink>
-            <div className="nav-item-dropdown">
-              <NavLink to="/dolls" className={({ isActive }) => `nav-link-dropdown ${isActive ? 'active' : ''}`}>
-                Dolls
-              </NavLink>
-              <div className="dropdown-menu">
-                <Link to="/dolls/labubu">Labubu</Link>
-                <Link to="/dolls/babythree">Babythree</Link>
-              </div>
-            </div>
+            <NavLink to="/doll-type">Dolls</NavLink>
             <NavLink to="/characters">Characters</NavLink>
             <NavLink to="/about">About</NavLink>
             <NavLink to="/contact">Contact</NavLink>
