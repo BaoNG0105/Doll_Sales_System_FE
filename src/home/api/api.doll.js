@@ -22,6 +22,17 @@ export const getDollModels = async () => {
     }
 };
 
+//Get DollModel by ID
+export const getDollModelById = async (id) => {
+    try {
+        const response = await api.get(`/DollModel/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching doll model with ID ${id}:`, error);
+        throw error;
+    }
+};
+
 //Get DollModel by DollType ID
 export const getDollModelsByDollTypeId = async (id) => {
     try {
@@ -29,6 +40,17 @@ export const getDollModelsByDollTypeId = async (id) => {
         return response.data;
     } catch (error) {
         console.error(`Error fetching doll models for doll type with ID ${id}:`, error);
+        throw error;
+    }
+};
+
+//Get DollVariant by DollModel ID
+export const getDollVariantsByDollModelId = async (id) => {
+    try {
+        const response = await api.get(`/DollVariant/by-model/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching doll variants for doll model with ID ${id}:`, error);
         throw error;
     }
 };

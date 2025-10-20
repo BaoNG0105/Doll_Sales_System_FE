@@ -1,125 +1,149 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { FaShoppingCart, FaPlus, FaMinus } from 'react-icons/fa';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
+import { FaShoppingCart, FaMoneyBillWave, FaPlus, FaMinus } from 'react-icons/fa';
+import { getDollModelById, getDollVariantsByDollModelId } from '../api/api.doll';
 import '../static/css/DollDetail.css';
 
-// --- Mock Data ---
-import Dog from '../static/img/dog.png';
-import Snake from '../static/img/snake.png';
-import Monkey from '../static/img/monkey.png';
-import Pig from '../static/img/pig.png';
-import Rabbit from '../static/img/rabbit.png';
-import Tiger from '../static/img/tiger.png';
-import Labubu1 from '../static/img/labubu1.jpg';
-import Labubu2 from '../static/img/labubu2.jpg';
-import Labubu3 from '../static/img/labubu3.jpg';
-
-const dollProducts = [
-    { id: 1, name: 'Dog Doll', description: 'A cute and cuddly dog doll, perfect for all ages.', price: '120.000đ', image: Dog, rating: 4.5, colors: [{ name: 'brown', hex: '#8B4513' }, { name: 'white', hex: '#FFFFFF' }, { name: 'black', hex: '#000000' }] },
-    { id: 2, name: 'Snake Doll', description: 'A friendly snake doll with a charming smile.', price: '150.000đ', image: Snake, rating: 4.0, colors: [{ name: 'green', hex: '#228B22' }, { name: 'yellow', hex: '#FFD700' }] },
-    { id: 3, name: 'Monkey Doll', description: 'A playful monkey doll that brings endless fun.', price: '130.000đ', image: Monkey, rating: 5.0 },
-    { id: 4, name: 'Pig Doll', description: 'A soft and squishy pig doll for cozy hugs.', price: '180.000đ', image: Pig, rating: 4.5, colors: [{ name: 'pink', hex: '#FFC0CB' }, { name: 'light-brown', hex: '#D2B48C' }] },
-    { id: 5, name: 'Rabbit Doll', description: 'An adorable rabbit doll with long, floppy ears.', price: '200.000đ', image: Rabbit, rating: 5.0, colors: [{ name: 'white', hex: '#FFFFFF' }, { name: 'grey', hex: '#808080' }] },
-    { id: 6, name: 'Tiger Doll', description: 'A brave tiger doll for adventurous playtime.', price: '190.000đ', image: Tiger, rating: 4.0 },
-    { id: 7, name: 'Labubu Ver1', description: 'A cute and cuddly doll, perfect for all ages.', price: '120.000đ', image: Labubu1, rating: 4.8, colors: [{ name: 'blue', hex: '#ADD8E6' }, { name: 'pink', hex: '#FFC0CB' }] },
-    { id: 8, name: 'Labubu Ver2', description: 'A friendly doll with a charming smile.', price: '150.000đ', image: Labubu2, rating: 4.7 },
-    { id: 9, name: 'Labubu Ver3', description: 'A playful doll that brings endless fun.', price: '130.000đ', image: Labubu3, rating: 4.9 },
-];
-
-
-const ProductRating = ({ rating }) => {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 !== 0;
-    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-
-    return (
-        <div className="product-rating">
-            {[...Array(fullStars)].map((_, i) => <FaStar key={`full-${i}`} />)}
-            {halfStar && <FaStarHalfAlt />}
-            {[...Array(emptyStars)].map((_, i) => <FaStar key={`empty-${i}`} style={{ color: '#e4e5e9' }} />)}
-            <span className="rating-value">{rating.toFixed(1)}</span>
-        </div>
-    );
-};
-
 function DollDetail() {
-    const { id } = useParams();
-    const [quantity, setQuantity] = useState(1);
+    const { id } = useParams(); // This is dollModelID
+    const [dollModel, setDollModel] = useState(null);
+    const [variants, setVariants] = useState([]);
     const [selectedColor, setSelectedColor] = useState(null);
-    const product = dollProducts.find(p => p.id === parseInt(id));
+    const [selectedSize, setSelectedSize] = useState(null);
+    const [selectedVariant, setSelectedVariant] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Group variants by color for easier selection
+    const variantsByColor = useMemo(() => {
+        return variants.reduce((acc, variant) => {
+            (acc[variant.color] = acc[variant.color] || []).push(variant);
+            return acc;
+        }, {});
+    }, [variants]);
+
+    const availableColors = Object.keys(variantsByColor);
+    const availableSizes = selectedColor ? variantsByColor[selectedColor].map(v => v.size) : [];
 
     useEffect(() => {
-        if (product && product.colors && product.colors.length > 0) {
-            setSelectedColor(product.colors[0]);
-        } else {
-            setSelectedColor(null);
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                const [modelRes, variantsRes] = await Promise.all([
+                    getDollModelById(id),
+                    getDollVariantsByDollModelId(id)
+                ]);
+
+                if (modelRes && modelRes.data) {
+                    setDollModel(modelRes.data);
+                } else {
+                    throw new Error('Doll model not found.');
+                }
+
+                if (variantsRes && Array.isArray(variantsRes) && variantsRes.length > 0) {
+                    setVariants(variantsRes);
+                    // Set initial selection
+                    const firstVariant = variantsRes[0];
+                    setSelectedColor(firstVariant.color);
+                    setSelectedSize(firstVariant.size);
+                } else {
+                    setVariants([]);
+                }
+
+            } catch (err) {
+                console.error("Failed to fetch doll details:", err);
+                setError('Could not load product details. Please try again later.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
+    // Update selected variant when color or size changes
+    useEffect(() => {
+        if (selectedColor && selectedSize) {
+            const variant = variants.find(v => v.color === selectedColor && v.size === selectedSize);
+            setSelectedVariant(variant);
         }
-    }, [product]);
+    }, [selectedColor, selectedSize, variants]);
 
-    if (!product) {
-        return (
-            <div className="product-detail-page product-not-found">
-                <h2>Doll Not Found</h2>
-                <p>Sorry, we couldn't find the doll you're looking for.</p>
-                <Link to="/babythree" className="back-to-shop-link">Back to Dolls</Link>
-            </div>
-        );
-    }
-
-    const handleQuantityChange = (amount) => {
-        setQuantity(prev => Math.max(1, prev + amount));
+    const handleColorSelect = (color) => {
+        setSelectedColor(color);
+        // Automatically select the first available size for the new color
+        const firstSizeForColor = variantsByColor[color][0].size;
+        setSelectedSize(firstSizeForColor);
     };
 
-    return (
-        <div className="product-detail-page">
-            <div className="product-detail-container">
-                {/* Product Image Gallery */}
-                <div className="product-image-gallery">
-                    <img src={product.image} alt={product.name} className="main-product-image" />
-                </div>
-                {/* Product Info Section */}
-                <div className="product-info">
-                    <h1 className="product-name">{product.name}</h1>
-                    <p className="product-description-short">{product.description}</p>
-                    <p className="product-price">{product.price}</p>
-                    {selectedColor && (
-                        <div className="color-selector">
-                            {/* <label>
-                                Color: <span className="selected-color-name">{selectedColor.name}</span>
-                            </label> */}
-                            <div className="color-options">
-                                {product.colors.map((color) => (
-                                    <button
-                                        key={color.name}
-                                        className={`color-swatch ${selectedColor.name === color.name ? 'active' : ''}`}
-                                        style={{ backgroundColor: color.hex }}
-                                        onClick={() => setSelectedColor(color)}
-                                        aria-label={`Select color ${color.name}`}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                    <div className="quantity-selector">
-                        {/* <label htmlFor="quantity">Quantity:</label> */}
-                        <div className="quantity-input-wrapper">
-                            <button className="quantity-btn" onClick={() => handleQuantityChange(-1)}><FaMinus /></button>
-                            <input
-                                type="number"
-                                id="quantity"
-                                className="quantity-display"
-                                value={quantity}
-                                readOnly
-                            />
-                            <button className="quantity-btn" onClick={() => handleQuantityChange(1)}><FaPlus /></button>
-                        </div>
-                    </div>
+    if (loading) {
+        return <div className="loading-container"><p>Loading product...</p></div>;
+    }
 
-                    <div className="action-buttons">
-                        <button className="add-to-cart-detail-btn">
+    if (error) {
+        return <div className="error-container"><p>{error}</p></div>;
+    }
+
+    if (!dollModel) {
+        return <div className="error-container"><p>Product not found.</p></div>;
+    }
+
+    // Use selected variant's image and price, fallback to model's data
+    const displayImage = selectedVariant?.image || dollModel.image;
+    const displayName = selectedVariant?.name || dollModel.name;
+    const displayPrice = selectedVariant?.price;
+
+    return (
+        <div className="doll-detail-container">
+            <div className="doll-detail-card">
+                <div className="doll-image-section">
+                    <img src={displayImage} alt={displayName} className="main-doll-image" />
+                </div>
+                <div className="doll-info-section">
+                    <h1 className="doll-title">{dollModel.name}</h1>
+                    <p className="doll-description">{dollModel.description}</p>
+                    
+                    {displayPrice !== undefined ? (
+                        <div className="doll-price">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(displayPrice)}</div>
+                    ) : (
+                        <div className="doll-price">Please select an option</div>
+                    )}
+
+                    {variants.length > 0 && (
+                        <>
+                            <div className="option-group">
+                                <p className="option-label">Color:</p>
+                                <div className="option-buttons">
+                                    {availableColors.map(color => (
+                                        <button key={color} onClick={() => handleColorSelect(color)} className={`option-btn ${selectedColor === color ? 'selected' : ''}`}>
+                                            {color}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="option-group">
+                                <p className="option-label">Size:</p>
+                                <div className="option-buttons">
+                                    {availableSizes.map(size => (
+                                        <button key={size} onClick={() => setSelectedSize(size)} className={`option-btn ${selectedSize === size ? 'selected' : ''}`}>
+                                            {size}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    )}
+
+                    <div className="action-buttons-container">
+                        <button className="add-to-cart-button" disabled={!selectedVariant}>
                             <FaShoppingCart /> Add to Cart
                         </button>
-                        <button className="buy-now-detail-btn">Buy Now</button>
+                        <button className="buy-now-button" disabled={!selectedVariant}>
+                            <FaMoneyBillWave /> Buy Now
+                        </button>
                     </div>
                 </div>
             </div>

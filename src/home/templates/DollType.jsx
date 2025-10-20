@@ -24,7 +24,7 @@ function Dolls() {
       <div className="menu-container">
         {dollTypes.map((dollType) => (
           <Link 
-            to={`/dolls/${dollType.dollTypeID}`} 
+            to={`/doll-type/${dollType.dollTypeID}`} 
             className="menu-card" 
             key={dollType.dollTypeID}
           >
