@@ -10,7 +10,7 @@ function Menu() {
   return (
     <div className="menu-page">
       <div className="menu-container">
-        <Link to="/dolls" className="menu-card">
+        <Link to="/doll-type" className="menu-card">
           <img src={dollsImage} alt="Dolls Collection" className="menu-card-img" />
           <div className="menu-card-overlay">
             <h2 className="menu-card-title">Dolls</h2>
