@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../static/css/Menu.css';
+import '../static/css/DollType.css';
 
 // Import images for the cards
 import dollsImage from '../static/img/dolls.png';
