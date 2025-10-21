@@ -17,6 +17,7 @@ import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
 import DollDetail from './home/templates/DollDetail.jsx';
 import CharacterDetail from './home/templates/CharacterDetail.jsx';
+import About from './home/templates/About.jsx';
 
 // Admin
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      // About page
+      {
+        path: "/about",
+        element: <About />,
       },
       // Menu page
       {
