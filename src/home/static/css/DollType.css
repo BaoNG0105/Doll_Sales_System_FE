@@ -2,7 +2,7 @@
     width: 100%;
 }
 
-/* New styles for the hero section */
+/* Styles for the hero section */
 .doll-type-hero-section {
     position: relative;
     height: 80vh;
@@ -44,7 +44,7 @@
     color: #f0f0f0;
 }
 
-
+/* Styles for menu & dolltype page */
 .menu-container {
     display: flex;
     flex-wrap: wrap;
