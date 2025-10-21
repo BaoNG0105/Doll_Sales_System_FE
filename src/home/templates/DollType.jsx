@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../static/css/Menu.css'; // Tái sử dụng CSS của trang Menu
+import '../static/css/DollType.css';
 import { getDollTypes } from '../api/api.doll'; // Import a function to get doll types
 
 function Dolls() {
@@ -21,17 +21,24 @@ function Dolls() {
 
   return (
     <div className="menu-page">
+      {/* Hero Section */}
+      <section className="doll-type-hero-section">
+        <div className="doll-type-hero-content">
+          <h1>Our Doll Types</h1>
+          <p>Choose a category to explore our beautiful dolls.</p>
+        </div>
+      </section>
       <div className="menu-container">
         {dollTypes.map((dollType) => (
-          <Link 
-            to={`/doll-type/${dollType.dollTypeID}`} 
-            className="menu-card" 
+          <Link
+            to={`/doll-type/${dollType.dollTypeID}`}
+            className="menu-card"
             key={dollType.dollTypeID}
           >
-            <img 
-              src={dollType.image} 
-              alt={`${dollType.name} Collection`} 
-              className="menu-card-img" 
+            <img
+              src={dollType.image}
+              alt={`${dollType.name} Collection`}
+              className="menu-card-img"
             />
             <div className="menu-card-overlay">
               <h2 className="menu-card-title">{dollType.name}</h2>

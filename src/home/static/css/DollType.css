@@ -1,12 +1,49 @@
 .menu-page {
     width: 100%;
-    min-height: 80vh; /* Ensure it takes up significant height */
+}
+
+/* New styles for the hero section */
+.doll-type-hero-section {
+    position: relative;
+    height: 80vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4rem 2rem;
-    background-color: #f9f9f9; /* A light background for the page */
+    text-align: center;
+    color: white;
+    background: url('../img/dolls.png') no-repeat center center/cover;
+    margin-top: -35px; /* Offset the margin from MainLayout */
 }
+
+.doll-type-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Lớp phủ màu đen */
+    z-index: 1;
+}
+
+.doll-type-hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.doll-type-hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.doll-type-hero-content p {
+    font-size: 1.2rem;
+    color: #f0f0f0;
+}
+
 
 .menu-container {
     display: flex;
@@ -14,6 +51,8 @@
     justify-content: center;
     gap: 3rem;
     max-width: 1200px;
+    padding: 4rem 2rem; /* Added padding here */
+    margin: 0 auto; /* Center the container */
 }
 
 .menu-card {
