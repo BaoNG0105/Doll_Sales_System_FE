@@ -9,7 +9,6 @@ function About() {
   return (
     <div className="about-container">
      <header className="about-header">
-        {/* Đã xóa video background và thẻ div bao bọc */}
         <h1>About Doll World</h1>
         <p>Where every doll has a story to tell.</p>
       </header>
@@ -35,7 +34,6 @@ function About() {
             </p>
           </div>
           <div className="about-section-image">
-            {/* You can add another image here if you want */}
             <img src={about2} alt="Doll details" />
           </div>
         </section>

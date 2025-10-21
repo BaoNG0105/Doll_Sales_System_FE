@@ -10,6 +10,8 @@ import AuthLayout from './home/layout/AuthLayout.jsx';
 import MainLayout from './home/layout/MainLayout.jsx';
 import Error from './home/templates/Error.jsx';
 import Home from './home/templates/Home.jsx';
+import About from './home/templates/About.jsx';
+import Contact from './home/templates/Contact.jsx';
 import Menu from './home/templates/Menu.jsx';
 import DollType from './home/templates/DollType.jsx';
 import DollModel from './home/templates/DollModel.jsx';
@@ -17,7 +19,7 @@ import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
 import DollDetail from './home/templates/DollDetail.jsx';
 import CharacterDetail from './home/templates/CharacterDetail.jsx';
-import About from './home/templates/About.jsx';
+
 
 // Admin
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
@@ -42,6 +44,11 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <About />,
+      },
+      // Contact page
+      {
+        path: "/contact",
+        element: <Contact />,
       },
       // Menu page
       {
