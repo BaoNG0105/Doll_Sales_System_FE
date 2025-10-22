@@ -13,6 +13,7 @@ import Home from './home/templates/Home.jsx';
 import About from './home/templates/About.jsx';
 import Contact from './home/templates/Contact.jsx';
 import Privacy from './home/templates/Privacy.jsx';
+import Terms from './home/templates/Terms.jsx';
 import Menu from './home/templates/Menu.jsx';
 import DollType from './home/templates/DollType.jsx';
 import DollModel from './home/templates/DollModel.jsx';
@@ -55,6 +56,11 @@ const router = createBrowserRouter([
       {
         path: "/privacy-policy",
         element: <Privacy />,
+      },
+      // Terms of Service page
+      {
+        path: "/terms-of-service",
+        element: <Terms />,
       },
       // Menu page
       {
