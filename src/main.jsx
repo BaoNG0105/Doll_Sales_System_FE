@@ -21,6 +21,8 @@ import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
 import DollDetail from './home/templates/DollDetail.jsx';
 import CharacterDetail from './home/templates/CharacterDetail.jsx';
+import Chatbot from './home/components/Chatbot.jsx'; 
+import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
 
 
 // Admin
@@ -149,5 +151,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     {/* <App /> */}
     <RouterProvider router={router} />
+    <Chatbot />
+    <ScrollToTopButton />
   </StrictMode>,
 )
