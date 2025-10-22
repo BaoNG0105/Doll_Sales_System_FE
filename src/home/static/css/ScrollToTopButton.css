@@ -1,0 +1,23 @@
+/* Style cho nút Scroll to Top */
+.scroll-to-top-button {
+  position: fixed;
+  bottom: 90px; /* Vị trí phía trên nút chatbot */
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #ffa33a;
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 998; /* Thấp hơn chatbot container nhưng cao hơn nút chatbot */
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.scroll-to-top-button:hover {
+    background-color: #e5942b;
+}
