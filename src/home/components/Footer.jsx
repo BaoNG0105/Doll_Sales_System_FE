@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaTiktok } from 'react-icons/fa';
+import { FaFacebook, FaInstagram, FaTiktok } from 'react-icons/fa';
 import '../static/css/Footer.css';
 
 function Footer() {
@@ -29,16 +29,14 @@ function Footer() {
                     <ul>
                         <li><Link to="/faq">FAQ</Link></li>
                         <li><Link to="/order-tracking">Order Tracking</Link></li>
-                        <li><Link to="/shipping-returns">Shipping & Returns</Link></li>
-                        <li><Link to="/payment-options">Payment option</Link></li>
                     </ul>
                 </div>
 
                 <div className="footer-section links">
                     <h3>Products</h3>    
                     <ul>
-                        <li><Link to="/dolls">Dolls</Link></li>
-                        <li><Link to="/emotion">Emotion</Link></li>
+                        <li><Link to="/doll-type">Dolls</Link></li>
+                        <li><Link to="/characters">Characters</Link></li>
                     </ul>
                 </div>
 
@@ -48,7 +46,6 @@ function Footer() {
                         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FaFacebook /></a>
                         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><FaInstagram /></a>
                         <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><FaTiktok /></a>
-                        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><FaYoutube /></a>
                     </div>
                 </div>
             </div>
