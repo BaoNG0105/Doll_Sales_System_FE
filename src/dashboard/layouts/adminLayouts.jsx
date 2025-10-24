@@ -1,4 +1,5 @@
 import "../../dashboard/static/css/dashboard.css";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 // Adminlayouts.jsx — React + Ant Design (JavaScript)
 import React, { useState } from "react";
 import {
@@ -12,7 +13,6 @@ import {
   TeamOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme, Row, Col, Card, Statistic } from "antd";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import {
   PieChart,
   Pie,
@@ -37,23 +37,13 @@ const sideNav = [
     label: "Dashboard Overview",
   },
 
-  // Nhóm Admin
+  //Admin
   { key: "admin-1", icon: <UserOutlined />, label: "Dolls Management" },
-  // { key: "admin-2", icon: <UserOutlined />, label: "Feedback Management" },
+  { key: "admin-2", icon: <UserOutlined />, label: "Characters Management" },
   { key: "admin-3", icon: <UserOutlined />, label: "Order Management" },
 
-  // Nhóm Manager~
+  //Manager~
   { key: "manager-1", icon: <LaptopOutlined />, label: "User Management" },
-  {
-    key: "manager-2",
-    icon: <DollarOutlined />,
-    label: "Revenue Tracking & Sales Dashboard",
-  },
-  {
-    key: "manager-3",
-    icon: <ShoppingCartOutlined />,
-    label: "Warranty & Return Policy Setup",
-  },
 ];
 
 // Demo data cho dashboard
@@ -82,17 +72,13 @@ export default function Adminlayouts() {
   const selectedKey =
     location.pathname.includes("/dashboard/dollsManager")
       ? "admin-1"
-      : location.pathname.includes("/dashboard/feedback")
-      ? "admin-2"
-      : location.pathname.includes("/dashboard/orders")
-      ? "admin-3"
-      : location.pathname.includes("/dashboard/users")
-      ? "manager-1"
-      : location.pathname.includes("/dashboard/revenue")
-      ? "manager-2"
-      : location.pathname.includes("/dashboard/warranty")
-      ? "manager-3"
-      : "dashboard";
+      : location.pathname.includes("/dashboard/character-manager")
+        ? "admin-2"
+        : location.pathname.includes("/dashboard/orders")
+          ? "admin-3"
+          : location.pathname.includes("/dashboard/users")
+            ? "manager-3"
+            : "dashboard";
 
   // điều hướng khi click menu
   const onMenuClick = (e) => {
@@ -104,19 +90,13 @@ export default function Adminlayouts() {
         navigate("/dashboard/dollsManager");
         break;
       case "admin-2":
-        navigate("/dashboard/feedback");
+        navigate("/dashboard/character-manager");
         break;
       case "admin-3":
         navigate("/dashboard/orders");
         break;
       case "manager-1":
         navigate("/dashboard/users");
-        break;
-      case "manager-2":
-        navigate("/dashboard/revenue");
-        break;
-      case "manager-3":
-        navigate("/dashboard/warranty");
         break;
       default:
         break;
@@ -226,6 +206,7 @@ export default function Adminlayouts() {
           theme="light"
           trigger={null}   // ✨ ẩn icon thu gọn mặc định ở góc dưới
         >
+
           {/* Nút toggle custom đặt ở trên */}
           <div className="admin__siderTop">
             <Button
@@ -260,7 +241,7 @@ export default function Adminlayouts() {
             style={{ background: colorBgContainer }}
           >
             {location.pathname === "/dashboard" ||
-            location.pathname === "/dashboard/"
+              location.pathname === "/dashboard/"
               ? renderDashboardContent()
               : <Outlet />}
           </Content>
