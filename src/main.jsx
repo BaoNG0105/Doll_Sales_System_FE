@@ -27,12 +27,11 @@ import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
 
 // Admin
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
+import CharacterManager from './dashboard/templates/characterManager.jsx';
 import DollsManager from './dashboard/templates/dollsManager.jsx';
 import FeedbackManager from './dashboard/templates/feedbackManager.jsx';
 import OrdersManager from './dashboard/templates/orderManager.jsx';
 import UserManager from './dashboard/templates/userManager.jsx';
-import RevenueTracking from './dashboard/templates/revenueTracking.jsx';
-import WarrantyPolicy from './dashboard/templates/warrantyPolicy.jsx';
 
 const router = createBrowserRouter([
   {
@@ -90,12 +89,12 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Adminlayouts />,
     children: [
+
       { path: "dollsManager", element: <DollsManager /> },
+      { path: "character-manager", element: <CharacterManager /> },
       { path: "users", element: <UserManager /> },
       { path: "feedback", element: <FeedbackManager /> },
-      { path: "orders", element: <OrdersManager /> },
-      { path: "revenue", element: <RevenueTracking /> },       
-      { path: "warranty", element: <WarrantyPolicy /> },       
+      { path: "orders", element: <OrdersManager /> },   
     ],
   }
 
