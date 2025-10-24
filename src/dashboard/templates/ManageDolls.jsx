@@ -43,7 +43,7 @@ const seedProducts = [
   { id: 6, name: "Tiger Doll",  description: "Brave doll for adventurous playtime.",    price: "190.000đ", image: "" },
 ];
 
-export default function DollsManager({ initial = seedProducts, onChange }) {
+export default function ManageDolls({ initial = seedProducts, onChange }) {
   const [list, setList] = useState(initial);
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);

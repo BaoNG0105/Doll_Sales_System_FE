@@ -27,11 +27,10 @@ import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
 
 // Admin
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
-import CharacterManager from './dashboard/templates/characterManager.jsx';
-import DollsManager from './dashboard/templates/dollsManager.jsx';
-import FeedbackManager from './dashboard/templates/feedbackManager.jsx';
-import OrdersManager from './dashboard/templates/orderManager.jsx';
-import UserManager from './dashboard/templates/userManager.jsx';
+import ManageCharacters from './dashboard/templates/ManageCharacters.jsx';
+import ManageDolls from './dashboard/templates/ManageDolls.jsx';
+import ManageOrders from './dashboard/templates/ManageOrders.jsx';
+import ManageUsers from './dashboard/templates/ManageUsers.jsx';
 
 const router = createBrowserRouter([
   {
@@ -90,11 +89,10 @@ const router = createBrowserRouter([
     element: <Adminlayouts />,
     children: [
 
-      { path: "dollsManager", element: <DollsManager /> },
-      { path: "character-manager", element: <CharacterManager /> },
-      { path: "users", element: <UserManager /> },
-      { path: "feedback", element: <FeedbackManager /> },
-      { path: "orders", element: <OrdersManager /> },   
+      { path: "manage-dolls", element: <ManageDolls /> },
+      { path: "manage-characters", element: <ManageCharacters /> },
+      { path: "manage-users", element: <ManageUsers /> },
+      { path: "manage-orders", element: <ManageOrders /> },   
     ],
   }
 

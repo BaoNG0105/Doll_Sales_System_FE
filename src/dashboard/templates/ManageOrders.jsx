@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Table, Select, message } from "antd";
 
-export default function OrdersManager() {
+export default function ManageOrders() {
   const [orders, setOrders] = useState([
     { id: 101, customer: "hoangnam123", product: "Dog Doll", price: "120.000đ", status: "Pending" },
     { id: 102, customer: "namht7", product: "Rabbit Doll", price: "200.000đ", status: "Shipped" },

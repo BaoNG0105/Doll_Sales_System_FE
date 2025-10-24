@@ -26,7 +26,7 @@ import {
 } from "../../service/api.user";
 
 /* -------- Main Component -------- */
-export default function UserManager() {
+export default function ManageUsers() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
