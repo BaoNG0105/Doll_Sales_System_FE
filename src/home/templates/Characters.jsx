@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../static/css/Characters.css';
 import { Link } from 'react-router-dom';
-import { getCharacters } from '../api/api.character.js';
+import { getCharacters } from '../../service/api.character.js';
 
 function Characters() {
   const [characters, setCharacters] = useState([]);

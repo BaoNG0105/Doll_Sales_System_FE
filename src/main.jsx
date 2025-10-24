@@ -40,92 +40,47 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       // Home page
-      {
-        path: "/",
-        element: <Home />,
-      },
+      { path: "/", element: <Home />, },
       // About page
-      {
-        path: "/about",
-        element: <About />,
-      },
+      { path: "/about", element: <About />, },
       // Contact page
-      {
-        path: "/contact",
-        element: <Contact />,
-      },
+      { path: "/contact", element: <Contact />, },
       // Privacy Policy page
-      {
-        path: "/privacy-policy",
-        element: <Privacy />,
-      },
+      { path: "/privacy-policy", element: <Privacy />, },
       // Terms of Service page
-      {
-        path: "/terms-of-service",
-        element: <Terms />,
-      },
+      { path: "/terms-of-service", element: <Terms />, },
       // Menu page
-      {
-        path: "/products",
-        element: <Menu />,
-      },
-      // Trang chọn loại doll
-      {
-        path: "/doll-type",
-        element: <DollType />,
-      },
-      {
-        path: "/doll-type/:id",
-        element: <DollModel />,
-      },
-      {
-        path: "/doll-detail/:id",
-        element: <DollDetail />,
-      },
-      // Characters library page
-      {
-        path: "/characters",
-        element: <Characters />,
-      },
+      { path: "/products", element: <Menu />, },
+      // Doll Type page
+      { path: "/doll-type", element: <DollType />, },
+      // Doll Model page
+      {path: "/doll-type/:id", element: <DollModel />, },
+      // Doll Detail page
+      { path: "/doll-detail/:id", element: <DollDetail />, },
+      // Characters page
+      {path: "/characters", element: <Characters />, },
       // Character Detail page
-      {
-        path: "/characters/:id",
-        element: <CharacterDetail />,
-      },
+      { path: "/characters/:id", element: <CharacterDetail />, },
       // Profile page
-      {
-        path: "/profile",
-        element: <Profile />,
-      },
+      { path: "/profile", element: <Profile />, },
       // 404 Not Found page
-      {
-        path: "*",
-        element: <Error />,
-      },
+      { path: "*", element: <Error />, },
     ],
   },
 
   //Login page
   {
-    path: "/login",
     element: <AuthLayout />,
     children: [
-      {
-        path: "/login",
-        element: <Login />,
-      },
+      {path: "/login", element: <Login />, },
     ],
   },
 
   //Register Page
   {
-    path: "/register",
     element: <AuthLayout />,
     children: [
-      {
-        path: "/register",
-        element: <Register />,
-      },
+      {path: "/register", element: <Register />, },
     ],
   },
 
@@ -139,8 +94,8 @@ const router = createBrowserRouter([
       { path: "users", element: <UserManager /> },
       { path: "feedback", element: <FeedbackManager /> },
       { path: "orders", element: <OrdersManager /> },
-      { path: "revenue", element: <RevenueTracking /> },       // 👈 mới
-      { path: "warranty", element: <WarrantyPolicy /> },       // 👈 mới
+      { path: "revenue", element: <RevenueTracking /> },       
+      { path: "warranty", element: <WarrantyPolicy /> },       
     ],
   }
 
