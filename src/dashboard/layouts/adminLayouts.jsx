@@ -87,16 +87,16 @@ export default function Adminlayouts() {
         navigate("/dashboard");
         break;
       case "admin-1":
-        navigate("/dashboard/dollsManager");
+        navigate("/dashboard/manage-dolls");
         break;
       case "admin-2":
-        navigate("/dashboard/character-manager");
+        navigate("/dashboard/manage-characters");
         break;
       case "admin-3":
-        navigate("/dashboard/orders");
+        navigate("/dashboard/manage-orders");
         break;
       case "manager-1":
-        navigate("/dashboard/users");
+        navigate("/dashboard/manage-users");
         break;
       default:
         break;

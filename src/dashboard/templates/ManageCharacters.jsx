@@ -38,7 +38,7 @@ function colorFromString(str = "") {
     return `hsl(${hue}deg 70% 45%)`;
 }
 
-export default function CharacterManager() {
+export default function ManageCharacters() {
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [q, setQ] = useState("");
