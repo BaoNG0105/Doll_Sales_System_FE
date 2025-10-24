@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { FaShoppingCart, FaMoneyBillWave, FaPlus, FaMinus } from 'react-icons/fa';
-import { getDollModelById, getDollVariantsByDollModelId } from '../api/api.doll';
+import { getDollModelById, getDollVariantsByDollModelId } from '../../service/api.doll';
 import '../static/css/DollDetail.css';
 
 function DollDetail() {

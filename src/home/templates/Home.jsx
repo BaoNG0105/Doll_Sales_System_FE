@@ -4,8 +4,8 @@ import '../static/css/Home.css';
 import aboutImage from '../static/img/about.png';
 import backgroundVideo from '../static/video/poster.mp4';
 //api
-import { getCharacters } from '../api/api.character.js';
-import { getDollModels } from '../api/api.doll.js';
+import { getCharacters } from '../../service/api.character.js';
+import { getDollModels } from '../../service/api.doll.js';
 
 function Home() {
   // State for Doll Slider

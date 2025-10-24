@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../static/css/DollType.css';
-import { getDollTypes } from '../api/api.doll'; // Import a function to get doll types
+import { getDollTypes } from '../../service/api.doll'; // Import a function to get doll types
 
 function Dolls() {
   const [dollTypes, setDollTypes] = useState([]);

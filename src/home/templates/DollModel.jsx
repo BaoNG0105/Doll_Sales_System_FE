@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getDollModelsByDollTypeId } from '../api/api.doll';
+import { getDollModelsByDollTypeId } from '../../service/api.doll';
 import '../static/css/Dolls.css'; // Reusing the CSS
 
 function DollModel() {

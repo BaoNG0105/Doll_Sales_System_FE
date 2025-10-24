@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
-import { getCharacterById, getCharacterPackagesByCharacterId } from '../api/api.character.js'; // Import the API functions
+import { getCharacterById, getCharacterPackagesByCharacterId } from '../../service/api.character.js'; // Import the API functions
 import '../static/css/CharacterDetail.css';
 
 function CharacterDetail() {
