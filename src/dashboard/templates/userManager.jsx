@@ -1,5 +1,4 @@
-// UserManager.jsx — React + Ant Design (no image imports)
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Button,
   Input,
@@ -8,103 +7,164 @@ import {
   Table,
   Space,
   Popconfirm,
-  Avatar,
   message,
+  Radio,
+  Tag,
 } from "antd";
 import {
   PlusOutlined,
-  EditOutlined,
   DeleteOutlined,
   SearchOutlined,
+  UnlockOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
+import {
+  getUsers,
+  postUser,
+  pathUser,
+  deleteUser,
+} from "../../service/api.user";
 
-/* -------- Helpers -------- */
-function getInitials(name = "") {
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0]?.slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-}
-function colorFromString(str = "") {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
-  const hue = h % 360;
-  return `hsl(${hue}deg 70% 45%)`;
-}
-
-/* -------- Demo data -------- */
-const seedUsers = [
-  { id: 1, name: "Alice Nguyen", email: "alice@example.com", role: "Admin", avatar: "" },
-  { id: 2, name: "Bob Tran", email: "bob@example.com", role: "User", avatar: "" },
-  { id: 3, name: "Charlie Le", email: "charlie@example.com", role: "Editor", avatar: "" },
-  { id: 4, name: "David Pham", email: "david@example.com", role: "User", avatar: "" },
-];
-
-export default function UserManager({ initial = seedUsers, onChange }) {
-  const [list, setList] = useState(initial);
+/* -------- Main Component -------- */
+export default function UserManager() {
+  const [list, setList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [q, setQ] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
   const [open, setOpen] = useState(false);
-  const [editing, setEditing] = useState(null);
   const [form] = Form.useForm();
+
+  const fetchAndSetUsers = async () => {
+    setLoading(true);
+    try {
+      const data = await getUsers();
+      setList(data || []);
+    } catch (error) {
+      message.error("Failed to fetch users.");
+      console.error("Error fetching users:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAndSetUsers();
+  }, []);
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
-    if (!s) return list;
-    return list.filter(
-      (u) =>
-        u.name.toLowerCase().includes(s) ||
-        u.email.toLowerCase().includes(s) ||
-        (u.role || "").toLowerCase().includes(s)
-    );
-  }, [q, list]);
+    return list.filter((user) => {
+      const matchesRole =
+        roleFilter === "all" || user.role.toLowerCase() === roleFilter;
+      const matchesSearch =
+        !s ||
+        user.userName.toLowerCase().includes(s) ||
+        user.email.toLowerCase().includes(s) ||
+        (user.phones || "").toLowerCase().includes(s);
+      return matchesRole && matchesSearch;
+    });
+  }, [q, list, roleFilter]);
+
+  const handleToggleStatus = async (user) => {
+    try {
+      const newStatus = user.status === "Active" ? "DeActive" : "Active";
+      await pathUser(user.userID, { status: newStatus });
+      message.success(`User status changed successfully!`);
+      fetchAndSetUsers();
+    } catch (error) {
+      message.error("Failed to change user status.");
+      console.error("Error toggling user status:", error);
+    }
+  };
+
+  const handleDelete = async (userId) => {
+    try {
+      await deleteUser(userId);
+      message.success("User soft deleted successfully!");
+      fetchAndSetUsers();
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      message.error("Failed to delete user.");
+    }
+  };
 
   const columns = [
     {
-      title: "AVATAR",
-      dataIndex: "avatar",
-      width: 90,
-      render: (_, record) => {
-        const initials = getInitials(record.name);
-        return record.avatar ? (
-          <Avatar
-            src={record.avatar}
-            shape="circle"
-            size={48}
-          />
-        ) : (
-          <Avatar
-            shape="circle"
-            size={48}
-            style={{
-              background: colorFromString(record.name),
-              color: "#fff",
-              fontWeight: 700,
-            }}
-          >
-            {initials}
-          </Avatar>
-        );
-      },
+      title: "ID",
+      dataIndex: "userID",
+      key: "userID",
+      width: 80,
+      align: "center",
     },
-    { title: "NAME", dataIndex: "name" },
-    { title: "EMAIL", dataIndex: "email" },
-    { title: "ROLE", dataIndex: "role", width: 120 },
+    {
+      title: "USER",
+      dataIndex: "userName",
+      key: "userName",
+      align: "center",
+    },
+    { title: "EMAIL", dataIndex: "email", key: "email", align: "center" },
+    { title: "PHONES", dataIndex: "phones", key: "phones", align: "center" },
+    {
+      title: "ROLE",
+      dataIndex: "role",
+      key: "role",
+      align: "center",
+      render: (role) => (
+        <Tag
+          color={
+            role === "admin"
+              ? "volcano"
+              : role === "manager"
+              ? "gold"
+              : "geekblue"
+          }
+        >
+          {role.toUpperCase()}
+        </Tag>
+      ),
+    },
+    {
+      title: "STATUS",
+      dataIndex: "isDeleted",
+      key: "isDeleted",
+      align: "center",
+      render: (isDeleted) =>
+        isDeleted ? (
+          <Tag color="red">Blocked</Tag>
+        ) : (
+          <Tag color="green">Active</Tag>
+        ),
+    },
     {
       title: "ACTIONS",
+      key: "actions",
       width: 120,
-      render: (_, r) => (
+      align: "center",
+      render: (_, record) => (
         <Space>
-          <Button
-            className="btn-pill btn-edit"
-            icon={<EditOutlined />}
-            onClick={() => handleEdit(r)}
-          />
           <Popconfirm
-            title="Delete this user?"
+            title={`Are you sure to ${
+              record.isDeleted ? "unlock" : "lock"
+            } this user?`}
+            onConfirm={() => handleToggleStatus(record)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              className="btn-pill"
+              icon={record.isDeleted ? <UnlockOutlined /> : <LockOutlined />}
+            />
+          </Popconfirm>
+          <Popconfirm
+            title="Delete this user permanently?"
             okText="Delete"
             okButtonProps={{ danger: true }}
-            onConfirm={() => handleDelete(r.id)}
+            onConfirm={() => handleDelete(record.userID)}
           >
-            <Button className="btn-pill btn-danger" icon={<DeleteOutlined />} />
+            <Button
+              className="btn-pill btn-danger"
+              icon={<DeleteOutlined />}
+            />
           </Popconfirm>
         </Space>
       ),
@@ -112,56 +172,47 @@ export default function UserManager({ initial = seedUsers, onChange }) {
   ];
 
   function handleAdd() {
-    setEditing(null);
     form.resetFields();
     setOpen(true);
   }
-  function handleEdit(rec) {
-    setEditing(rec);
-    form.setFieldsValue(rec);
-    setOpen(true);
-  }
-  function handleDelete(id) {
-    const next = list.filter((x) => x.id !== id);
-    setList(next);
-    onChange?.(next);
-    message.success("User deleted");
-  }
+
   function handleOk() {
-    form.validateFields().then((values) => {
-      if (editing) {
-        const next = list.map((x) =>
-          x.id === editing.id ? { ...editing, ...values } : x
-        );
-        setList(next);
-        onChange?.(next);
-        message.success("User updated");
-      } else {
-        const next = [...list, { ...values, id: (list.at(-1)?.id || 0) + 1 }];
-        setList(next);
-        onChange?.(next);
-        message.success("User added");
+    form.validateFields().then(async (values) => {
+      try {
+        await postUser(values);
+        message.success("User added successfully");
+        setOpen(false);
+        form.resetFields();
+        fetchAndSetUsers();
+      } catch (error) {
+        console.error("Error saving user:", error);
+        message.error("An error occurred. Please try again.");
       }
-      setOpen(false);
-      setEditing(null);
-      form.resetFields();
     });
   }
+
   function handleCancel() {
     setOpen(false);
-    setEditing(null);
-    form.resetFields();
   }
 
   return (
     <div className="panel" style={{ padding: 16 }}>
-      <div className="panel__header">
-        <h2>Users</h2>
-        <div style={{ display: "flex", gap: 8 }}>
+      <div className="panel__header" style={{ marginBottom: 16 }}>
+        <h2 style={{ fontSize: "30px", marginBottom: 16 }}>
+          Users Management
+        </h2>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
           <Input
             allowClear
             prefix={<SearchOutlined />}
-            placeholder="Search by name/email/role…"
+            placeholder="Search by name, email, phone..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
             style={{ width: 320, background: "#fff" }}
@@ -174,29 +225,44 @@ export default function UserManager({ initial = seedUsers, onChange }) {
             Add User
           </Button>
         </div>
+        <Radio.Group
+          onChange={(e) => setRoleFilter(e.target.value)}
+          value={roleFilter}
+          style={{ marginTop: 16 }}
+        >
+          <Radio.Button value="all">All</Radio.Button>
+          <Radio.Button value="admin">Admin</Radio.Button>
+          <Radio.Button value="manager">Manager</Radio.Button>
+          <Radio.Button value="customer">Customer</Radio.Button>
+        </Radio.Group>
       </div>
 
       <Table
-        rowKey="id"
+        rowKey="userID"
         columns={columns}
         dataSource={filtered}
         pagination={{ pageSize: 5, showSizeChanger: false }}
         size="middle"
+        loading={loading}
       />
 
       <Modal
-        title={editing ? "Edit User" : "Add User"}
+        title="Add User"
         open={open}
         onOk={handleOk}
         onCancel={handleCancel}
-        okText={editing ? "Save" : "Add"}
+        okText="Add"
       >
         <Form
           layout="vertical"
           form={form}
-          initialValues={{ name: "", email: "", role: "User", avatar: "" }}
+          initialValues={{ role: "customer" }}
         >
-          <Form.Item label="Name" name="name" rules={[{ required: true }]}>
+          <Form.Item
+            label="User Name"
+            name="userName"
+            rules={[{ required: true }]}
+          >
             <Input placeholder="e.g., John Doe" />
           </Form.Item>
           <Form.Item
@@ -204,17 +270,28 @@ export default function UserManager({ initial = seedUsers, onChange }) {
             name="email"
             rules={[{ required: true, type: "email" }]}
           >
-            <Input placeholder="e.g., john@example.com" />
-          </Form.Item>
-          <Form.Item label="Role" name="role" rules={[{ required: true }]}>
-            <Input placeholder="e.g., Admin / User / Editor" />
+            <Input placeholder="e.g., john.doe@example.com" />
           </Form.Item>
           <Form.Item
-            label="Avatar URL"
-            name="avatar"
-            tooltip="Để trống sẽ dùng avatar chữ tự sinh."
+            label="Password"
+            name="password"
+            rules={[{ required: true }]}
           >
-            <Input placeholder="https://..." />
+            <Input.Password placeholder="Enter a strong password" />
+          </Form.Item>
+          <Form.Item
+            label="Phone Number"
+            name="phones"
+            rules={[{ required: true }]}
+          >
+            <Input placeholder="e.g., 0912345678" />
+          </Form.Item>
+          <Form.Item label="Role" name="role" rules={[{ required: true }]}>
+            <Radio.Group>
+              <Radio value="customer">Customer</Radio>
+              <Radio value="manager">Manager</Radio>
+              <Radio value="admin">Admin</Radio>
+            </Radio.Group>
           </Form.Item>
         </Form>
       </Modal>
