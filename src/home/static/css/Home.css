@@ -473,3 +473,35 @@
     transform: scale(1.05);
 }
 
+/* Collaborator Section */
+.collaborator-section {
+    padding: 4rem 0;
+    text-align: center;
+  }
+  
+  .collaborator-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .logo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem; /* Add space around logos */
+  }
+  
+  .logo-item img {
+    height: 80px; /* Set a consistent height for all logos */
+    width: auto;
+    max-width: 200px;
+    object-fit: contain;
+    filter: grayscale(100%); /* Make logos grayscale initially */
+    opacity: 0.6;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+  }
+  
+  .logo-item:hover img {
+    filter: grayscale(0%); /* Show color on hover */
+    opacity: 1;
+  }

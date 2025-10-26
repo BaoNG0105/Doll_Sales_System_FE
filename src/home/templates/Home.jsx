@@ -3,9 +3,24 @@ import { Link } from 'react-router-dom';
 import '../static/css/Home.css';
 import aboutImage from '../static/img/about.png';
 import backgroundVideo from '../static/video/poster.mp4';
+// Import collaborator logos (bạn cần tạo thư mục và thêm các file này)
+import logo1 from '../static/img/logo1.png';
+import logo2 from '../static/img/logo2.png';
+import logo3 from '../static/img/logo3.png';
+import logo4 from '../static/img/logo4.png';
+import logo5 from '../static/img/logo5.png';
 //api
 import { getCharacters } from '../../service/api.character.js';
 import { getDollModels } from '../../service/api.doll.js';
+
+// Sample collaborator data
+const collaborators = [
+  { id: 1, name: 'Brand One', image: logo1 },
+  { id: 2, name: 'Brand Two', image: logo2 },
+  { id: 3, name: 'Brand Three', image: logo3 },
+  { id: 4, name: 'Brand Four', image: logo4 },
+  { id: 5, name: 'Brand Five', image: logo5 },
+];
 
 function Home() {
   // State for Doll Slider
@@ -206,6 +221,26 @@ function Home() {
             </div>
           </div>
         )}
+      </section>
+
+      {/* Collaborator Section */}
+      <section className="collaborator-section">
+        <h2>Our Collaborators</h2>
+        <div className="product-slider-container">
+          <div className="product-slider">
+            {/* Render the list twice for a seamless loop */}
+            {collaborators.map((logo) => (
+              <div key={`${logo.id}-1`} className="logo-item">
+                <img src={logo.image} alt={logo.name} />
+              </div>
+            ))}
+            {collaborators.map((logo) => (
+              <div key={`${logo.id}-2`} className="logo-item">
+                <img src={logo.image} alt={logo.name} />
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     </div>
   );
