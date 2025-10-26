@@ -14,6 +14,7 @@ import About from './home/templates/About.jsx';
 import Contact from './home/templates/Contact.jsx';
 import Privacy from './home/templates/Privacy.jsx';
 import Terms from './home/templates/Terms.jsx';
+import FAQ from './home/templates/FAQ.jsx';
 import Menu from './home/templates/Menu.jsx';
 import DollType from './home/templates/DollType.jsx';
 import DollModel from './home/templates/DollModel.jsx';
@@ -47,6 +48,8 @@ const router = createBrowserRouter([
       { path: "/privacy-policy", element: <Privacy />, },
       // Terms of Service page
       { path: "/terms-of-service", element: <Terms />, },
+      // FAQ page
+      { path: "/faq", element: <FAQ />, },
       // Menu page
       { path: "/products", element: <Menu />, },
       // Doll Type page
