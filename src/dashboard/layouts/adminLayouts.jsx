@@ -40,10 +40,10 @@ const sideNav = [
   //Admin
   { key: "admin-1", icon: <UserOutlined />, label: "Dolls Management" },
   { key: "admin-2", icon: <UserOutlined />, label: "Characters Management" },
-  { key: "admin-3", icon: <UserOutlined />, label: "Order Management" },
+  { key: "admin-3", icon: <UserOutlined />, label: "Orders Management" },
 
   //Manager~
-  { key: "manager-1", icon: <LaptopOutlined />, label: "User Management" },
+  { key: "manager-1", icon: <LaptopOutlined />, label: "Users Management" },
 ];
 
 // Demo data cho dashboard
@@ -72,11 +72,11 @@ export default function Adminlayouts() {
   const selectedKey =
     location.pathname.includes("/dashboard/dollsManager")
       ? "admin-1"
-      : location.pathname.includes("/dashboard/character-manager")
+      : location.pathname.includes("/dashboard/manage-characters")
         ? "admin-2"
-        : location.pathname.includes("/dashboard/orders")
+        : location.pathname.includes("/dashboard/manage-orders")
           ? "admin-3"
-          : location.pathname.includes("/dashboard/users")
+          : location.pathname.includes("/dashboard/manage-users")
             ? "manager-3"
             : "dashboard";
 
