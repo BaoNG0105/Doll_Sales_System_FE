@@ -6,11 +6,13 @@
     width: 100%;
     box-sizing: border-box;
 }
+
 .footer-container {
     max-width: 1280px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); */
+    grid-template-columns: 1fr 1fr 1.5fr; /* Make the last column wider */
     gap: 2rem;
     text-align: left;
 }
@@ -54,6 +56,13 @@
 
 .footer-section.links ul li a:hover {
     color: #87ceeb;
+}
+
+.footer-section.map .map-iframe {
+    width: 400px;
+    height: 300px;
+    border: 0;
+    border-radius: 8px;
 }
 
 .social-icons {

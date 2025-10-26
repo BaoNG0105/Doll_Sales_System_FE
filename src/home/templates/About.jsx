@@ -55,7 +55,7 @@ function About() {
           <p>
             Ready to find a new friend? Explore our diverse collection of dolls and characters.
           </p>
-          <Link to="/doll-type" className="btn-primary">
+          <Link to="/products" className="btn-primary">
             Shop Now
           </Link>
         </section>
