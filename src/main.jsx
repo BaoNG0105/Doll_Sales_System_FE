@@ -30,6 +30,7 @@ import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
 import ManageCharacters from './dashboard/templates/ManageCharacters.jsx';
 import ManageDolls from './dashboard/templates/ManageDolls.jsx';
 import ManageOrders from './dashboard/templates/ManageOrders.jsx';
+import ManageCharacterOrders from './dashboard/templates/ManageCharacterOrders.jsx';
 import ManageUsers from './dashboard/templates/ManageUsers.jsx';
 
 const router = createBrowserRouter([
@@ -90,11 +91,11 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Adminlayouts />,
     children: [
-
       { path: "manage-dolls", element: <ManageDolls /> },
       { path: "manage-characters", element: <ManageCharacters /> },
       { path: "manage-users", element: <ManageUsers /> },
-      { path: "manage-orders", element: <ManageOrders /> },   
+      { path: "manage-orders", element: <ManageOrders /> }, 
+      { path: "manage-character-orders", element: <ManageCharacterOrders /> },
     ],
   }
 

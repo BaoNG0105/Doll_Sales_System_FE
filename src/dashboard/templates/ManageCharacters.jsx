@@ -1,28 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-    Button,
-    Input,
-    Modal,
-    Form,
-    Table,
-    Space,
-    Popconfirm,
-    Avatar,
-    message,
-    InputNumber, // Import InputNumber
-} from "antd";
-import {
-    PlusOutlined,
-    EditOutlined,
-    DeleteOutlined,
-    SearchOutlined,
-} from "@ant-design/icons";
-import {
-    getCharacters,
-    postCharacter,
-    pathCharacter,
-    deleteCharacter,
-} from "../../service/api.character";
+import { Button, Input, Modal, Form, Table, Space, Popconfirm, Avatar, message, InputNumber } from "antd";
+import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
+import { getCharacters, postCharacter, pathCharacter, deleteCharacter } from "../../service/api.character";
 
 // Helpers
 function getInitials(name = "") {
@@ -201,8 +180,17 @@ export default function ManageCharacters() {
     return (
         <div className="panel" style={{ padding: 16 }}>
             <div className="panel__header" style={{ marginBottom: 16 }}>
-                <h2 style={{ fontSize: '30px', marginBottom: 16 }} >Characters Management</h2>
-                <div style={{ display: "flex", gap: 8 }}>
+                <h2 style={{ fontSize: "30px", marginBottom: 16 }}>
+                    Characters Management
+                </h2>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        gap: 8,
+                    }}
+                >
                     <Input
                         allowClear
                         prefix={<SearchOutlined />}
