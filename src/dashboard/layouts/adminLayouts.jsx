@@ -2,30 +2,9 @@ import "../../dashboard/static/css/dashboard.css";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 // Adminlayouts.jsx — React + Ant Design (JavaScript)
 import React, { useState } from "react";
-import {
-  LaptopOutlined,
-  UserOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  DashboardOutlined,
-  DollarOutlined,
-  ShoppingCartOutlined,
-  TeamOutlined,
-} from "@ant-design/icons";
+import {OpenAIFilled, HeartFilled, ShoppingCartOutlined, LaptopOutlined, UserOutlined, MenuFoldOutlined, MenuUnfoldOutlined, DashboardOutlined, DollarOutlined, TeamOutlined, } from "@ant-design/icons";
 import { Button, Layout, Menu, theme, Row, Col, Card, Statistic } from "antd";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts";
 
 const { Header, Content, Sider } = Layout;
 
@@ -38,12 +17,13 @@ const sideNav = [
   },
 
   //Admin
-  { key: "admin-1", icon: <UserOutlined />, label: "Dolls Management" },
-  { key: "admin-2", icon: <UserOutlined />, label: "Characters Management" },
-  { key: "admin-3", icon: <UserOutlined />, label: "Orders Management" },
+  { key: "admin-1", icon: <HeartFilled />, label: "Dolls Management" },
+  { key: "admin-2", icon: <OpenAIFilled />, label: "Characters Management" },
+  { key: "admin-3", icon: <ShoppingCartOutlined />, label: "Orders Management" },
+  { key: "admin-4", icon: <ShoppingCartOutlined />, label: "Character Orders Management" },
 
   //Manager~
-  { key: "manager-1", icon: <LaptopOutlined />, label: "Users Management" },
+  { key: "manager-1", icon: <UserOutlined />, label: "Users Management" },
 ];
 
 // Demo data cho dashboard
@@ -76,9 +56,11 @@ export default function Adminlayouts() {
         ? "admin-2"
         : location.pathname.includes("/dashboard/manage-orders")
           ? "admin-3"
-          : location.pathname.includes("/dashboard/manage-users")
-            ? "manager-3"
-            : "dashboard";
+          : location.pathname.includes("/dashboard/manage-character-orders")
+            ? "manager-1"
+            : location.pathname.includes("/dashboard/manage-users")
+              ? "manager-2"
+              : "dashboard";
 
   // điều hướng khi click menu
   const onMenuClick = (e) => {
@@ -94,6 +76,9 @@ export default function Adminlayouts() {
         break;
       case "admin-3":
         navigate("/dashboard/manage-orders");
+        break;
+      case "admin-4":
+        navigate("/dashboard/manage-character-orders");
         break;
       case "manager-1":
         navigate("/dashboard/manage-users");

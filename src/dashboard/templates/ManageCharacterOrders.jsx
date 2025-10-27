@@ -1,33 +1,30 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {Table, Select, message, Button, Popconfirm, Tag, Input, Radio,} from "antd";
+import { Table, Select, message, Button, Popconfirm, Tag, Input, Radio } from "antd";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getOrders, patchOrder, deleteOrder } from "../../service/api.order";
+import { getCharacterOrders, patchCharacterOrder, deleteCharacterOrder } from "../../service/api.order";
 
 const statusOptions = [
-  { value: 0, label: "Pending", color: "gold" },
-  { value: 1, label: "Processing", color: "processing" },
-  { value: 2, label: "Shipped", color: "blue" },
-  { value: 3, label: "Delivered", color: "success" },
-  { value: 4, label: "Canceled", color: "error" },
+  { value: 1, label: "Active", color: "success" },
+  { value: 0, label: "Canceled", color: "error" },
 ];
 
-export default function ManageOrders() {
-  const [orders, setOrders] = useState([]);
+export default function ManageCharacterOrders() {
+  const [characterOrders, setCharacterOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [q, setQ] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  const fetchOrders = async () => {
+  const fetchCharacterOrders = async () => {
     setLoading(true);
     try {
-      const data = await getOrders();
+      const data = await getCharacterOrders();
       const formattedData = data.data.map((order) => ({
         ...order,
-        key: order.orderID,
+        key: order.characterOrderID,
       }));
-      setOrders(formattedData);
+      setCharacterOrders(formattedData);
     } catch (error) {
-      message.error("Failed to fetch orders.");
+      message.error("Failed to fetch character orders.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -35,26 +32,27 @@ export default function ManageOrders() {
   };
 
   useEffect(() => {
-    fetchOrders();
+    fetchCharacterOrders();
   }, []);
 
   const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
+    return characterOrders.filter((order) => {
       const matchesStatus =
         statusFilter === "all" || order.status === statusFilter;
       const matchesSearch =
         q.trim() === "" ||
-        order.userName.toLowerCase().includes(q.trim().toLowerCase()) ||
-        String(order.orderID).includes(q.trim());
+        order.characterName.toLowerCase().includes(q.trim().toLowerCase()) ||
+        order.packageName.toLowerCase().includes(q.trim().toLowerCase()) ||
+        String(order.characterOrderID).includes(q.trim());
       return matchesStatus && matchesSearch;
     });
-  }, [orders, q, statusFilter]);
+  }, [characterOrders, q, statusFilter]);
 
   const updateStatus = async (id, status) => {
     try {
-      await patchOrder(id, { status });
+      await patchCharacterOrder(id, { status });
       message.success(`Order ${id} updated successfully.`);
-      fetchOrders();
+      fetchCharacterOrders();
     } catch (error) {
       console.error(error);
       message.error(`Failed to update order ${id}.`);
@@ -63,9 +61,9 @@ export default function ManageOrders() {
 
   const handleDelete = async (id) => {
     try {
-      await deleteOrder(id);
+      await deleteCharacterOrder(id);
       message.success(`Order ${id} deleted successfully.`);
-      fetchOrders();
+      fetchCharacterOrders();
     } catch (error) {
       console.error(error);
       message.error(`Failed to delete order ${id}.`);
@@ -75,20 +73,15 @@ export default function ManageOrders() {
   const columns = [
     {
       title: "Order ID",
-      dataIndex: "orderID",
+      dataIndex: "characterOrderID",
       width: 100,
       align: "center",
     },
-    { title: "Customer", dataIndex: "userName", align: "center" },
-    {
-      title: "Products",
-      dataIndex: "orderItems",
-      align: "center",
-      render: (orderItems) => `${orderItems.length} item(s)`,
-    },
+    { title: "Character Name", dataIndex: "characterName", align: "center" },
+    { title: "Package Name", dataIndex: "packageName", align: "center" },
     {
       title: "Price",
-      dataIndex: "totalAmount",
+      dataIndex: "unitPrice",
       width: 150,
       align: "center",
       render: (price) =>
@@ -106,7 +99,7 @@ export default function ManageOrders() {
         <Select
           defaultValue={status}
           style={{ width: 140 }}
-          onChange={(newStatus) => updateStatus(record.orderID, newStatus)}
+          onChange={(newStatus) => updateStatus(record.characterOrderID, newStatus)}
           bordered={false}
         >
           {statusOptions.map((opt) => (
@@ -118,8 +111,8 @@ export default function ManageOrders() {
       ),
     },
     {
-      title: "Order Date",
-      dataIndex: "orderDate",
+      title: "Created Date",
+      dataIndex: "createdAt",
       align: "center",
       render: (date) => new Date(date).toLocaleDateString("vi-VN"),
     },
@@ -132,7 +125,7 @@ export default function ManageOrders() {
         <Popconfirm
           title="Delete the order"
           description="Are you sure to delete this order?"
-          onConfirm={() => handleDelete(record.orderID)}
+          onConfirm={() => handleDelete(record.characterOrderID)}
           okText="Yes"
           cancelText="No"
         >
@@ -146,7 +139,7 @@ export default function ManageOrders() {
     <div className="panel" style={{ padding: 16 }}>
       <div className="panel__header" style={{ marginBottom: 16 }}>
         <h2 style={{ fontSize: "30px", marginBottom: 16 }}>
-          Orders Management
+          Character Orders Management
         </h2>
         <div
           style={{
@@ -159,7 +152,7 @@ export default function ManageOrders() {
           <Input
             allowClear
             prefix={<SearchOutlined />}
-            placeholder="Search by Order ID, Customer Name..."
+            placeholder="Search by Order ID, Character, Package..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
             style={{ width: 320, background: "#fff" }}
@@ -183,7 +176,7 @@ export default function ManageOrders() {
         columns={columns}
         dataSource={filteredOrders}
         loading={loading}
-        rowKey="orderID"
+        rowKey="characterOrderID"
         pagination={{ pageSize: 5, showSizeChanger: false }}
         size="middle"
       />
