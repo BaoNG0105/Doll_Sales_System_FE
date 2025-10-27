@@ -1,14 +1,45 @@
 import "../../dashboard/static/css/dashboard.css";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
-// Adminlayouts.jsx — React + Ant Design (JavaScript)
 import React, { useState } from "react";
-import {OpenAIFilled, HeartFilled, ShoppingCartOutlined, LaptopOutlined, UserOutlined, MenuFoldOutlined, MenuUnfoldOutlined, DashboardOutlined, DollarOutlined, TeamOutlined, } from "@ant-design/icons";
-import { Button, Layout, Menu, theme, Row, Col, Card, Statistic } from "antd";
-import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts";
+import {
+  OpenAIFilled,
+  HeartFilled,
+  ShoppingCartOutlined,
+  LaptopOutlined,
+  UserOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  DashboardOutlined,
+  DollarOutlined,
+  TeamOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Layout,
+  Menu,
+  theme,
+  Row,
+  Col,
+  Card,
+  Statistic,
+} from "antd";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 
 const { Header, Content, Sider } = Layout;
 
-/* SideNav: Dashboard / Admin / Manager (phẳng, không collapse) */
+// ================== SIDE NAV ==================
 const sideNav = [
   {
     key: "dashboard",
@@ -16,17 +47,19 @@ const sideNav = [
     label: "Dashboard Overview",
   },
 
-  //Admin
-  { key: "admin-1", icon: <HeartFilled />, label: "Dolls Management" },
+  // --- Dolls Management (chia thành 3 trang) ---
+  { key: "admin-type", icon: <HeartFilled />, label: "Manage Doll Types" },
+  { key: "admin-model", icon: <HeartFilled />, label: "Manage Doll Models" },
+  { key: "admin-variant", icon: <HeartFilled />, label: "Manage Doll Variants" },
+
+  // --- Other Management ---
   { key: "admin-2", icon: <OpenAIFilled />, label: "Characters Management" },
   { key: "admin-3", icon: <ShoppingCartOutlined />, label: "Orders Management" },
   { key: "admin-4", icon: <ShoppingCartOutlined />, label: "Character Orders Management" },
-
-  //Manager~
   { key: "manager-1", icon: <UserOutlined />, label: "Users Management" },
 ];
 
-// Demo data cho dashboard
+// ================== DEMO DATA ==================
 const revenueData = [
   { name: "Jan", revenue: 12000000 },
   { name: "Feb", revenue: 18000000 },
@@ -40,36 +73,48 @@ const categoryData = [
 ];
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
+// ================== MAIN COMPONENT ==================
 export default function Adminlayouts() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // sync chọn menu theo URL
+  // Sync menu selection theo URL
   const selectedKey =
-    location.pathname.includes("/dashboard/dollsManager")
-      ? "admin-1"
-      : location.pathname.includes("/dashboard/manage-characters")
-        ? "admin-2"
-        : location.pathname.includes("/dashboard/manage-orders")
-          ? "admin-3"
-          : location.pathname.includes("/dashboard/manage-character-orders")
-            ? "manager-1"
-            : location.pathname.includes("/dashboard/manage-users")
-              ? "manager-2"
-              : "dashboard";
+    location.pathname.includes("/dashboard/manage-doll-types")
+      ? "admin-type"
+      : location.pathname.includes("/dashboard/manage-doll-models")
+        ? "admin-model"
+        : location.pathname.includes("/dashboard/manage-doll-variants")
+          ? "admin-variant"
+          : location.pathname.includes("/dashboard/manage-characters")
+            ? "admin-2"
+            : location.pathname.includes("/dashboard/manage-orders")
+              ? "admin-3"
+              : location.pathname.includes("/dashboard/manage-character-orders")
+                ? "admin-4"
+                : location.pathname.includes("/dashboard/manage-users")
+                  ? "manager-1"
+                  : "dashboard";
 
-  // điều hướng khi click menu
+  // Điều hướng menu
   const onMenuClick = (e) => {
     switch (e.key) {
       case "dashboard":
         navigate("/dashboard");
         break;
-      case "admin-1":
-        navigate("/dashboard/manage-dolls");
+      case "admin-type":
+        navigate("/dashboard/manage-doll-types");
+        break;
+      case "admin-model":
+        navigate("/dashboard/manage-doll-models");
+        break;
+      case "admin-variant":
+        navigate("/dashboard/manage-doll-variants");
         break;
       case "admin-2":
         navigate("/dashboard/manage-characters");
@@ -88,7 +133,7 @@ export default function Adminlayouts() {
     }
   };
 
-  // Nội dung dashboard báo cáo mặc định
+  // ================== DASHBOARD DEFAULT CONTENT ==================
   const renderDashboardContent = () => (
     <div style={{ padding: 16 }}>
       <h2 style={{ marginBottom: 16 }}>📊 Dashboard Report</h2>
@@ -107,20 +152,12 @@ export default function Adminlayouts() {
         </Col>
         <Col span={8}>
           <Card>
-            <Statistic
-              title="Orders"
-              value={152}
-              prefix={<ShoppingCartOutlined />}
-            />
+            <Statistic title="Orders" value={152} prefix={<ShoppingCartOutlined />} />
           </Card>
         </Col>
         <Col span={8}>
           <Card>
-            <Statistic
-              title="Active Users"
-              value={320}
-              prefix={<TeamOutlined />}
-            />
+            <Statistic title="Active Users" value={320} prefix={<TeamOutlined />} />
           </Card>
         </Col>
       </Row>
@@ -154,10 +191,7 @@ export default function Adminlayouts() {
                   label
                 >
                   {categoryData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip />
@@ -169,6 +203,7 @@ export default function Adminlayouts() {
     </div>
   );
 
+  // ================== RENDER ==================
   return (
     <Layout className="admin">
       {/* Header */}
@@ -189,10 +224,9 @@ export default function Adminlayouts() {
           onCollapse={setCollapsed}
           breakpoint="lg"
           theme="light"
-          trigger={null}   // ✨ ẩn icon thu gọn mặc định ở góc dưới
+          trigger={null}
         >
-
-          {/* Nút toggle custom đặt ở trên */}
+          {/* Toggle button */}
           <div className="admin__siderTop">
             <Button
               size="small"
@@ -202,6 +236,7 @@ export default function Adminlayouts() {
             />
           </div>
 
+          {/* Menu */}
           <Menu
             className="admin__sideMenu"
             mode="inline"
@@ -221,12 +256,8 @@ export default function Adminlayouts() {
 
         {/* Content */}
         <Layout className="admin__contentWrap">
-          <Content
-            className="admin__content"
-            style={{ background: colorBgContainer }}
-          >
-            {location.pathname === "/dashboard" ||
-              location.pathname === "/dashboard/"
+          <Content className="admin__content" style={{ background: colorBgContainer }}>
+            {location.pathname === "/dashboard" || location.pathname === "/dashboard/"
               ? renderDashboardContent()
               : <Outlet />}
           </Content>
