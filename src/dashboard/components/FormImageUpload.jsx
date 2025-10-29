@@ -10,7 +10,7 @@ const FormImageUpload = ({ value, onChange }) => {
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState(value);
 
-    // Cập nhật ảnh khi giá trị từ form thay đổi (khi mở modal edit)
+    // Cập nhật ảnh khi giá trị từ form thay đổi (khi mở modal edit lên)
     useEffect(() => {
         setImageUrl(value);
     }, [value]);
