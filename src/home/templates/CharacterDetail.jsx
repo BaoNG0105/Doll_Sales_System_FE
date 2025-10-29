@@ -13,22 +13,34 @@ function CharacterDetail() {
     const [selectedOption, setSelectedOption] = useState(null);
     const [selectedPackage, setSelectedPackage] = useState(null); // State for the selected package object
 
-    useEffect(() => {
+useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const [characterData, packagesData] = await Promise.all([
+                const [characterResult, packagesResult] = await Promise.allSettled([
                     getCharacterById(id),
                     getCharacterPackagesByCharacterId(id)
                 ]);
-                
-                setCharacter(characterData);
 
-                const validPackages = Array.isArray(packagesData.data) ? packagesData.data : [];
-                setPackages(validPackages);
+                if (characterResult.status === 'fulfilled') {
+                    setCharacter(characterResult.value);
+                } else {
+                    // If character fails to load, we should treat it as a critical error
+                    throw characterResult.reason;
+                }
 
-                if (validPackages.length > 0) {
-                    setSelectedOption(validPackages[0].packageId);
+                if (packagesResult.status === 'fulfilled') {
+                    const packagesData = packagesResult.value;
+                    const validPackages = Array.isArray(packagesData.data) ? packagesData.data : [];
+                    setPackages(validPackages);
+
+                    if (validPackages.length > 0) {
+                        setSelectedOption(validPackages[0].packageId);
+                    }
+                } else {
+                    // Log error for packages but don't block rendering the character
+                    console.error(`Failed to fetch packages for character with id ${id}:`, packagesResult.reason);
+                    setPackages([]); // Set packages to empty array on failure
                 }
 
             } catch (err) {

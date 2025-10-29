@@ -17,8 +17,8 @@ function DollModel() {
           setLoading(true);
           const responseData = await getDollModelsByDollTypeId(id);
           console.log('API Response Data:', responseData); // Thêm dòng này để kiểm tra
-          if (responseData && responseData.data) {
-            setDollModels(responseData.data);
+          if (responseData && responseData) {
+            setDollModels(responseData);
           }
         // If the API also returned the type name, you could set it here.
         // For example: setDollTypeName(data.typeName);

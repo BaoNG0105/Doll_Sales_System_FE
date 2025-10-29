@@ -76,7 +76,7 @@ export const getDollModelById = async (id) => {
 // GET Doll Models by Doll Type ID
 export const getDollModelsByDollTypeId = async (dollTypeId) => {
     try {
-        const response = await api.get(`/doll-models/by-type/${dollTypeId}`);
+        const response = await api.get(`/doll-models/doll-type-id/${dollTypeId}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching doll models for doll type with ID ${dollTypeId}:`, error);
@@ -145,7 +145,7 @@ export const getDollVariants = async (params) => {
 // GET Doll Variants by DollModel ID
 export const getDollVariantsByDollModelId = async (dollModelId) => {
     try {
-        const response = await api.get(`/doll-variants/by-model-id/${dollModelId}`);
+        const response = await api.get(`/doll-variants/doll-model-id/${dollModelId}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching doll variants for doll model with ID ${dollModelId}:`, error);

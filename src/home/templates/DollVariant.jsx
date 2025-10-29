@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { FaShoppingCart, FaMoneyBillWave, FaPlus, FaMinus } from 'react-icons/fa';
+import { FaShoppingCart, FaMoneyBillWave } from 'react-icons/fa';
 import { getDollModelById, getDollVariantsByDollModelId } from '../../service/api.doll';
 import '../static/css/DollDetail.css';
 
@@ -36,8 +36,8 @@ function DollDetail() {
                     getDollVariantsByDollModelId(id)
                 ]);
 
-                if (modelRes && modelRes.data) {
-                    setDollModel(modelRes.data);
+                if (modelRes && modelRes) {
+                    setDollModel(modelRes);
                 } else {
                     throw new Error('Doll model not found.');
                 }
