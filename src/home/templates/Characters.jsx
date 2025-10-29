@@ -11,7 +11,7 @@ function Characters() {
       try {
         const data = await getCharacters();
         console.log('Fetched characters data:', data); // Debug log
-        setCharacters(data);
+        setCharacters(data.items);
       } catch (error) {
         console.error('Failed to fetch characters:', error);
         // Handle error if needed

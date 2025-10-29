@@ -10,7 +10,7 @@ function Dolls() {
     const fetchDollTypes = async () => {
       try {
         const data = await getDollTypes();
-        setDollTypes(data);
+        setDollTypes(data.items);
       } catch (error) {
         console.error("Failed to fetch doll types:", error);
       }
@@ -28,12 +28,12 @@ function Dolls() {
           <p>Choose a category to explore our beautiful dolls.</p>
         </div>
       </section>
+      {/* Menu Section */}
       <div className="menu-container">
-        {dollTypes.map((dollType) => (
+        {Array.isArray(dollTypes) && dollTypes.map((dollType) => (
           <Link
             to={`/doll-type/${dollType.dollTypeID}`}
             className="menu-card"
-            key={dollType.dollTypeID}
           >
             <img
               src={dollType.image}

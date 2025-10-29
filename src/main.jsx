@@ -22,10 +22,11 @@ import DollType from './home/templates/DollType.jsx';
 import DollModel from './home/templates/DollModel.jsx';
 import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
-import DollDetail from './home/templates/DollDetail.jsx';
+import DollVariant from './home/templates/DollVariant.jsx';
 import CharacterDetail from './home/templates/CharacterDetail.jsx';
 import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
 
+// Protected Route
 import ProtectedRoute from './home/components/ProtectedRoute.jsx'; // Đảm bảo bạn đã import ProtectedRoute
 
 // Admin
@@ -63,7 +64,7 @@ const router = createBrowserRouter([
       // Doll Model page
       { path: "/doll-type/:id", element: <DollModel />, },
       // Doll Detail page
-      { path: "/doll-detail/:id", element: <DollDetail />, },
+      { path: "/doll-detail/:id", element: <DollVariant />, },
       // Characters page
       { path: "/characters", element: <Characters />, },
       // Character Detail page
@@ -97,7 +98,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard",
-        element: <Adminlayout />,
+        element: <AdminLayout />,
         children: [
           { path: "overview", element: <DashboardPage />, },
           { path: "manage-doll-types", element: <ManageDollTypes /> },

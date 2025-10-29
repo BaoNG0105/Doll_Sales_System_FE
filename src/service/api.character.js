@@ -11,6 +11,17 @@ export const getCharacters = async (params) => {
     }
 };
 
+//Get Character by ID
+export const getCharacterById = async (id) => {
+    try {
+        const response = await api.get(`/characters/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching character with ID ${id}:`, error);
+        throw error;
+    }
+};
+
 //Post Character
 export const postCharacter = async (characterData) => {
     try {
@@ -45,24 +56,14 @@ export const deleteCharacter = async (id) => {
     }
 };
 
-//Get Character by ID
-export const getCharacterById = async (id) => {
-    try {
-        const response = await api.get(`/characters/${id}`);
-        return response.data;
-    } catch (error) {
-        console.error(`Error fetching character with ID ${id}:`, error);
-        throw error;
-    }
-};
 
 //Get Characters packages by character ID
-export const getCharacterPackagesByCharacterId = async (id) => {
+export const getCharacterPackagesByCharacterId = async (characterId) => {
     try {
-        const response = await api.get(`/character-packages/character/${id}`);
+        const response = await api.get(`/character-packages/characters/${characterId}`);
         return response.data;
     } catch (error) {
-        console.error(`Error fetching packages for character with ID ${id}:`, error);
+        console.error(`Error fetching packages for character with ID ${characterId}:`, error);
         throw error;
     }
 };

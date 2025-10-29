@@ -44,8 +44,8 @@ function Home() {
       try {
         setProductLoading(true);
         const responseData = await getDollModels();
-        if (responseData && responseData.data) {
-          setProducts(responseData.data);
+        if (responseData && responseData.items) {
+          setProducts(responseData.items);
         } else {
           setProducts([]);
         }
@@ -65,8 +65,8 @@ function Home() {
       try {
         setCharLoading(true);
         const data = await getCharacters();
-        if (Array.isArray(data)) {
-          setCharacters(data);
+        if (Array.isArray(data.items)) {
+          setCharacters(data.items);
         } else {
           setCharacters([]);
         }
@@ -157,7 +157,7 @@ function Home() {
 
       {/* Doll Section */}
       <section className="product-section">
-        <h2>Featured Products</h2>
+        <h2>Featured Dolls</h2>
         {productLoading ? (
           <p>Loading products...</p>
         ) : productError ? (
@@ -201,7 +201,7 @@ function Home() {
             <div className="product-slider">
               {/* Render the list twice for a seamless loop */}
               {characters.map((character) => (
-                <Link to={`/character-detail/${character.characterID}`} key={`${character.characterID}-1`} className="product-card">
+                <Link to={`/characters/${character.characterId}`} key={`${character.characterID}-1`} className="product-card">
                   <img src={character.image} alt={character.name} />
                   <div className="product-card-content">
                     <h3>{character.name}</h3>
@@ -210,7 +210,7 @@ function Home() {
                 </Link>
               ))}
               {characters.map((character) => (
-                <Link to={`/character-detail/${character.characterID}`} key={`${character.characterID}-2`} className="product-card">
+                <Link to={`/characters/${character.characterId}`} key={`${character.characterID}-2`} className="product-card">
                   <img src={character.image} alt={character.name} />
                   <div className="product-card-content">
                     <h3>{character.name}</h3>
