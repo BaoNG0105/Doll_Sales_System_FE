@@ -18,6 +18,8 @@ import {
     deleteDollType,
 } from "../../service/api.doll";
 import { useDebounce } from "use-debounce";
+import FormImageUpload from '../components/FormImageUpload';
+
 
 export default function ManageDollTypes() {
     const [list, setList] = useState([]);
@@ -220,8 +222,8 @@ export default function ManageDollTypes() {
                     <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item name="image" label="Image URL">
-                        <Input />
+                    <Form.Item name="image" label="Image">
+                        <FormImageUpload />
                     </Form.Item>
                     <Form.Item name="description" label="Description">
                         <Input.TextArea rows={4} />
