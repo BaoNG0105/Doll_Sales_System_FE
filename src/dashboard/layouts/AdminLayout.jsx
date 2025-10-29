@@ -11,7 +11,7 @@ import {
   BarChartOutlined, //Icon Dashboard
 } from "@ant-design/icons";
 import { Layout, Menu, Button, Typography } from "antd"; // Thêm Typography
-import "../static/css/AdminLayouts.css";
+import "../static/css/AdminLayout.css";
 
 // Redux
 import { useDispatch } from "react-redux";
