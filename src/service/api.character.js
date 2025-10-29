@@ -1,9 +1,9 @@
 import api from '../config/axios';
 
 //Get Characters
-export const getCharacters = async () => {
+export const getCharacters = async (params) => {
     try {
-        const response = await api.get('/Character');
+        const response = await api.get('/characters', { params });
         return response.data;
     } catch (error) {
         console.error('Error fetching characters:', error);
@@ -14,7 +14,7 @@ export const getCharacters = async () => {
 //Post Character
 export const postCharacter = async (characterData) => {
     try {
-        const response = await api.post('/Character', characterData);
+        const response = await api.post('/characters', characterData);
         return response.data;
     } catch (error) {
         console.error('Error creating character:', error);
@@ -25,7 +25,7 @@ export const postCharacter = async (characterData) => {
 //Path Character
 export const pathCharacter = async (id, characterData) => {
     try {
-        const response = await api.patch(`/Character/${id}`, characterData);
+        const response = await api.patch(`/characters/${id}`, characterData);
         return response.data;
     } catch (error) {
         console.error(`Error updating character with ID ${id}:`, error);
@@ -37,7 +37,7 @@ export const pathCharacter = async (id, characterData) => {
 //Delete Character
 export const deleteCharacter = async (id) => {
     try {
-        const response = await api.delete(`/Character/${id}`);
+        const response = await api.delete(`/characters/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error deleting character with ID ${id}:`, error);
@@ -48,7 +48,7 @@ export const deleteCharacter = async (id) => {
 //Get Character by ID
 export const getCharacterById = async (id) => {
     try {
-        const response = await api.get(`/Character/${id}`);
+        const response = await api.get(`/characters/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching character with ID ${id}:`, error);
@@ -59,7 +59,7 @@ export const getCharacterById = async (id) => {
 //Get Characters packages by character ID
 export const getCharacterPackagesByCharacterId = async (id) => {
     try {
-        const response = await api.get(`/CharacterPackage/character/${id}`);
+        const response = await api.get(`/character-packages/character/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching packages for character with ID ${id}:`, error);

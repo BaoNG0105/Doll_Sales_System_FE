@@ -3,10 +3,10 @@ import api from "../config/axios";
 //------------------------------------
 //Doll Order API
 //------------------------------------
-//GET Orders
-export const getOrders = async () => {
+//GET Doll Orders
+export const getDollOrders = async (params) => {
   try {
-    const response = await api.get("/Order");
+    const response = await api.get("/doll-orders", { params });
     return response.data;
   } catch (error) {
     console.error("Error fetching orders:", error);
@@ -14,10 +14,10 @@ export const getOrders = async () => {
   }
 };
 
-//GET Order by ID
-export const getOrderById = async (id) => {
+//GET Doll Order by ID
+export const getDollOrderById = async (id) => {
   try {
-    const response = await api.get(`/Order/${id}`);
+    const response = await api.get(`/doll-orders/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching order with ID ${id}:`, error);
@@ -25,10 +25,21 @@ export const getOrderById = async (id) => {
   }
 };
 
-//POST Order
-export const postOrder = async (orderData) => {
+//GET Doll Orders by User ID
+export const getDollOrdersByUserId = async (userId) => {
   try {
-    const response = await api.post("/Order", orderData);
+    const response = await api.get(`/doll-orders/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching orders for user ID ${userId}:`, error);
+    throw error;
+  }
+};
+
+//POST Doll Order
+export const postDollOrder = async (orderData) => {
+  try {
+    const response = await api.post("/doll-orders", orderData);
     return response.data;
   } catch (error) {
     console.error("Error creating order:", error);
@@ -36,10 +47,10 @@ export const postOrder = async (orderData) => {
   }
 };
 
-//PATCH Order
-export const patchOrder = async (id, orderData) => {
+//PATCH Doll Order
+export const patchDollOrder = async (id, orderData) => {
   try {
-    const response = await api.patch(`/Order/${id}`, orderData);
+    const response = await api.patch(`/doll-orders/${id}`, orderData);
     return response.data;
   } catch (error) {
     console.error(`Error updating order with ID ${id}:`, error);
@@ -47,10 +58,10 @@ export const patchOrder = async (id, orderData) => {
   }
 };
 
-//DELETE Order
-export const deleteOrder = async (id) => {
+//DELETE Doll Order
+export const deleteDollOrder = async (id) => {
   try {
-    const response = await api.delete(`/Order/${id}`);
+    const response = await api.delete(`/doll-orders/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error deleting order with ID ${id}:`, error);
@@ -58,13 +69,14 @@ export const deleteOrder = async (id) => {
   }
 };
 
+
 //------------------------------------
 //Character Order API
 //------------------------------------
 //GET Character Orders
-export const getCharacterOrders = async () => {
+export const getCharacterOrders = async (params) => {
   try {
-    const response = await api.get("/CharacterOrder");
+    const response = await api.get("/character-orders", { params });
     return response.data;
   } catch (error) {
     console.error("Error fetching character orders:", error);
@@ -75,7 +87,7 @@ export const getCharacterOrders = async () => {
 //GET Character Order by ID
 export const getCharacterOrderById = async (id) => {
   try {
-    const response = await api.get(`/CharacterOrder/${id}`);
+    const response = await api.get(`/character-orders/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error fetching character order with ID ${id}:`, error);
@@ -86,7 +98,7 @@ export const getCharacterOrderById = async (id) => {
 //POST Character Order
 export const postCharacterOrder = async (orderData) => {
   try {
-    const response = await api.post("/CharacterOrder", orderData);
+    const response = await api.post("/character-orders", orderData);
     return response.data;
   } catch (error) {
     console.error("Error creating character order:", error);
@@ -97,7 +109,7 @@ export const postCharacterOrder = async (orderData) => {
 //PATCH Character Order
 export const patchCharacterOrder = async (id, data) => {
   try {
-    const response = await api.patch(`/CharacterOrder/${id}`, data);
+    const response = await api.patch(`/character-orders/${id}`, data);
     return response.data;
   } catch (error) {
     console.error(`Error updating character order with ID ${id}:`, error);
@@ -108,7 +120,7 @@ export const patchCharacterOrder = async (id, data) => {
 //DELETE Character Order
 export const deleteCharacterOrder = async (id) => {
   try {
-    const response = await api.delete(`/CharacterOrder/${id}`);
+    const response = await api.delete(`/character-orders/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error deleting character order with ID ${id}:`, error);

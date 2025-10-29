@@ -1,9 +1,9 @@
 import api from "../config/axios";
 
-//Get Users
-export const getUsers = async () => {
+//GET Users
+export const getUsers = async (params) => {
     try {
-        const response = await api.get("/users");
+        const response = await api.get("/users", { params });
         return response.data;
     } catch (error) {
         console.error("Error fetching users:", error);
@@ -11,7 +11,7 @@ export const getUsers = async () => {
     }
 };
 
-//Get User by ID
+//GET User by ID
 export const getUserById = async (id) => {
     try {
         const response = await api.get(`/users/${id}`);
@@ -22,7 +22,7 @@ export const getUserById = async (id) => {
     }
 };
 
-//Post User
+//POST User
 export const postUser = async (userData) => {
     try {
         const response = await api.post("/users", userData);
@@ -33,7 +33,7 @@ export const postUser = async (userData) => {
     }
 };
 
-//Path User
+//PATH User
 export const pathUser = async (id, userData) => {
     try {
         const response = await api.patch(`/users/${id}`, userData);
@@ -44,10 +44,21 @@ export const pathUser = async (id, userData) => {
     }
 };
 
-//Delete soft User
+// PATH status User
+export const pathUserStatus = async (id, statusData) => {
+    try {
+        const response = await api.patch(`/users/${id}/status`, statusData);
+        return response.data;
+    } catch (error) {
+        console.error(`Error updating status for user with ID ${id}:`, error);
+        throw error;
+    }
+};
+
+//DELETE User Permanently
 export const deleteUser = async (id) => {
     try {
-        const response = await api.delete(`/users/soft/${id}`);
+        const response = await api.delete(`/users/${id}/Permanent`);
         return response.data;
     } catch (error) {
         console.error(`Error deleting user with ID ${id}:`, error);
