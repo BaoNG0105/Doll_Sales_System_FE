@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../redux/authSlice';
 
 function Header() {
-  const { isAuthenticated, username } = useSelector((state) => state.auth);
+  const { isAuthenticated, username, userId } = useSelector((state) => state.auth); // Lấy thêm userId
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -47,7 +47,7 @@ function Header() {
           <div className="header-actions">
             {isAuthenticated ? (
               <div className="user-menu">
-                <Link to="/profile" className="user-action">{username || 'user'}</Link>
+                <Link to={`/profile/${userId}`} className="user-action">{username || 'user'}</Link>
                 <button onClick={handleLogout} className="logout-button"><FaSignOutAlt size={22} /></button>
               </div>
             ) : (
