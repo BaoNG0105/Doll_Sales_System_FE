@@ -5,23 +5,30 @@ import {
     Input,
     Modal,
     Table,
-    message,
     Popconfirm,
+    message,
     Image,
-    InputNumber,
+    Tag,
     Space,
+    Select,
 } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import {
-    getCharacters,
-    postCharacter,
-    pathCharacter,
-    deleteCharacter,
-} from "../../service/api.character";
+    PlusOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    SearchOutlined,
+} from "@ant-design/icons";
 import { useDebounce } from "use-debounce";
 
+import {
+    getDollModels,
+    postDollModel,
+    patchDollModel,
+    softDeleteDollModel,
+    getDollTypes,
+} from "../../service/api.doll";
 
-export default function ManageCharacters() {
+export default function ManageDollModels() {
     const [list, setList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [q, setQ] = useState("");
@@ -33,9 +40,10 @@ export default function ManageCharacters() {
     });
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState(null);
+    const [dollTypes, setDollTypes] = useState([]);
     const [form] = Form.useForm();
 
-    const fetchAndSetCharacters = async (params = {}) => {
+    const fetchAndSetDollModels = async (params = {}) => {
         setLoading(true);
         try {
             const queryParams = {
@@ -45,36 +53,49 @@ export default function ManageCharacters() {
                 sortBy: params.sorter?.field,
                 sortDir: params.sorter?.order ? (params.sorter.order === "descend" ? "desc" : "asc") : undefined,
             };
-            const response = await getCharacters(queryParams);
+            const response = await getDollModels(queryParams);
             setList(response.items || []);
             setPagination(prev => ({
                 ...prev,
-                current: queryParams.page,
-                pageSize: queryParams.pageSize,
-                total: response.totalItems || 0,
+                current: response.pagination.page,
+                pageSize: response.pagination.pageSize,
+                total: response.pagination.total || 0,
             }));
         } catch (error) {
-            console.error("Failed to fetch characters:", error);
-            message.error("Failed to fetch characters.");
+            console.error("Failed to fetch doll models:", error);
+            message.error("Failed to fetch doll models.");
             setList([]);
         } finally {
             setLoading(false);
         }
     };
 
+    const fetchDollTypes = async () => {
+        try {
+            // Fetch all types for the select dropdown, no pagination needed
+            const response = await getDollTypes({ pageSize: 100 });
+            setDollTypes(response.items || []);
+        } catch (error) {
+            console.error("Failed to fetch doll types for form:", error);
+            message.error("Failed to load doll types for the form.");
+        }
+    };
+
     useEffect(() => {
-        // Reset to page 1 when search term changes
+        fetchDollTypes();
+    }, []);
+
+    useEffect(() => {
         const newPagination = { ...pagination, current: 1 };
-        fetchAndSetCharacters({
+        fetchAndSetDollModels({
             pagination: newPagination,
             search: debouncedQ
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedQ]);
 
-
     const handleTableChange = (pagination, filters, sorter) => {
-        fetchAndSetCharacters({ pagination, sorter, search: q });
+        fetchAndSetDollModels({ pagination, sorter, search: q });
     };
 
     const onAdd = () => {
@@ -89,39 +110,39 @@ export default function ManageCharacters() {
         setOpen(true);
     };
 
-    const onDelete = async (characterId) => {
+    const onDelete = async (dollModelID) => {
         try {
-            await deleteCharacter(characterId);
-            message.success("Character deleted successfully!");
-            fetchAndSetCharacters({ pagination, search: q });
+            await softDeleteDollModel(dollModelID);
+            message.success("Doll model deleted successfully!");
+            fetchAndSetDollModels({ pagination, search: q });
         } catch (error) {
-            console.error("Failed to delete character:", error);
-            message.error("Failed to delete character.");
+            console.error("Failed to delete doll model:", error);
+            message.error("Failed to delete doll model.");
         }
     };
 
     const onFinish = async (values) => {
         try {
             if (editing) {
-                await pathCharacter(editing.characterId, values);
-                message.success("Character updated successfully!");
+                await patchDollModel(editing.dollModelID, values);
+                message.success("Doll model updated successfully!");
             } else {
-                await postCharacter(values);
-                message.success("Character added successfully!");
+                await postDollModel(values);
+                message.success("Doll model added successfully!");
             }
             setOpen(false);
-            fetchAndSetCharacters({ pagination, search: q });
+            fetchAndSetDollModels({ pagination, search: q });
         } catch (error) {
-            console.error("Failed to save character:", error);
-            message.error("Failed to save character.");
+            console.error("Failed to save doll model:", error);
+            message.error("Failed to save doll model.");
         }
     };
 
     const columns = [
         {
             title: "ID",
-            dataIndex: "characterId",
-            key: "characterId",
+            dataIndex: "dollModelID",
+            key: "dollModelID",
             align: "center",
             sorter: true,
         },
@@ -129,11 +150,15 @@ export default function ManageCharacters() {
             title: "Name",
             dataIndex: "name",
             key: "name",
+            sorter: true,
+            render: (name) => <span className="font-medium">{name}</span>,
+        },
+        {
+            title: "Doll Type",
+            dataIndex: "dollTypeName",
+            key: "dollTypeName",
             align: "center",
             sorter: true,
-            render: (name) => (
-                <span className="font-medium">{name}</span>
-            ),
         },
         {
             title: "Image",
@@ -143,31 +168,22 @@ export default function ManageCharacters() {
             render: (url) => <Image width={60} src={url} />,
         },
         {
-            title: "Age Range",
-            dataIndex: "ageRange",
-            key: "ageRange",
-            align: "center",
-            sorter: true,
-        },
-        {
-            title: "Personality",
-            dataIndex: "personality",
-            key: "personality",
-            ellipsis: true,
-        },
-        {
             title: "Description",
             dataIndex: "description",
             key: "description",
             ellipsis: true,
         },
         {
-            title: "AI URL",
-            dataIndex: "aiUrl",
-            key: "aiUrl",
+            title: "Status",
+            dataIndex: "isActive",
+            key: "isActive",
             align: "center",
-            ellipsis: true,
-            render: (url) => <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>,
+            sorter: true,
+            render: (isActive) => (
+                <Tag color={isActive ? "green" : "red"}>
+                    {isActive ? "ACTIVE" : "INACTIVE"}
+                </Tag>
+            ),
         },
         {
             title: "Actions",
@@ -182,9 +198,9 @@ export default function ManageCharacters() {
                         size="small"
                     />
                     <Popconfirm
-                        title="Delete the character"
-                        description="Are you sure to delete this character?"
-                        onConfirm={() => onDelete(record.characterId)}
+                        title="Delete the doll model"
+                        description="Are you sure to delete this doll model?"
+                        onConfirm={() => onDelete(record.dollModelID)}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -199,7 +215,7 @@ export default function ManageCharacters() {
         <div className="panel" style={{ padding: 16 }}>
             <div className="panel__header" style={{ marginBottom: 16 }}>
                 <h2 style={{ fontSize: "30px", marginBottom: 16 }}>
-                    Characters Management
+                    Doll Models Management
                 </h2>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <Input
@@ -216,7 +232,7 @@ export default function ManageCharacters() {
                         icon={<PlusOutlined />}
                         onClick={onAdd}
                     >
-                        Add Character
+                        Add Doll Model
                     </Button>
                 </div>
             </div>
@@ -224,7 +240,7 @@ export default function ManageCharacters() {
                 loading={loading}
                 columns={columns}
                 dataSource={list}
-                rowKey="characterId"
+                rowKey="dollModelID"
                 pagination={{
                     ...pagination,
                     showSizeChanger: true,
@@ -235,7 +251,7 @@ export default function ManageCharacters() {
             />
             <Modal
                 open={open}
-                title={editing ? "Edit Character" : "Add Character"}
+                title={editing ? "Edit Doll Model" : "Add Doll Model"}
                 onCancel={() => setOpen(false)}
                 onOk={() => form.submit()}
                 okText="Save"
@@ -245,20 +261,20 @@ export default function ManageCharacters() {
                     <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
+                    <Form.Item name="dollTypeID" label="Doll Type" rules={[{ required: true }]}>
+                        <Select
+                            placeholder="Select a doll type"
+                            options={dollTypes.map(type => ({
+                                value: type.dollTypeID,
+                                label: type.name,
+                            }))}
+                        />
+                    </Form.Item>
                     <Form.Item name="image" label="Image URL">
                         <Input />
                     </Form.Item>
-                    <Form.Item name="ageRange" label="Age Range" rules={[{ type: 'number' }]}>
-                        <InputNumber style={{ width: '100%' }} />
-                    </Form.Item>
-                    <Form.Item name="personality" label="Personality">
-                        <Input.TextArea rows={2} />
-                    </Form.Item>
                     <Form.Item name="description" label="Description">
                         <Input.TextArea rows={4} />
-                    </Form.Item>
-                    <Form.Item name="aiUrl" label="AI URL">
-                        <Input />
                     </Form.Item>
                 </Form>
             </Modal>

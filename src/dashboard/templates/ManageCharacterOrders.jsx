@@ -1,28 +1,58 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Table, Select, message, Button, Popconfirm, Tag, Input, Radio } from "antd";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import { getCharacterOrders, patchCharacterOrder, deleteCharacterOrder } from "../../service/api.order";
+import { useDebounce } from "use-debounce";
 
 const statusOptions = [
-  { value: 1, label: "Active", color: "success" },
-  { value: 0, label: "Canceled", color: "error" },
+  { value: 0, label: "Pending", color: "processing" },
+  { value: 1, label: "Active", color: "successful" },
+  { value: 2, label: "Completed", color: "default" },
+  { value: 3, label: "Canceled", color: "error" },
 ];
 
 export default function ManageCharacterOrders() {
-  const [characterOrders, setCharacterOrders] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [q, setQ] = useState("");
+  const [debouncedQ] = useDebounce(q, 500);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
-  const fetchCharacterOrders = async () => {
+  const fetchCharacterOrders = async (params = {}) => {
     setLoading(true);
     try {
-      const data = await getCharacterOrders();
-      const formattedData = data.data.map((order) => ({
+      const queryParams = {
+        page: params.pagination.current,
+        pageSize: params.pagination.pageSize,
+        search: params.search,
+        status: params.status === "all" ? "" : params.status,
+        sortBy: params.sortBy,
+        sortDir: params.sortDir,
+      };
+      // Filter out undefined/null params
+      Object.keys(queryParams).forEach(
+        (key) => (queryParams[key] == null || queryParams[key] === "") && delete queryParams[key]
+      );
+
+      const response = await getCharacterOrders(queryParams);
+      setAllOrders(response.items.map((order) => ({
         ...order,
         key: order.characterOrderID,
-      }));
-      setCharacterOrders(formattedData);
+      })));
+      setOrders(response.items.map((order) => ({
+        ...order,
+        key: order.characterOrderID,
+      })));
+      setPagination({
+        ...params.pagination,
+        total: response.pagination.total,
+      });
     } catch (error) {
       message.error("Failed to fetch character orders.");
       console.error(error);
@@ -31,42 +61,64 @@ export default function ManageCharacterOrders() {
     }
   };
 
-  useEffect(() => {
-    fetchCharacterOrders();
-  }, []);
+  const handleTableChange = (newPagination, filters, sorter) => {
+    const sortDir = sorter.order === "ascend" ? "asc" : sorter.order === "descend" ? "desc" : undefined;
 
-  const filteredOrders = useMemo(() => {
-    return characterOrders.filter((order) => {
-      const matchesStatus =
-        statusFilter === "all" || order.status === statusFilter;
-      const matchesSearch =
-        q.trim() === "" ||
-        order.characterName.toLowerCase().includes(q.trim().toLowerCase()) ||
-        order.packageName.toLowerCase().includes(q.trim().toLowerCase()) ||
-        String(order.characterOrderID).includes(q.trim());
-      return matchesStatus && matchesSearch;
+    fetchCharacterOrders({
+      pagination: newPagination,
+      search: debouncedQ,
+      status: statusFilter,
+      sortBy: sorter.field,
+      sortDir: sortDir,
     });
-  }, [characterOrders, q, statusFilter]);
+  };
 
-  const updateStatus = async (id, status) => {
+  useEffect(() => {
+    if (statusFilter === "all") {
+      setOrders(allOrders);
+    } else {
+      const filteredOrders = allOrders.filter(
+        (order) => order.status === statusFilter
+      );
+      setOrders(filteredOrders);
+    }
+  }, [statusFilter, allOrders]);
+
+  useEffect(() => {
+    // Reset to page 1 when search or filter changes
+    const newPagination = { ...pagination, current: 1 };
+    fetchCharacterOrders({
+      pagination: newPagination,
+      search: debouncedQ,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedQ]);
+
+  const getCurrentFetchParams = () => ({
+    pagination,
+    search: debouncedQ,
+    status: statusFilter,
+  });
+
+  const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await patchCharacterOrder(id, { status });
-      message.success(`Order ${id} updated successfully.`);
-      fetchCharacterOrders();
+      await patchCharacterOrder(orderId, { status: newStatus });
+      message.success("Order status updated successfully!");
+      fetchCharacterOrders(getCurrentFetchParams());
     } catch (error) {
       console.error(error);
-      message.error(`Failed to update order ${id}.`);
+      message.error("Failed to update order status.");
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (orderId) => {
     try {
-      await deleteCharacterOrder(id);
-      message.success(`Order ${id} deleted successfully.`);
-      fetchCharacterOrders();
+      await deleteCharacterOrder(orderId);
+      message.success("Order deleted successfully!");
+      fetchCharacterOrders(getCurrentFetchParams());
     } catch (error) {
       console.error(error);
-      message.error(`Failed to delete order ${id}.`);
+      message.error("Failed to delete order.");
     }
   };
 
@@ -74,16 +126,30 @@ export default function ManageCharacterOrders() {
     {
       title: "Order ID",
       dataIndex: "characterOrderID",
-      width: 100,
+      key: "characterOrderID",
       align: "center",
+      sorter: true,
     },
-    { title: "Character Name", dataIndex: "characterName", align: "center" },
-    { title: "Package Name", dataIndex: "packageName", align: "center" },
+    {
+      title: "Character",
+      dataIndex: "characterName",
+      key: "characterName",
+      align: "center",
+      sorter: true,
+    },
+    {
+      title: "Package",
+      dataIndex: "packageName",
+      key: "packageName",
+      align: "center",
+      sorter: true,
+    },
     {
       title: "Price",
       dataIndex: "unitPrice",
-      width: 150,
+      key: "unitPrice",
       align: "center",
+      sorter: true,
       render: (price) =>
         `${price.toLocaleString("vi-VN", {
           style: "currency",
@@ -91,15 +157,23 @@ export default function ManageCharacterOrders() {
         })}`,
     },
     {
+      title: "Created At",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      align: "center",
+      sorter: true,
+      render: (text) => new Date(text).toLocaleDateString("vi-VN"),
+    },
+    {
       title: "Status",
       dataIndex: "status",
-      width: 180,
+      key: "status",
       align: "center",
       render: (status, record) => (
         <Select
           defaultValue={status}
           style={{ width: 140 }}
-          onChange={(newStatus) => updateStatus(record.characterOrderID, newStatus)}
+          onChange={(value) => handleStatusChange(record.characterOrderID, value)}
           bordered={false}
         >
           {statusOptions.map((opt) => (
@@ -111,15 +185,8 @@ export default function ManageCharacterOrders() {
       ),
     },
     {
-      title: "Created Date",
-      dataIndex: "createdAt",
-      align: "center",
-      render: (date) => new Date(date).toLocaleDateString("vi-VN"),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      width: 120,
+      title: "Action",
+      key: "action",
       align: "center",
       render: (_, record) => (
         <Popconfirm
@@ -138,9 +205,7 @@ export default function ManageCharacterOrders() {
   return (
     <div className="panel" style={{ padding: 16 }}>
       <div className="panel__header" style={{ marginBottom: 16 }}>
-        <h2 style={{ fontSize: "30px", marginBottom: 16 }}>
-          Character Orders Management
-        </h2>
+        <h2 style={{ fontSize: "30px", marginBottom: 16 }}>Character Orders Management</h2>
         <div
           style={{
             display: "flex",
@@ -152,7 +217,7 @@ export default function ManageCharacterOrders() {
           <Input
             allowClear
             prefix={<SearchOutlined />}
-            placeholder="Search by Order ID, Character, Package..."
+            placeholder="Search by User Name, Character, Package..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
             style={{ width: 320, background: "#fff" }}
@@ -171,13 +236,13 @@ export default function ManageCharacterOrders() {
           ))}
         </Radio.Group>
       </div>
-
       <Table
         columns={columns}
-        dataSource={filteredOrders}
+        dataSource={orders}
         loading={loading}
         rowKey="characterOrderID"
-        pagination={{ pageSize: 5, showSizeChanger: false }}
+        pagination={{ ...pagination, showSizeChanger: true }}
+        onChange={handleTableChange}
         size="middle"
       />
     </div>

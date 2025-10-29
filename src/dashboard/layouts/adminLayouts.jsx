@@ -1,237 +1,102 @@
-import "../../dashboard/static/css/dashboard.css";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
-// Adminlayouts.jsx — React + Ant Design (JavaScript)
-import React, { useState } from "react";
-import {OpenAIFilled, HeartFilled, ShoppingCartOutlined, LaptopOutlined, UserOutlined, MenuFoldOutlined, MenuUnfoldOutlined, DashboardOutlined, DollarOutlined, TeamOutlined, } from "@ant-design/icons";
-import { Button, Layout, Menu, theme, Row, Col, Card, Statistic } from "antd";
-import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts";
+import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import {
+  MenuFoldOutlined, //Icons for expanding sidebar
+  MenuUnfoldOutlined, //Icons for collapsing sidebar
+  UserOutlined, //Icon Users
+  HeartFilled, //Icon Doll Types, Models, Variants
+  OpenAIFilled, //Icon Characters
+  ShoppingCartOutlined, //Icon Orders
+  LogoutOutlined, //Icon Logout
+  BarChartOutlined, //Icon Dashboard
+} from "@ant-design/icons";
+import { Layout, Menu, Button, Typography } from "antd"; // Thêm Typography
+import "../static/css/Dashboard.css";
+// Redux
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/authSlice";
 
-const { Header, Content, Sider } = Layout;
+const { Header, Sider, Content } = Layout;
+const { Title } = Typography; // Thêm Title
 
-/* SideNav: Dashboard / Admin / Manager (phẳng, không collapse) */
-const sideNav = [
-  {
-    key: "dashboard",
-    icon: <DashboardOutlined />,
-    label: "Dashboard Overview",
-  },
-
-  //Admin
-  { key: "admin-1", icon: <HeartFilled />, label: "Dolls Management" },
-  { key: "admin-2", icon: <OpenAIFilled />, label: "Characters Management" },
-  { key: "admin-3", icon: <ShoppingCartOutlined />, label: "Orders Management" },
-  { key: "admin-4", icon: <ShoppingCartOutlined />, label: "Character Orders Management" },
-
-  //Manager~
-  { key: "manager-1", icon: <UserOutlined />, label: "Users Management" },
-];
-
-// Demo data cho dashboard
-const revenueData = [
-  { name: "Jan", revenue: 12000000 },
-  { name: "Feb", revenue: 18000000 },
-  { name: "Mar", revenue: 15000000 },
-  { name: "Apr", revenue: 22000000 },
-];
-const categoryData = [
-  { name: "Dolls", value: 45 },
-  { name: "Characters", value: 30 },
-  { name: "Accessories", value: 25 },
-];
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
-
-export default function Adminlayouts() {
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+const AdminLayouts = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
+  const dispatch = useDispatch();
 
-  // sync chọn menu theo URL
-  const selectedKey =
-    location.pathname.includes("/dashboard/dollsManager")
-      ? "admin-1"
-      : location.pathname.includes("/dashboard/manage-characters")
-        ? "admin-2"
-        : location.pathname.includes("/dashboard/manage-orders")
-          ? "admin-3"
-          : location.pathname.includes("/dashboard/manage-character-orders")
-            ? "manager-1"
-            : location.pathname.includes("/dashboard/manage-users")
-              ? "manager-2"
-              : "dashboard";
-
-  // điều hướng khi click menu
-  const onMenuClick = (e) => {
-    switch (e.key) {
-      case "dashboard":
-        navigate("/dashboard");
-        break;
-      case "admin-1":
-        navigate("/dashboard/manage-dolls");
-        break;
-      case "admin-2":
-        navigate("/dashboard/manage-characters");
-        break;
-      case "admin-3":
-        navigate("/dashboard/manage-orders");
-        break;
-      case "admin-4":
-        navigate("/dashboard/manage-character-orders");
-        break;
-      case "manager-1":
-        navigate("/dashboard/manage-users");
-        break;
-      default:
-        break;
-    }
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login");
   };
 
-  // Nội dung dashboard báo cáo mặc định
-  const renderDashboardContent = () => (
-    <div style={{ padding: 16 }}>
-      <h2 style={{ marginBottom: 16 }}>📊 Dashboard Report</h2>
-
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={8}>
-          <Card>
-            <Statistic
-              title="Total Revenue"
-              value={67.5}
-              precision={2}
-              prefix={<DollarOutlined />}
-              suffix="M VND"
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card>
-            <Statistic
-              title="Orders"
-              value={152}
-              prefix={<ShoppingCartOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card>
-            <Statistic
-              title="Active Users"
-              value={320}
-              prefix={<TeamOutlined />}
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      <Row gutter={16}>
-        <Col span={14}>
-          <Card title="Monthly Revenue">
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="revenue" fill="#8884d8" />
-              </BarChart>
-            </ResponsiveContainer>
-          </Card>
-        </Col>
-        <Col span={10}>
-          <Card title="Sales by Category">
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={categoryData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  label
-                >
-                  {categoryData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </Card>
-        </Col>
-      </Row>
-    </div>
-  );
+  const handleMenuClick = (e) => {
+    if (e.key === "home") {
+      navigate("/");
+    } else {
+      // Navigate relative to the /dashboard route
+      navigate(`/dashboard/${e.key}`);
+    }
+  };
+  const items = [
+    { key: "overview", icon: <BarChartOutlined />, label: "Overview" },
+    { key: "manage-doll-types", icon: <HeartFilled />, label: "Doll Types Management" },
+    { key: "manage-doll-models", icon: <HeartFilled />, label: "Doll Models Management" },
+    { key: "manage-doll-variants", icon: <HeartFilled />, label: "Doll Variants Management" },
+    { key: "manage-characters", icon: <OpenAIFilled />, label: "Characters Management" },
+    { key: "manage-doll-orders", icon: <ShoppingCartOutlined />, label: "Doll Orders Management" },
+    { key: "manage-character-orders", icon: <ShoppingCartOutlined />, label: "Character Orders Management" },
+    { key: "manage-users", icon: <UserOutlined />, label: "Users Management" },
+  ];
 
   return (
     <Layout className="admin">
-      {/* Header */}
-      <Header className="admin__header admin__header--minimal">
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        className="admin__sider"
+        theme="light"
+      >
         <div className="admin__brand">
-          <div className="admin__logo">🧸</div>
-          <span className="admin__brandText">Doll Admin</span>
+          <div className="admin__logo">
+            <HeartFilled />
+          </div>
+          {!collapsed && <Title level={5} className="admin__brandText">DASHBOARD</Title>}
         </div>
-      </Header>
-
+        <Menu
+          className="admin__sideMenu"
+          mode="inline"
+          defaultSelectedKeys={["overview"]}
+          items={items}
+          onClick={handleMenuClick}
+        />
+      </Sider>
       <Layout className="admin__body">
-        {/* Sidebar */}
-        <Sider
-          className="admin__sider"
-          width={240}
-          collapsible
-          collapsed={collapsed}
-          onCollapse={setCollapsed}
-          breakpoint="lg"
-          theme="light"
-          trigger={null}   // ✨ ẩn icon thu gọn mặc định ở góc dưới
-        >
-
-          {/* Nút toggle custom đặt ở trên */}
-          <div className="admin__siderTop">
-            <Button
-              size="small"
-              type="text"
-              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
-            />
-          </div>
-
-          <Menu
-            className="admin__sideMenu"
-            mode="inline"
-            selectedKeys={[selectedKey]}
-            items={sideNav}
-            onClick={onMenuClick}
+        <Header className="admin__header">
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            className="admin__header-trigger"
           />
-
-          {/* Mascot */}
-          <div className="admin__siderBottom">
-            <div className="charBadge">
-              <span className="charBadge__emoji">🧸</span>
-            </div>
-            {!collapsed && <div className="charBadge__label">Doll Mascot</div>}
-          </div>
-        </Sider>
-
-        {/* Content */}
-        <Layout className="admin__contentWrap">
-          <Content
-            className="admin__content"
-            style={{ background: colorBgContainer }}
+          <Button
+            className="admin__logoutBtn"
+            type="primary"
+            icon={<LogoutOutlined />}
+            onClick={handleLogout}
+            danger
           >
-            {location.pathname === "/dashboard" ||
-              location.pathname === "/dashboard/"
-              ? renderDashboardContent()
-              : <Outlet />}
-          </Content>
-        </Layout>
+            {!collapsed && <span>Logout</span>}
+          </Button>
+        </Header>
+        <Content className="admin__contentWrap">
+          <div className="admin__content">
+            <Outlet />
+          </div>
+        </Content>
       </Layout>
     </Layout>
   );
-}
+};
+
+export default AdminLayouts;

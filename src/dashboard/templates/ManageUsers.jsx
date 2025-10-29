@@ -1,300 +1,334 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
-  Button,
-  Input,
-  Modal,
-  Form,
-  Table,
-  Space,
-  Popconfirm,
-  message,
-  Radio,
-  Tag,
+    Button,
+    Form,
+    Input,
+    Modal,
+    Table,
+    message,
+    Popconfirm,
+    Tag,
+    Space,
+    Select,
 } from "antd";
 import {
-  PlusOutlined,
-  DeleteOutlined,
-  SearchOutlined,
-  UnlockOutlined,
-  LockOutlined,
+    PlusOutlined,
+    EditOutlined,
+    DeleteOutlined,
+    SearchOutlined,
 } from "@ant-design/icons";
 import {
-  getUsers,
-  postUser,
-  pathUser,
-  deleteUser,
+    getUsers,
+    postUser,
+    pathUser,
+    deleteUser,
 } from "../../service/api.user";
+import { useDebounce } from "use-debounce";
 
-/* -------- Main Component -------- */
 export default function ManageUsers() {
-  const [list, setList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [q, setQ] = useState("");
-  const [roleFilter, setRoleFilter] = useState("all");
-  const [open, setOpen] = useState(false);
-  const [form] = Form.useForm();
-
-  const fetchAndSetUsers = async () => {
-    setLoading(true);
-    try {
-      const data = await getUsers();
-      setList(data || []);
-    } catch (error) {
-      message.error("Failed to fetch users.");
-      console.error("Error fetching users:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAndSetUsers();
-  }, []);
-
-  const filtered = useMemo(() => {
-    const s = q.trim().toLowerCase();
-    return list.filter((user) => {
-      const matchesRole =
-        roleFilter === "all" || user.role.toLowerCase() === roleFilter;
-      const matchesSearch =
-        !s ||
-        user.userName.toLowerCase().includes(s) ||
-        user.email.toLowerCase().includes(s) ||
-        (user.phones || "").toLowerCase().includes(s);
-      return matchesRole && matchesSearch;
+    const [list, setList] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [q, setQ] = useState("");
+    const [debouncedQ] = useDebounce(q, 500);
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0,
     });
-  }, [q, list, roleFilter]);
+    const [open, setOpen] = useState(false);
+    const [editing, setEditing] = useState(null);
+    const [form] = Form.useForm();
 
-  const handleToggleStatus = async (user) => {
-    try {
-      const newStatus = user.status === "Active" ? "DeActive" : "Active";
-      await pathUser(user.userID, { status: newStatus });
-      message.success(`User status changed successfully!`);
-      fetchAndSetUsers();
-    } catch (error) {
-      message.error("Failed to change user status.");
-      console.error("Error toggling user status:", error);
-    }
-  };
+    const fetchAndSetUsers = async (params = {}) => {
+        setLoading(true);
+        try {
+            const queryParams = {
+                page: params.pagination?.current || 1,
+                pageSize: params.pagination?.pageSize || 10,
+                search: params.search,
+                sortBy: params.sorter?.field,
+                sortDir: params.sorter?.order
+                    ? params.sorter.order === "descend"
+                        ? "desc"
+                        : "asc"
+                    : undefined,
+            };
+            const response = await getUsers(queryParams);
+            if (response.success && response.data) {
+                setList(response.data);
+                setPagination((prev) => ({
+                    ...prev,
+                    current: response.pagination.page,
+                    pageSize: response.pagination.pageSize,
+                    total: response.pagination.total,
+                }));
+            } else {
+                setList([]);
+                message.error(response.message || "Failed to fetch users.");
+            }
+        } catch (error) {
+            console.error("Failed to fetch users:", error);
+            message.error("Failed to fetch users.");
+            setList([]);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const handleDelete = async (userId) => {
-    try {
-      await deleteUser(userId);
-      message.success("User soft deleted successfully!");
-      fetchAndSetUsers();
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      message.error("Failed to delete user.");
-    }
-  };
+    useEffect(() => {
+        const newPagination = { ...pagination, current: 1 };
+        fetchAndSetUsers({
+            pagination: newPagination,
+            search: debouncedQ,
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [debouncedQ]);
 
-  const columns = [
-    {
-      title: "ID",
-      dataIndex: "userID",
-      key: "userID",
-      width: 80,
-      align: "center",
-    },
-    {
-      title: "USER",
-      dataIndex: "userName",
-      key: "userName",
-      align: "center",
-    },
-    { title: "EMAIL", dataIndex: "email", key: "email", align: "center" },
-    { title: "PHONES", dataIndex: "phones", key: "phones", align: "center" },
-    {
-      title: "ROLE",
-      dataIndex: "role",
-      key: "role",
-      align: "center",
-      render: (role) => (
-        <Tag
-          color={
-            role === "admin"
-              ? "volcano"
-              : role === "manager"
-              ? "gold"
-              : "geekblue"
-          }
-        >
-          {role.toUpperCase()}
-        </Tag>
-      ),
-    },
-    {
-      title: "STATUS",
-      dataIndex: "isDeleted",
-      key: "isDeleted",
-      align: "center",
-      render: (isDeleted) =>
-        isDeleted ? (
-          <Tag color="red">Blocked</Tag>
-        ) : (
-          <Tag color="green">Active</Tag>
-        ),
-    },
-    {
-      title: "ACTIONS",
-      key: "actions",
-      width: 120,
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          <Popconfirm
-            title={`Are you sure to ${
-              record.isDeleted ? "unlock" : "lock"
-            } this user?`}
-            onConfirm={() => handleToggleStatus(record)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button
-              className="btn-pill"
-              icon={record.isDeleted ? <UnlockOutlined /> : <LockOutlined />}
-            />
-          </Popconfirm>
-          <Popconfirm
-            title="Delete this user permanently?"
-            okText="Delete"
-            okButtonProps={{ danger: true }}
-            onConfirm={() => handleDelete(record.userID)}
-          >
-            <Button
-              className="btn-pill btn-danger"
-              icon={<DeleteOutlined />}
-            />
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
+    const handleTableChange = (pagination, filters, sorter) => {
+        // Note: The `filters` object from AntD is used for client-side filtering.
+        // If you wanted server-side filtering, you would pass `filters` to `fetchAndSetUsers`.
+        // Here, we only handle pagination and sorting from the server.
+        fetchAndSetUsers({ pagination, sorter, search: q });
+    };
 
-  function handleAdd() {
-    form.resetFields();
-    setOpen(true);
-  }
-
-  function handleOk() {
-    form.validateFields().then(async (values) => {
-      try {
-        await postUser(values);
-        message.success("User added successfully");
-        setOpen(false);
+    const onAdd = () => {
         form.resetFields();
-        fetchAndSetUsers();
-      } catch (error) {
-        console.error("Error saving user:", error);
-        message.error("An error occurred. Please try again.");
-      }
-    });
-  }
+        setEditing(null);
+        setOpen(true);
+    };
 
-  function handleCancel() {
-    setOpen(false);
-  }
+    const onEdit = (record) => {
+        setEditing(record);
+        form.setFieldsValue({
+            ...record,
+            status: record.status === 1 ? "Active" : "Inactive",
+        });
+        setOpen(true);
+    };
 
-  return (
-    <div className="panel" style={{ padding: 16 }}>
-      <div className="panel__header" style={{ marginBottom: 16 }}>
-        <h2 style={{ fontSize: "30px", marginBottom: 16 }}>
-          Users Management
-        </h2>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <Input
-            allowClear
-            prefix={<SearchOutlined />}
-            placeholder="Search by name, email, phone..."
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            style={{ width: 320, background: "#fff" }}
-          />
-          <Button
-            className="btn-accent btn-rounded"
-            icon={<PlusOutlined />}
-            onClick={handleAdd}
-          >
-            Add User
-          </Button>
+    const onDelete = async (userId) => {
+        try {
+            await deleteUser(userId);
+            message.success("User deleted successfully!");
+            fetchAndSetUsers({ pagination, search: q });
+        } catch (error) {
+            console.error("Failed to delete user:", error);
+            message.error("Failed to delete user.");
+        }
+    };
+
+    const onFinish = async (values) => {
+        const statusValue =
+            values.status === "Active" ? 1 : values.status === "Inactive" ? 0 : values.status;
+        const finalValues = { ...values, status: statusValue };
+
+        try {
+            if (editing) {
+                await pathUser(editing.userID, finalValues);
+                message.success("User updated successfully!");
+            } else {
+                await postUser(finalValues);
+                message.success("User added successfully!");
+            }
+            setOpen(false);
+            fetchAndSetUsers({ pagination, search: q });
+        } catch (error) {
+            console.error("Failed to save user:", error);
+            message.error("Failed to save user.");
+        }
+    };
+
+    const columns = [
+        {
+            title: "ID",
+            dataIndex: "userID",
+            key: "userID",
+            align: "center",
+            sorter: true,
+        },
+        {
+            title: "Username",
+            dataIndex: "userName",
+            key: "userName",
+            sorter: true,
+            render: (name) => <span className="font-medium">{name}</span>,
+        },
+        {
+            title: "Full Name",
+            dataIndex: "fullName",
+            key: "fullName",
+            sorter: true,
+        },
+        {
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
+            sorter: true,
+        },
+        {
+            title: "Role",
+            dataIndex: "role",
+            key: "role",
+            align: "center",
+            sorter: true,
+            filters: [
+                { text: "Admin", value: "admin" },
+                { text: "Manager", value: "manager" },
+                { text: "Customer", value: "customer" },
+            ],
+            onFilter: (value, record) => record.role.indexOf(value) === 0,
+            render: (role) => {
+                let color = "geekblue";
+                if (role === "admin") color = "volcano";
+                if (role === "manager") color = "green";
+                return <Tag color={color}>{role?.toUpperCase()}</Tag>;
+            },
+        },
+        {
+            title: "Status",
+            dataIndex: "status",
+            key: "status",
+            align: "center",
+            sorter: true,
+            render: (status) => (
+                <Tag color={status === 1 ? "green" : "red"}>
+                    {status === 1 ? "Active" : "Inactive"}
+                </Tag>
+            ),
+        },
+        {
+            title: "Created At",
+            dataIndex: "createdAt",
+            key: "createdAt",
+            sorter: true,
+            render: (text) => new Date(text).toLocaleDateString(),
+        },
+        {
+            title: "Actions",
+            key: "actions",
+            width: 120,
+            align: "center",
+            render: (_, record) => (
+                <Space>
+                    <Button
+                        icon={<EditOutlined />}
+                        onClick={() => onEdit(record)}
+                        size="small"
+                    />
+                    <Popconfirm
+                        title="Delete the user"
+                        description="Are you sure to delete this user permanently?"
+                        onConfirm={() => onDelete(record.userID)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button icon={<DeleteOutlined />} danger size="small" />
+                    </Popconfirm>
+                </Space>
+            ),
+        },
+    ];
+
+    return (
+        <div className="panel" style={{ padding: 16 }}>
+            <div className="panel__header" style={{ marginBottom: 16 }}>
+                <h2 style={{ fontSize: "30px", marginBottom: 16 }}>
+                    Users Management
+                </h2>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <Input
+                        allowClear
+                        prefix={<SearchOutlined />}
+                        placeholder="Search by name, email..."
+                        value={q}
+                        onChange={(e) => setQ(e.target.value)}
+                        style={{ width: 320, background: "#fff" }}
+                    />
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<PlusOutlined />}
+                        onClick={onAdd}
+                    >
+                        Add User
+                    </Button>
+                </div>
+            </div>
+            <Table
+                loading={loading}
+                columns={columns}
+                dataSource={list}
+                rowKey="userID"
+                pagination={{
+                    ...pagination,
+                    showSizeChanger: true,
+                    pageSizeOptions: ["5", "10", "20", "50"],
+                }}
+                onChange={handleTableChange}
+                size="middle"
+            />
+            <Modal
+                open={open}
+                title={editing ? "Edit User" : "Add User"}
+                onCancel={() => setOpen(false)}
+                onOk={() => form.submit()}
+                okText="Save"
+                width={600}
+            >
+                <Form
+                    form={form}
+                    layout="vertical"
+                    onFinish={onFinish}
+                    className="mt-6"
+                >
+                    <Form.Item
+                        name="userName"
+                        label="Username"
+                        rules={[{ required: true }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[{ required: true, type: "email" }]}
+                    >
+                        <Input />
+                    </Form.Item>
+                    <Form.Item
+                        name="password"
+                        label="Password"
+                        rules={[{ required: !editing }]}
+                    >
+                        <Input.Password />
+                    </Form.Item>
+                    <Form.Item name="fullName" label="Full Name">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="phones" label="Phone">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="role" label="Role" rules={[{ required: true }]}>
+                        <Select>
+                            <Select.Option value="customer">Customer</Select.Option>
+                            <Select.Option value="manager">Manager</Select.Option>
+                            <Select.Option value="admin">Admin</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name="status" label="Status">
+                        <Select>
+                            <Select.Option value="Active">Active</Select.Option>
+                            <Select.Option value="Inactive">Inactive</Select.Option>
+                        </Select>
+                    </Form.Item>
+                </Form>
+            </Modal>
         </div>
-        <Radio.Group
-          onChange={(e) => setRoleFilter(e.target.value)}
-          value={roleFilter}
-          style={{ marginTop: 16 }}
-        >
-          <Radio.Button value="all">All</Radio.Button>
-          <Radio.Button value="admin">Admin</Radio.Button>
-          <Radio.Button value="manager">Manager</Radio.Button>
-          <Radio.Button value="customer">Customer</Radio.Button>
-        </Radio.Group>
-      </div>
-
-      <Table
-        rowKey="userID"
-        columns={columns}
-        dataSource={filtered}
-        pagination={{ pageSize: 5, showSizeChanger: false }}
-        size="middle"
-        loading={loading}
-      />
-
-      <Modal
-        title="Add User"
-        open={open}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        okText="Add"
-      >
-        <Form
-          layout="vertical"
-          form={form}
-          initialValues={{ role: "customer" }}
-        >
-          <Form.Item
-            label="User Name"
-            name="userName"
-            rules={[{ required: true }]}
-          >
-            <Input placeholder="e.g., John Doe" />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, type: "email" }]}
-          >
-            <Input placeholder="e.g., john.doe@example.com" />
-          </Form.Item>
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true }]}
-          >
-            <Input.Password placeholder="Enter a strong password" />
-          </Form.Item>
-          <Form.Item
-            label="Phone Number"
-            name="phones"
-            rules={[{ required: true }]}
-          >
-            <Input placeholder="e.g., 0912345678" />
-          </Form.Item>
-          <Form.Item label="Role" name="role" rules={[{ required: true }]}>
-            <Radio.Group>
-              <Radio value="customer">Customer</Radio>
-              <Radio value="manager">Manager</Radio>
-              <Radio value="admin">Admin</Radio>
-            </Radio.Group>
-          </Form.Item>
-        </Form>
-      </Modal>
-    </div>
-  );
+    );
 }

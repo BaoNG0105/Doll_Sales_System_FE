@@ -29,9 +29,12 @@ import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
 
 // Admin
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
+import DashboardPage from './dashboard/templates/DashboardPage.jsx';
+import ManageDollTypes from './dashboard/templates/ManageDollTypes.jsx';
+import ManageDollModels from './dashboard/templates/ManageDollModels.jsx';
+import ManageDollVariants from './dashboard/templates/ManageDollVariants.jsx';
 import ManageCharacters from './dashboard/templates/ManageCharacters.jsx';
-import ManageDolls from './dashboard/templates/ManageDolls.jsx';
-import ManageOrders from './dashboard/templates/ManageOrders.jsx';
+import ManageDollOrders from './dashboard/templates/ManageDollOrders.jsx';
 import ManageCharacterOrders from './dashboard/templates/ManageCharacterOrders.jsx';
 import ManageUsers from './dashboard/templates/ManageUsers.jsx';
 
@@ -93,10 +96,13 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <Adminlayouts />,
     children: [
-      { path: "manage-dolls", element: <ManageDolls /> },
+      {path: "overview", element: <DashboardPage />, },
+      {path: "manage-doll-types", element: <ManageDollTypes /> },
+      {path: "manage-doll-models", element: <ManageDollModels /> },
+      {path: "manage-doll-variants", element: <ManageDollVariants /> },
       { path: "manage-characters", element: <ManageCharacters /> },
       { path: "manage-users", element: <ManageUsers /> },
-      { path: "manage-orders", element: <ManageOrders /> }, 
+      { path: "manage-doll-orders", element: <ManageDollOrders /> }, 
       { path: "manage-character-orders", element: <ManageCharacterOrders /> },
     ],
   }

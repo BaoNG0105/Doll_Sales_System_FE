@@ -1,31 +1,71 @@
-import React, { useState, useEffect, useMemo } from "react";
-import {Table, Select, message, Button, Popconfirm, Tag, Input, Radio,} from "antd";
+import React, { useState, useEffect } from "react";
+import {
+  Table,
+  Select,
+  message,
+  Button,
+  Popconfirm,
+  Tag,
+  Input,
+  Radio,
+} from "antd";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getOrders, patchOrder, deleteOrder } from "../../service/api.order";
+import {
+  getDollOrders,
+  patchDollOrder,
+  deleteDollOrder,
+} from "../../service/api.order";
+import { useDebounce } from "use-debounce";
 
 const statusOptions = [
   { value: 0, label: "Pending", color: "gold" },
   { value: 1, label: "Processing", color: "processing" },
-  { value: 2, label: "Shipped", color: "blue" },
-  { value: 3, label: "Delivered", color: "success" },
-  { value: 4, label: "Canceled", color: "error" },
+  { value: 2, label: "Shipping", color: "blue" },
+  { value: 3, label: "Completed", color: "success" },
+  { value: 4, label: "Cancelled", color: "error" },
 ];
 
 export default function ManageOrders() {
   const [orders, setOrders] = useState([]);
+  const [allOrders, setAllOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [q, setQ] = useState("");
+  const [debouncedQ] = useDebounce(q, 500);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+    total: 0,
+  });
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (params = {}) => {
     setLoading(true);
     try {
-      const data = await getOrders();
+      const queryParams = {
+        page: params.pagination.current,
+        pageSize: params.pagination.pageSize,
+        search: params.search,
+        sortBy: params.sortBy,
+        sortDir: params.sortDir,
+      };
+      // Filter out undefined/null params
+      Object.keys(queryParams).forEach(
+        (key) =>
+          (queryParams[key] == null || queryParams[key] === "") &&
+          delete queryParams[key]
+      );
+
+      const data = await getDollOrders(queryParams);
       const formattedData = data.data.map((order) => ({
         ...order,
         key: order.orderID,
       }));
+      setAllOrders(formattedData);
       setOrders(formattedData);
+      setPagination({
+        ...params.pagination,
+        total: data.total,
+      });
     } catch (error) {
       message.error("Failed to fetch orders.");
       console.error(error);
@@ -34,27 +74,53 @@ export default function ManageOrders() {
     }
   };
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+  const handleTableChange = (newPagination, filters, sorter) => {
+    const sortDir =
+      sorter.order === "ascend"
+        ? "asc"
+        : sorter.order === "descend"
+        ? "desc"
+        : undefined;
 
-  const filteredOrders = useMemo(() => {
-    return orders.filter((order) => {
-      const matchesStatus =
-        statusFilter === "all" || order.status === statusFilter;
-      const matchesSearch =
-        q.trim() === "" ||
-        order.userName.toLowerCase().includes(q.trim().toLowerCase()) ||
-        String(order.orderID).includes(q.trim());
-      return matchesStatus && matchesSearch;
+    fetchOrders({
+      pagination: newPagination,
+      search: debouncedQ,
+      sortBy: sorter.field,
+      sortDir: sortDir,
     });
-  }, [orders, q, statusFilter]);
+  };
+
+  useEffect(() => {
+    if (statusFilter === "all") {
+      setOrders(allOrders);
+    } else {
+      const filteredOrders = allOrders.filter(
+        (order) => order.status === statusFilter
+      );
+      setOrders(filteredOrders);
+    }
+  }, [statusFilter, allOrders]);
+
+  useEffect(() => {
+    // Reset to page 1 when search changes
+    const newPagination = { ...pagination, current: 1 };
+    fetchOrders({
+      pagination: newPagination,
+      search: debouncedQ,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedQ]);
+
+  const getCurrentFetchParams = () => ({
+    pagination,
+    search: debouncedQ,
+  });
 
   const updateStatus = async (id, status) => {
     try {
-      await patchOrder(id, { status });
+      await patchDollOrder(id, { status });
       message.success(`Order ${id} updated successfully.`);
-      fetchOrders();
+      fetchOrders(getCurrentFetchParams());
     } catch (error) {
       console.error(error);
       message.error(`Failed to update order ${id}.`);
@@ -63,9 +129,9 @@ export default function ManageOrders() {
 
   const handleDelete = async (id) => {
     try {
-      await deleteOrder(id);
+      await deleteDollOrder(id);
       message.success(`Order ${id} deleted successfully.`);
-      fetchOrders();
+      fetchOrders(getCurrentFetchParams());
     } catch (error) {
       console.error(error);
       message.error(`Failed to delete order ${id}.`);
@@ -78,8 +144,9 @@ export default function ManageOrders() {
       dataIndex: "orderID",
       width: 100,
       align: "center",
+      sorter: true,
     },
-    { title: "Customer", dataIndex: "userName", align: "center" },
+    { title: "Customer", dataIndex: "userName", align: "center", sorter: true },
     {
       title: "Products",
       dataIndex: "orderItems",
@@ -91,6 +158,7 @@ export default function ManageOrders() {
       dataIndex: "totalAmount",
       width: 150,
       align: "center",
+      sorter: true,
       render: (price) =>
         `${price.toLocaleString("vi-VN", {
           style: "currency",
@@ -121,6 +189,7 @@ export default function ManageOrders() {
       title: "Order Date",
       dataIndex: "orderDate",
       align: "center",
+      sorter: true,
       render: (date) => new Date(date).toLocaleDateString("vi-VN"),
     },
     {
@@ -181,10 +250,11 @@ export default function ManageOrders() {
 
       <Table
         columns={columns}
-        dataSource={filteredOrders}
+        dataSource={orders}
         loading={loading}
         rowKey="orderID"
-        pagination={{ pageSize: 5, showSizeChanger: false }}
+        pagination={{ ...pagination, showSizeChanger: true }}
+        onChange={handleTableChange}
         size="middle"
       />
     </div>
