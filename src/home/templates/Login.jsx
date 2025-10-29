@@ -20,6 +20,15 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
+  const handleLoginSuccess = (response) => {
+    dispatch(loginSuccess(response));
+    if (response.role === 'admin' || response.role === 'manager') {
+      navigate('/dashboard/overview');
+    } else {
+      navigate('/');
+    }
+  };
+
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
     try {
@@ -28,8 +37,7 @@ function Login() {
       const response = await postGoogleLogin(idToken);
       
       console.log('Backend response:', response);
-      dispatch(loginSuccess(response));
-      navigate('/');
+      handleLoginSuccess(response);
     } catch (error) {
       console.error('Error during Google login:', error);
       setError('Google login failed. Please try again.');
@@ -38,7 +46,7 @@ function Login() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(''); // Reset error message
+    setError('');
     if (!username || !password) {
       setError('Please enter both username and password.');
       return;
@@ -48,12 +56,7 @@ function Login() {
       const response = await postLogin(credentials);
 
       console.log('Login successful:', response);
-
-      // Store tokens and user info in Redux store
-      dispatch(loginSuccess(response));
-
-      // Navigate to home page
-      navigate('/');
+      handleLoginSuccess(response);
     } catch (err) {
       console.error('Login failed:', err);
       setError('Invalid username or password. Please try again.');

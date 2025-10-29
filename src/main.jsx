@@ -26,6 +26,7 @@ import DollDetail from './home/templates/DollDetail.jsx';
 import CharacterDetail from './home/templates/CharacterDetail.jsx';
 import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
 
+import ProtectedRoute from './home/components/ProtectedRoute.jsx'; // Đảm bảo bạn đã import ProtectedRoute
 
 // Admin
 import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
@@ -60,11 +61,11 @@ const router = createBrowserRouter([
       // Doll Type page
       { path: "/doll-type", element: <DollType />, },
       // Doll Model page
-      {path: "/doll-type/:id", element: <DollModel />, },
+      { path: "/doll-type/:id", element: <DollModel />, },
       // Doll Detail page
       { path: "/doll-detail/:id", element: <DollDetail />, },
       // Characters page
-      {path: "/characters", element: <Characters />, },
+      { path: "/characters", element: <Characters />, },
       // Character Detail page
       { path: "/characters/:id", element: <CharacterDetail />, },
       // Profile page
@@ -78,7 +79,7 @@ const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [
-      {path: "/login", element: <Login />, },
+      { path: "/login", element: <Login />, },
     ],
   },
 
@@ -86,27 +87,30 @@ const router = createBrowserRouter([
   {
     element: <AuthLayout />,
     children: [
-      {path: "/register", element: <Register />, },
+      { path: "/register", element: <Register />, },
     ],
   },
 
-  //Admin Page
-
+  //Admin Page - Protected
   {
-    path: "/dashboard",
-    element: <Adminlayouts />,
+    element: <ProtectedRoute />,
     children: [
-      {path: "overview", element: <DashboardPage />, },
-      {path: "manage-doll-types", element: <ManageDollTypes /> },
-      {path: "manage-doll-models", element: <ManageDollModels /> },
-      {path: "manage-doll-variants", element: <ManageDollVariants /> },
-      { path: "manage-characters", element: <ManageCharacters /> },
-      { path: "manage-users", element: <ManageUsers /> },
-      { path: "manage-doll-orders", element: <ManageDollOrders /> }, 
-      { path: "manage-character-orders", element: <ManageCharacterOrders /> },
-    ],
+      {
+        path: "/dashboard",
+        element: <Adminlayouts />,
+        children: [
+          { path: "overview", element: <DashboardPage />, },
+          { path: "manage-doll-types", element: <ManageDollTypes /> },
+          { path: "manage-doll-models", element: <ManageDollModels /> },
+          { path: "manage-doll-variants", element: <ManageDollVariants /> },
+          { path: "manage-characters", element: <ManageCharacters /> },
+          { path: "manage-users", element: <ManageUsers /> },
+          { path: "manage-doll-orders", element: <ManageDollOrders /> },
+          { path: "manage-character-orders", element: <ManageCharacterOrders /> },
+        ],
+      }
+    ]
   }
-
 
 ])
 
