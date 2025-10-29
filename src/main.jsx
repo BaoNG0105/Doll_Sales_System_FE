@@ -29,7 +29,7 @@ import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
 import ProtectedRoute from './home/components/ProtectedRoute.jsx'; // Đảm bảo bạn đã import ProtectedRoute
 
 // Admin
-import Adminlayouts from './dashboard/layouts/adminLayouts.jsx';
+import AdminLayout from './dashboard/layouts/AdminLayout.jsx';
 import DashboardPage from './dashboard/templates/DashboardPage.jsx';
 import ManageDollTypes from './dashboard/templates/ManageDollTypes.jsx';
 import ManageDollModels from './dashboard/templates/ManageDollModels.jsx';
@@ -97,7 +97,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/dashboard",
-        element: <Adminlayouts />,
+        element: <Adminlayout />,
         children: [
           { path: "overview", element: <DashboardPage />, },
           { path: "manage-doll-types", element: <ManageDollTypes /> },
