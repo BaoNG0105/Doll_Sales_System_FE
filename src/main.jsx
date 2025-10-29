@@ -65,7 +65,7 @@ const router = createBrowserRouter([
       // Character Detail page
       { path: "/characters/:id", element: <CharacterDetail />, },
       // Profile page
-      { path: "/profile", element: <Profile />, },
+      { path: "/profile/:id", element: <Profile />, },
       // 404 Not Found page
       { path: "*", element: <Error />, },
     ],

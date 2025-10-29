@@ -3,7 +3,7 @@ import api from "../config/axios";
 //Get Users
 export const getUsers = async () => {
     try {
-        const response = await api.get("/User");
+        const response = await api.get("/users");
         return response.data;
     } catch (error) {
         console.error("Error fetching users:", error);
@@ -14,7 +14,7 @@ export const getUsers = async () => {
 //Get User by ID
 export const getUserById = async (id) => {
     try {
-        const response = await api.get(`/User/${id}`);
+        const response = await api.get(`/users/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching user with ID ${id}:`, error);
@@ -25,7 +25,7 @@ export const getUserById = async (id) => {
 //Post User
 export const postUser = async (userData) => {
     try {
-        const response = await api.post("/User", userData);
+        const response = await api.post("/users", userData);
         return response.data;
     } catch (error) {
         console.error("Error creating user:", error);
@@ -36,7 +36,7 @@ export const postUser = async (userData) => {
 //Path User
 export const pathUser = async (id, userData) => {
     try {
-        const response = await api.patch(`/User/${id}`, userData);
+        const response = await api.patch(`/users/${id}`, userData);
         return response.data;
     } catch (error) {
         console.error(`Error updating user with ID ${id}:`, error);
@@ -47,7 +47,7 @@ export const pathUser = async (id, userData) => {
 //Delete soft User
 export const deleteUser = async (id) => {
     try {
-        const response = await api.delete(`/User/soft/${id}`);
+        const response = await api.delete(`/users/soft/${id}`);
         return response.data;
     } catch (error) {
         console.error(`Error deleting user with ID ${id}:`, error);
