@@ -19,6 +19,7 @@ import {
     SearchOutlined,
 } from "@ant-design/icons";
 import { useDebounce } from "use-debounce";
+import FormImageUpload from "../components/FormImageUpload";
 
 import {
     getDollModels,
@@ -256,7 +257,7 @@ export default function ManageDollModels() {
                 onOk={() => form.submit()}
                 okText="Save"
                 width={600}
-            >
+                >
                 <Form form={form} layout="vertical" onFinish={onFinish} className="mt-6">
                     <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                         <Input />
@@ -270,8 +271,8 @@ export default function ManageDollModels() {
                             }))}
                         />
                     </Form.Item>
-                    <Form.Item name="image" label="Image URL">
-                        <Input />
+                    <Form.Item name="image" label="Image">
+                        <FormImageUpload />
                     </Form.Item>
                     <Form.Item name="description" label="Description">
                         <Input.TextArea rows={4} />
