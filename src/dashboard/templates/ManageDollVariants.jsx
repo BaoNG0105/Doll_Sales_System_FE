@@ -3,14 +3,14 @@ import {
   Button,
   Form,
   Input,
-  InputNumber,
   Modal,
-  Select,
   Table,
   message,
   Popconfirm,
   Image,
   Space,
+  InputNumber,
+  Select,
   Tag,
 } from "antd";
 import {
@@ -19,19 +19,19 @@ import {
   DeleteOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
-import {
-  getDollVariants,
-  postDollVariant,
-  deleteDollVariant,
-  patchDollVariant, // Assuming you will add this
-} from "../../service/api.doll";
-import { getDollModels } from "../../service/api.doll";
 import { useDebounce } from "use-debounce";
+import {
+  deleteDollVariant,
+  getDollModels,
+  getDollVariants,
+  patchDollVariant,
+  postDollVariant,
+} from "../../service/api.doll";
+import FormImageUpload from "../components/FormImageUpload";
 
 export default function ManageDollVariants() {
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [dollModels, setDollModels] = useState([]);
   const [q, setQ] = useState("");
   const [debouncedQ] = useDebounce(q, 500);
   const [pagination, setPagination] = useState({
@@ -41,6 +41,7 @@ export default function ManageDollVariants() {
   });
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState(null);
+  const [dollModels, setDollModels] = useState([]);
   const [form] = Form.useForm();
 
   const fetchData = async (params = {}) => {
@@ -67,12 +68,29 @@ export default function ManageDollVariants() {
       }));
     } catch (error) {
       console.error("Failed to fetch doll variants:", error);
-      message.error("Failed to fetch doll variants");
+      message.error("Failed to fetch doll variants.");
       setList([]);
     } finally {
       setLoading(false);
     }
   };
+
+  const fetchDollModels = async () => {
+    try {
+      // Fetch all models without pagination for the select dropdown
+      const response = await getDollModels({ pageSize: 1000 });
+      setDollModels(response.items || []);
+    } catch (error) {
+      console.error("Failed to fetch doll models:", error);
+      message.error("Failed to fetch doll models for selection.");
+    }
+  };
+
+  useEffect(() => {
+    fetchData({ pagination });
+    fetchDollModels();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const newPagination = { ...pagination, current: 1 };
@@ -82,19 +100,6 @@ export default function ManageDollVariants() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedQ]);
-
-  useEffect(() => {
-    const fetchDollModels = async () => {
-      try {
-        // Fetch all models for the select dropdown
-        const response = await getDollModels({ pageSize: 1000 });
-        setDollModels(response.items || []);
-      } catch (error) {
-        console.error("Failed to fetch doll models:", error);
-      }
-    };
-    fetchDollModels();
-  }, []);
 
   const handleTableChange = (pagination, filters, sorter) => {
     fetchData({ pagination, sorter, search: q });
@@ -112,35 +117,32 @@ export default function ManageDollVariants() {
     setOpen(true);
   };
 
-  const handleDelete = async (id) => {
+  const onDelete = async (id) => {
     try {
       await deleteDollVariant(id);
-      message.success("Deleted variant successfully");
+      message.success("Variant deleted successfully!");
       fetchData({ pagination, search: q });
     } catch (error) {
-      console.error(error);
-      message.error("Failed to delete variant");
+      console.error("Failed to delete variant:", error);
+      message.error("Failed to delete variant.");
     }
   };
 
-  const handleOk = async () => {
+  const onFinish = async (values) => {
     try {
-      const values = await form.validateFields();
+      const payload = { ...values };
       if (editing) {
-        // Assuming patchDollVariant exists
-        await patchDollVariant(editing.dollVariantID, values);
-        message.success("Updated variant successfully");
+        await patchDollVariant(editing.dollVariantID, payload);
+        message.success("Variant updated successfully!");
       } else {
-        await postDollVariant(values);
-        message.success("Added new variant");
+        await postDollVariant(payload);
+        message.success("Variant added successfully!");
       }
       setOpen(false);
-      setEditing(null);
-      form.resetFields();
       fetchData({ pagination, search: q });
     } catch (error) {
-      console.error(error);
-      message.error("Failed to save variant");
+      console.error("Failed to save variant:", error);
+      message.error("Failed to save variant.");
     }
   };
 
@@ -149,8 +151,21 @@ export default function ManageDollVariants() {
       title: "ID",
       dataIndex: "dollVariantID",
       key: "dollVariantID",
-      sorter: true,
       align: "center",
+      sorter: true,
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      sorter: true,
+      render: (name) => <span className="font-medium">{name}</span>,
+    },
+    {
+      title: "Doll Model",
+      dataIndex: "dollModelName",
+      key: "dollModelName",
+      sorter: true,
     },
     {
       title: "Image",
@@ -160,47 +175,44 @@ export default function ManageDollVariants() {
       render: (url) => <Image width={60} src={url} />,
     },
     {
-      title: "Variant Name",
-      dataIndex: "name",
-      key: "name",
-      sorter: true,
-    },
-    {
-      title: "Model Name",
-      dataIndex: "dollModelName",
-      key: "dollModelName",
-      sorter: true,
-    },
-    {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      align: "center",
       sorter: true,
-      align: "right",
       render: (price) =>
         price.toLocaleString("vi-VN", { style: "currency", currency: "VND" }),
+    },
+    {
+      title: "Stock",
+      dataIndex: "stock",
+      key: "stock",
+      align: "center",
+      sorter: true,
     },
     {
       title: "Color",
       dataIndex: "color",
       key: "color",
+      align: "center",
       sorter: true,
     },
     {
       title: "Size",
       dataIndex: "size",
       key: "size",
+      align: "center",
       sorter: true,
     },
     {
       title: "Status",
       dataIndex: "isActive",
       key: "isActive",
-      sorter: true,
       align: "center",
+      sorter: true,
       render: (isActive) => (
         <Tag color={isActive ? "green" : "red"}>
-          {isActive ? "Active" : "Inactive"}
+          {isActive ? "ACTIVE" : "INACTIVE"}
         </Tag>
       ),
     },
@@ -219,7 +231,7 @@ export default function ManageDollVariants() {
           <Popconfirm
             title="Delete the variant"
             description="Are you sure to delete this variant?"
-            onConfirm={() => handleDelete(record.dollVariantID)}
+            onConfirm={() => onDelete(record.dollVariantID)}
             okText="Yes"
             cancelText="No"
           >
@@ -246,12 +258,17 @@ export default function ManageDollVariants() {
           <Input
             allowClear
             prefix={<SearchOutlined />}
-            placeholder="Search by name, color, size..."
+            placeholder="Search by name, model, color..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
             style={{ width: 320, background: "#fff" }}
           />
-          <Button type="primary" danger icon={<PlusOutlined />} onClick={onAdd}>
+          <Button
+            type="primary"
+            danger
+            icon={<PlusOutlined />}
+            onClick={onAdd}
+          >
             Add Variant
           </Button>
         </div>
@@ -273,11 +290,11 @@ export default function ManageDollVariants() {
         open={open}
         title={editing ? "Edit Doll Variant" : "Add Doll Variant"}
         onCancel={() => setOpen(false)}
-        onOk={handleOk}
+        onOk={() => form.submit()}
         okText="Save"
         width={600}
       >
-        <Form form={form} layout="vertical" className="mt-6">
+        <Form form={form} layout="vertical" onFinish={onFinish} className="mt-6">
           <Form.Item
             name="dollModelID"
             label="Doll Model"
@@ -286,21 +303,25 @@ export default function ManageDollVariants() {
             <Select
               showSearch
               placeholder="Select a doll model"
-              optionFilterProp="children"
-              filterOption={(input, option) =>
-                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
-              }
+              optionFilterProp="label"
               options={dollModels.map((model) => ({
                 value: model.dollModelID,
                 label: model.name,
               }))}
             />
           </Form.Item>
-          <Form.Item name="name" label="Variant Name" rules={[{ required: true }]}>
+          <Form.Item
+            name="name"
+            label="Variant Name"
+            rules={[{ required: true }]}
+          >
             <Input />
           </Form.Item>
           <Form.Item name="price" label="Price" rules={[{ required: true }]}>
-            <InputNumber style={{ width: "100%" }} min={0} />
+            <InputNumber min={0} style={{ width: "100%" }} />
+          </Form.Item>
+          <Form.Item name="stock" label="Stock" rules={[{ required: true }]}>
+            <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
           <Form.Item name="color" label="Color" rules={[{ required: true }]}>
             <Input />
@@ -308,8 +329,11 @@ export default function ManageDollVariants() {
           <Form.Item name="size" label="Size" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="image" label="Image URL">
-            <Input />
+          <Form.Item name="image" label="Image">
+            <FormImageUpload />
+          </Form.Item>
+          <Form.Item name="description" label="Description">
+            <Input.TextArea rows={4} />
           </Form.Item>
         </Form>
       </Modal>
