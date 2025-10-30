@@ -4,7 +4,6 @@ import {
   ArrowDownOutlined,
   ArrowUpOutlined,
 } from "@ant-design/icons";
-// 1. Thay đổi Bar thành Column
 import { Column } from "@ant-design/charts"; 
 import { getStaticRevenue, getStaticUsers, getStaticOrders } from "../../service/api.statics";
 
