@@ -216,8 +216,8 @@
   align-items: center;
   width: 100%;
   padding: 10px;
-  background-color: #4285F4; /* Google Blue */
-  color: white;
+  background-color: white;
+  color: #4285F4;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -226,7 +226,7 @@
 }
 
 .google-login-button:hover {
-  background-color: #357ae8;
+  background-color: #f0f0f0;
 }
 
 .google-icon {

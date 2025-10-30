@@ -232,14 +232,13 @@ const DashboardPage = () => {
         </Col>
       </Row>
 
-      {/* 2. Hàng mới chứa biểu đồ Column */}
+      {/* 2. Hàng chứa biểu đồ Column */}
       <Row gutter={16} style={{ marginTop: 16 }}>
         <Col span={24}>
           <Card title={`Monthly Revenue (${displayYear})`}>
             {loading ? (
               <Spin />
             ) : (
-              // Thay đổi <Bar> thành <Column>
               <Column
                 data={monthlyRevenueData}
                 xField="monthLabel" 

@@ -1,12 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../static/css/Auth.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../config/firebase';
 import { postGoogleLogin, postLogin } from '../../service/api.login'; // Import postLogin
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../redux/authSlice';
+import { loginSuccess, logout } from '../../redux/authSlice';
 
 function Login() {
   const navigate = useNavigate();
@@ -15,6 +15,15 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [sessionExpired, setSessionExpired] = useState(false);
+
+  useEffect(() => {
+    // Kiểm tra nếu vừa bị logout do hết phiên
+    if (localStorage.getItem('sessionExpired')) {
+      setSessionExpired(true);
+      localStorage.removeItem('sessionExpired');
+    }
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -22,6 +31,13 @@ function Login() {
 
   const handleLoginSuccess = (response) => {
     dispatch(loginSuccess(response));
+    // Đặt timeout logout sau 60 phút (3600000 ms)
+    setTimeout(() => {
+      dispatch(logout());
+      localStorage.setItem('sessionExpired', 'true');
+      navigate('/login');
+    }, 60 * 60 * 1000);
+
     if (response.role === 'admin' || response.role === 'manager') {
       navigate('/dashboard/overview');
     } else {
@@ -35,7 +51,7 @@ function Login() {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       const response = await postGoogleLogin(idToken);
-      
+
       console.log('Backend response:', response);
       handleLoginSuccess(response);
     } catch (error) {
@@ -67,6 +83,11 @@ function Login() {
     <div className="auth-container">
       <h1>Login</h1>
       <form className="auth-form" onSubmit={handleSubmit}>
+        {sessionExpired && (
+          <p style={{ color: 'red', textAlign: 'center' }}>
+            Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.
+          </p>
+        )}
         {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
         <div className="input-group">
           <label htmlFor="username">Username</label>
