@@ -65,3 +65,17 @@ export const deleteUser = async (id) => {
         throw error;
     }
 };
+
+//-------------------
+//User Character
+//-------------------
+//GET User Characters by User ID
+export const getUserCharactersByUserId = async (userId) => {
+    try {
+        const response = await api.get(`/user-characters/users/${userId}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching characters for user with ID ${userId}:`, error);
+        throw error;
+    }
+};

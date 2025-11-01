@@ -25,6 +25,7 @@ import Profile from './home/templates/Profile.jsx';
 import DollVariant from './home/templates/DollVariant.jsx';
 import CharacterDetail from './home/templates/CharacterDetail.jsx';
 import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
+import AI from './home/templates/AI.jsx';
 
 // Protected Route
 import ProtectedRoute from './home/components/ProtectedRoute.jsx'; // Đảm bảo bạn đã import ProtectedRoute
@@ -71,6 +72,8 @@ const router = createBrowserRouter([
       { path: "/characters/:id", element: <CharacterDetail />, },
       // Profile page
       { path: "/profile/:id", element: <Profile />, },
+      // AI page
+      { path: "/ai/:characterId", element: <AI />, },
       // 404 Not Found page
       { path: "*", element: <Error />, },
     ],

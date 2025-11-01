@@ -279,6 +279,33 @@
     background-color: #5a6268;
 }
 
+.edit-btn {
+    background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.05em;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.12);
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.2s, transform 0.1s;
+    letter-spacing: 0.5px;
+}
+
+.edit-btn:hover:not(:disabled) {
+    background: linear-gradient(90deg, #0056b3 0%, #00aaff 100%);
+    box-shadow: 0 4px 16px rgba(0,123,255,0.18);
+    transform: translateY(-2px) scale(1.04);
+}
+
+.edit-btn:disabled {
+    background: #b0c4de;
+    color: #eee;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 /* --- Keyframes for Modal Animation --- */
 @keyframes fadeIn {
     from {
