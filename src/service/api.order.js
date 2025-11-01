@@ -95,6 +95,17 @@ export const getCharacterOrderById = async (id) => {
   }
 };
 
+//GET Character Orders by User ID
+export const getCharacterOrdersByUserId = async (userId) => {
+  try {
+    const response = await api.get(`/character-orders/user-characters/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching character orders for user ID ${userId}:`, error);
+    throw error;
+  }
+};
+
 //POST Character Order
 export const postCharacterOrder = async (orderData) => {
   try {
