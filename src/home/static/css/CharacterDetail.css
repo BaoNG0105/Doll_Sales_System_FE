@@ -158,11 +158,13 @@
 }
 
 .product-not-found h2 {
+    color: #333;
     font-size: 2rem;
     margin-bottom: 1rem;
 }
 
 .product-not-found p {
+    color: #666;
     margin-bottom: 2rem;
 }
 

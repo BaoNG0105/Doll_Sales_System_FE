@@ -53,7 +53,7 @@ function Header() {
             ) : (
               <Link to="/login" className="user-action"><FaUser /></Link>
             )}
-            <Link to="/cart" className="cart-icon"><FaShoppingCart size={24} /></Link>
+            <Link to={`/cart/${userId}`} className="cart-icon"><FaShoppingCart size={24} /></Link>
           </div>
           <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <FaTimes /> : <FaBars />}

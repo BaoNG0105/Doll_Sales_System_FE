@@ -10,11 +10,10 @@ function Characters() {
     const fetchCharacters = async () => {
       try {
         const data = await getCharacters();
-        console.log('Fetched characters data:', data); // Debug log
-        setCharacters(data.items);
+        // Chỉ lấy character isActive: true
+        setCharacters(data.items.filter(char => char.isActive));
       } catch (error) {
         console.error('Failed to fetch characters:', error);
-        // Handle error if needed
       }
     };
 
@@ -36,19 +35,19 @@ function Characters() {
         <div className="products-grid">
           {characters.map((character) => (
             <Link to={`/characters/${character.characterId}`} style={{ textDecoration: 'none', color: 'inherit' }} key={character.characterId}>
-            <div className="emotion-product-card">
-              <img className="emotion-product-image" src={character.image} alt={character.name} />
-              <div className="emotion-product-info">
-                <h3 className="emotion-product-name">{character.name}</h3>
-                <p className="emotion-product-description"><strong>Age:</strong> {character.ageRange}</p>
-                <p className="emotion-product-description"><strong>Personality:</strong> {character.personality}</p>
-                <p className="emotion-product-description">{character.description}</p>
-                <div className="emotion-card-buttons">
-                  <button className="add-to-cart-btn">Add to Cart</button>
-                  <button className="buy-now-btn">Buy Now</button>
+              <div className="emotion-product-card">
+                <img className="emotion-product-image" src={character.image} alt={character.name} />
+                <div className="emotion-product-info">
+                  <h3 className="emotion-product-name">{character.name}</h3>
+                  <p className="emotion-product-description"><strong>Age:</strong> {character.ageRange}</p>
+                  <p className="emotion-product-description"><strong>Personality:</strong> {character.personality}</p>
+                  <p className="emotion-product-description">{character.description}</p>
+                  <div className="emotion-card-buttons">
+                    <button className="add-to-cart-btn">Add to Cart</button>
+                    <button className="buy-now-btn">Buy Now</button>
+                  </div>
                 </div>
               </div>
-            </div>
             </Link>
           ))}
         </div>

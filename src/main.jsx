@@ -22,6 +22,7 @@ import DollType from './home/templates/DollType.jsx';
 import DollModel from './home/templates/DollModel.jsx';
 import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
+import Cart from './home/templates/Cart.jsx';
 import DollVariant from './home/templates/DollVariant.jsx';
 import CharacterDetail from './home/templates/CharacterDetail.jsx';
 import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
@@ -58,20 +59,22 @@ const router = createBrowserRouter([
       { path: "/terms-of-service", element: <Terms />, },
       // FAQ page
       { path: "/faq", element: <FAQ />, },
-      // Menu page
-      { path: "/products", element: <Menu />, },
-      // Doll Type page
-      { path: "/doll-type", element: <DollType />, },
-      // Doll Model page
-      { path: "/doll-type/:id", element: <DollModel />, },
-      // Doll Detail page
-      { path: "/doll-detail/:id", element: <DollVariant />, },
-      // Characters page
-      { path: "/characters", element: <Characters />, },
+       // Menu page
+       { path: "/products", element: <Menu />, },
+       // Doll Type page
+       { path: "/doll-type", element: <DollType />, },
+       // Doll Model page
+       { path: "/doll-type/:typeId", element: <DollModel />, },
+       // Doll Detail page (DollVariant)
+       { path: "/doll-type/:typeId/doll-model/:modelId", element: <DollVariant />, },
+       // Characters page
+       { path: "/characters", element: <Characters />, },
       // Character Detail page
       { path: "/characters/:id", element: <CharacterDetail />, },
       // Profile page
       { path: "/profile/:id", element: <Profile />, },
+      // Cart page
+      { path: "/cart/:id", element: <Cart />, },
       // AI page
       { path: "/ai/:characterId", element: <AI />, },
       // 404 Not Found page
