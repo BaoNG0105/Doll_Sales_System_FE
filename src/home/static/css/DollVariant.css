@@ -143,9 +143,9 @@
     font-size: 1.1rem;
     font-weight: 600;
     color: #333;
-    background-color: #fff;
+    background-color: transparent;
     border: 2px solid #333;
-    border-radius: 8px;
+    border-radius: 50px; /* Rounded pill shape */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -157,7 +157,6 @@
 .add-to-cart-button:hover:not(:disabled) {
     background-color: #333;
     color: #fff;
-    transform: translateY(-2px);
 }
 
 /* Buy Now Button */
@@ -167,31 +166,30 @@
     font-size: 1.1rem;
     font-weight: 600;
     color: #fff;
-    background: #87ceeb;
-    border: 2px solid #87ceeb;
-    border-radius: 8px;
+    /* Gradient background */
+    background: linear-gradient(45deg, #87ceeb, #5ab9ea);
+    border: none; /* Remove border */
+    border-radius: 50px; /* Rounded pill shape */
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(135, 206, 235, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .buy-now-button:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(135, 206, 235, 0.6);
-    background: #3498db;
-    border-color: #3498db;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
 }
 
 /* Disabled button state */
 .add-to-cart-button:disabled,
 .buy-now-button:disabled {
-    background-color: #e0e0e0;
-    border-color: #e0e0e0;
-    color: #9e9e9e;
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+    color: #adb5bd;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;

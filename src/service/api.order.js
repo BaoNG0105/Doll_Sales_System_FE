@@ -3,7 +3,7 @@ import api from "../config/axios";
 //------------------------------------
 //Doll Order API
 //------------------------------------
-//GET Doll Orders
+//GET All Doll Orders
 export const getDollOrders = async (params) => {
   try {
     const response = await api.get("/doll-orders", { params });
@@ -26,12 +26,12 @@ export const getDollOrderById = async (id) => {
 };
 
 //GET Doll Orders by User ID
-export const getDollOrdersByUserId = async (userId) => {
+export const getDollOrdersByUserId = async (id) => {
   try {
-    const response = await api.get(`/doll-orders/user/${userId}`);
+    const response = await api.get(`/doll-orders/user/${id}`);
     return response.data;
   } catch (error) {
-    console.error(`Error fetching orders for user ID ${userId}:`, error);
+    console.error(`Error fetching orders for user ID ${id}:`, error);
     throw error;
   }
 };

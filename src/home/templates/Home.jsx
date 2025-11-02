@@ -11,7 +11,7 @@ import logo4 from '../static/img/logo4.png';
 import logo5 from '../static/img/logo5.png';
 //api
 import { getCharacters } from '../../service/api.character.js';
-import { getDollModels } from '../../service/api.doll.js';
+import { getDollTypes, getDollModels } from '../../service/api.doll.js';
 
 // Sample collaborator data
 const collaborators = [
@@ -40,24 +40,39 @@ function Home() {
 
   // --- FETCH DOLL MODELS FROM API ---
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchFeaturedProducts = async () => {
       try {
         setProductLoading(true);
-        const responseData = await getDollModels();
-        if (responseData && responseData.items) {
-          setProducts(responseData.items);
-        } else {
-          setProducts([]);
-        }
-      } catch (err) {
-        setProductError('Failed to fetch dolls. Please try again later.');
-        console.error(err);
+        // Fetch both models and types concurrently
+        const [modelsData, typesData] = await Promise.all([
+          getDollModels({ isFeatured: true, limit: 10 }), // Assuming an API parameter to get featured dolls
+          getDollTypes()
+        ]);
+
+        // Create a set of active doll type IDs for efficient lookup
+        const activeTypeIds = new Set(
+          typesData.items
+            .filter(type => type.isActive)
+            .map(type => type.dollTypeID)
+        );
+
+        // Filter models: must be active AND belong to an active type
+        const activeProducts = modelsData.items.filter(product =>
+          product.isActive && activeTypeIds.has(product.dollTypeID)
+        );
+
+        setProducts(activeProducts);
+      } catch (error) {
+        console.error("Failed to fetch featured products:", error);
+        setProductError("Could not load featured products.");
       } finally {
         setProductLoading(false);
       }
     };
-    fetchProducts();
+
+    fetchFeaturedProducts();
   }, []);
+
 
   // --- FETCH CHARACTERS FROM API ---
   useEffect(() => {
@@ -66,7 +81,8 @@ function Home() {
         setCharLoading(true);
         const data = await getCharacters();
         if (Array.isArray(data.items)) {
-          setCharacters(data.items);
+          // Chỉ lấy character isActive: true
+          setCharacters(data.items.filter(char => char.isActive));
         } else {
           setCharacters([]);
         }
@@ -167,7 +183,7 @@ function Home() {
             <div className="product-slider">
               {/* Render the list twice for a seamless loop */}
               {products.map((product) => (
-                <Link to={`/doll-detail/${product.dollModelID}`} key={`${product.dollModelID}-1`} className="product-card">
+                <Link to={`/doll-type/${product.dollTypeID}/doll-model/${product.dollModelID}`} key={`${product.dollModelID}-1`} className="product-card">
                   <img src={product.image} alt={product.name} />
                   <div className="product-card-content">
                     <h3>{product.name}</h3>
@@ -176,7 +192,7 @@ function Home() {
                 </Link>
               ))}
               {products.map((product) => (
-                <Link to={`/doll-detail/${product.dollModelID}`} key={`${product.dollModelID}-2`} className="product-card">
+                <Link to={`/doll-type/${product.dollTypeID}/doll-model/${product.dollModelID}`} key={`${product.dollModelID}-2`} className="product-card">
                   <img src={product.image} alt={product.name} />
                   <div className="product-card-content">
                     <h3>{product.name}</h3>
@@ -189,8 +205,8 @@ function Home() {
         )}
       </section>
 
-     {/* Character Section */}
-     <section className="product-section" style={{ backgroundColor: '#ffffff' }}>
+      {/* Character Section */}
+      <section className="product-section" style={{ backgroundColor: '#ffffff' }}>
         <h2>Featured Characters</h2>
         {charLoading ? (
           <p>Loading characters...</p>

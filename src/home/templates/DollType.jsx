@@ -30,21 +30,23 @@ function Dolls() {
       </section>
       {/* Menu Section */}
       <div className="menu-container">
-        {Array.isArray(dollTypes) && dollTypes.map((dollType) => (
-          <Link
-            to={`/doll-type/${dollType.dollTypeID}`}
-            className="menu-card"
-          >
-            <img
-              src={dollType.image}
-              alt={`${dollType.name} Collection`}
-              className="menu-card-img"
-            />
-            <div className="menu-card-overlay">
-              <h2 className="menu-card-title">{dollType.name}</h2>
-            </div>
-          </Link>
-        ))}
+        {Array.isArray(dollTypes) && dollTypes
+          .filter((dollType) => dollType.isActive)
+          .map((dollType) => (
+            <Link
+              to={`/doll-type/${dollType.dollTypeID}`}
+              className="menu-card"
+            >
+              <img
+                src={dollType.image}
+                alt={`${dollType.name} Collection`}
+                className="menu-card-img"
+              />
+              <div className="menu-card-overlay">
+                <h2 className="menu-card-title">{dollType.name}</h2>
+              </div>
+            </Link>
+          ))}
       </div>
     </div>
   );

@@ -1,11 +1,16 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import Swal from 'sweetalert2';
 import { FaShoppingCart, FaMoneyBillWave } from 'react-icons/fa';
-import { getDollModelById, getDollVariantsByDollModelId } from '../../service/api.doll';
-import '../static/css/DollDetail.css';
+import {getDollTypes ,getDollModelById, getDollVariantsByDollModelId } from '../../service/api.doll';
+import { postDollOrder } from '../../service/api.order';
+import '../static/css/DollVariant.css';
 
 function DollDetail() {
-    const { id } = useParams(); // This is dollModelID
+    const {typeId, modelId } = useParams(); // Changed from id to modelId
+    const navigate = useNavigate();
+    const { userId, isAuthenticated } = useSelector((state) => state.auth);
     const [dollModel, setDollModel] = useState(null);
     const [variants, setVariants] = useState([]);
     const [selectedColor, setSelectedColor] = useState(null);
@@ -13,6 +18,58 @@ function DollDetail() {
     const [selectedVariant, setSelectedVariant] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const handleAddToCart = async () => {
+        if (!isAuthenticated) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Please Log In',
+                text: 'You need to be logged in to add items to your cart.',
+                confirmButtonText: 'Log In'
+            }).then(() => {
+                navigate('/login');
+            });
+            return;
+        }
+
+        if (!selectedVariant) {
+            Swal.fire({
+                icon: 'error',
+                title: 'No Variant Selected',
+                text: 'Please select a color and size!',
+            });
+            return;
+        }
+
+        const orderData = {
+            userID: userId,
+            shippingAddress: "User's default address", // Placeholder
+            orderItems: [
+                {
+                    dollVariantID: selectedVariant.dollVariantID,
+                    quantity: 1 // Assuming quantity is 1 for now
+                }
+            ]
+        };
+
+        try {
+            await postDollOrder(orderData);
+            Swal.fire({
+                icon: 'success',
+                title: 'Added to cart successfully!',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            navigate('/cart/:id'.replace(':id', userId)); // Navigate to the cart page
+        } catch (err) {
+            console.error("Failed to add to cart:", err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Failed to add to cart. Please try again.',
+            });
+        }
+    };
 
     // Group variants by color for easier selection
     const variantsByColor = useMemo(() => {
@@ -31,20 +88,39 @@ function DollDetail() {
                 setLoading(true);
                 setError(null);
 
-                const [modelRes, variantsRes] = await Promise.all([
-                    getDollModelById(id),
-                    getDollVariantsByDollModelId(id)
+                // --- Access Validation ---
+                const [typesData, modelRes] = await Promise.all([
+                    getDollTypes(),
+                    getDollModelById(modelId)
                 ]);
 
-                if (modelRes && modelRes) {
-                    setDollModel(modelRes);
-                } else {
-                    throw new Error('Doll model not found.');
+                const dollType = typesData.items.find(t => String(t.dollTypeID) === String(typeId));
+
+                if (!dollType || !dollType.isActive) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied',
+                        text: 'This doll category is inactive or does not exist!',
+                    }).then(() => navigate('/doll-type'));
+                    return;
                 }
+
+                if (!modelRes || !modelRes.isActive) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Access Denied',
+                        text: 'This doll model is inactive or does not exist!',
+                    }).then(() => navigate(`/doll-type/${typeId}`));
+                    return;
+                }
+                // --- End Validation ---
+
+                setDollModel(modelRes);
+
+                const variantsRes = await getDollVariantsByDollModelId(modelId);
 
                 if (variantsRes && Array.isArray(variantsRes) && variantsRes.length > 0) {
                     setVariants(variantsRes);
-                    // Set initial selection
                     const firstVariant = variantsRes[0];
                     setSelectedColor(firstVariant.color);
                     setSelectedSize(firstVariant.size);
@@ -61,7 +137,7 @@ function DollDetail() {
         };
 
         fetchData();
-    }, [id]);
+    }, [modelId, typeId, navigate]);
 
     // Update selected variant when color or size changes
     useEffect(() => {
@@ -104,7 +180,7 @@ function DollDetail() {
                 <div className="doll-info-section">
                     <h1 className="doll-title">{dollModel.name}</h1>
                     <p className="doll-description">{dollModel.description}</p>
-                    
+
                     {displayPrice !== undefined ? (
                         <div className="doll-price">{new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(displayPrice)}</div>
                     ) : (
@@ -138,10 +214,17 @@ function DollDetail() {
                     )}
 
                     <div className="action-buttons-container">
-                        <button className="add-to-cart-button" disabled={!selectedVariant}>
+                        <button
+                            className="add-to-cart-button"
+                            onClick={handleAddToCart}
+                            disabled={!selectedVariant}
+                        >
                             <FaShoppingCart /> Add to Cart
                         </button>
-                        <button className="buy-now-button" disabled={!selectedVariant}>
+                        <button
+                            className="buy-now-button"
+                            disabled={!selectedVariant}
+                        >
                             <FaMoneyBillWave /> Buy Now
                         </button>
                     </div>

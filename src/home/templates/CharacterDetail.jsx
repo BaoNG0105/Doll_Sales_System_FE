@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaShoppingCart } from 'react-icons/fa';
+import Swal from 'sweetalert2';
 import { getCharacterById, getCharacterPackagesByCharacterId } from '../../service/api.character.js'; // Import the API functions
 import '../static/css/CharacterDetail.css';
 
@@ -13,7 +14,7 @@ function CharacterDetail() {
     const [selectedOption, setSelectedOption] = useState(null);
     const [selectedPackage, setSelectedPackage] = useState(null); // State for the selected package object
 
-useEffect(() => {
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 setLoading(true);
@@ -21,28 +22,34 @@ useEffect(() => {
                     getCharacterById(id),
                     getCharacterPackagesByCharacterId(id)
                 ]);
-
+    
                 if (characterResult.status === 'fulfilled') {
+                    // Kiểm tra isActive
+                    if (!characterResult.value || !characterResult.value.isActive) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Access Denied',
+                            text: 'This character is inactive or does not exist!',
+                        }).then(() => window.location.href = '/characters');
+                        return;
+                    }
                     setCharacter(characterResult.value);
                 } else {
-                    // If character fails to load, we should treat it as a critical error
                     throw characterResult.reason;
                 }
-
+    
                 if (packagesResult.status === 'fulfilled') {
                     const packagesData = packagesResult.value;
                     const validPackages = Array.isArray(packagesData.data) ? packagesData.data : [];
                     setPackages(validPackages);
-
+    
                     if (validPackages.length > 0) {
                         setSelectedOption(validPackages[0].packageId);
                     }
                 } else {
-                    // Log error for packages but don't block rendering the character
-                    console.error(`Failed to fetch packages for character with id ${id}:`, packagesResult.reason);
-                    setPackages([]); // Set packages to empty array on failure
+                    setPackages([]);
                 }
-
+    
             } catch (err) {
                 setError(err);
                 console.error(`Failed to fetch data for character with id ${id}:`, err);
@@ -50,7 +57,7 @@ useEffect(() => {
                 setLoading(false);
             }
         };
-
+    
         fetchData();
     }, [id]);
 

@@ -2,7 +2,7 @@ import { Outlet, Link } from 'react-router-dom';
 import '../static/css/Auth.css';
 
 const AuthLayout = () => {
-  const videoUrl = 'https://res.cloudinary.com/dygipvoal/video/upload/v1760609426/xajapnrflirs9qzmbl0x.mp4';
+  const videoUrl = 'https://res.cloudinary.com/dygipvoal/video/upload/v1762022212/myhc16ricbztewdpzjcg.mp4';
 
   return (
     <div className="auth-layout">
