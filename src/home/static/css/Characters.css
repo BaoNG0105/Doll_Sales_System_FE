@@ -101,18 +101,12 @@
     flex-grow: 1; /* Đẩy giá và nút xuống dưới */
 }
 
-.emotion-product-price {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #87ceeb;
-    margin-bottom: 1.5rem;
-}
-
 .emotion-card-buttons {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* grid-template-columns: 1fr 1fr; */ /* Remove two-column layout */
     gap: 0.75rem;
     margin-top: auto; /* Đẩy nút xuống dưới cùng */
+    padding: 0 1.5rem; /* Add some padding to center the button */
 }
 
 .emotion-card-buttons button {
@@ -123,17 +117,6 @@
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-}
-
-.add-to-cart-btn {
-    background-color: #fff;
-    color: #333;
-    border: 2px solid #333;
-}
-
-.add-to-cart-btn:hover {
-    background-color: #333;
-    color: #fff;
 }
 
 .buy-now-btn {

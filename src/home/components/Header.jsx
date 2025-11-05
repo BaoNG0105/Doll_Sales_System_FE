@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { FaShoppingCart, FaUser, FaSearch, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
+import { FaUser, FaSearch, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import '../static/css/Header.css';
 // Redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -53,7 +53,6 @@ function Header() {
             ) : (
               <Link to="/login" className="user-action"><FaUser /></Link>
             )}
-            <Link to={`/cart/${userId}`} className="cart-icon"><FaShoppingCart size={24} /></Link>
           </div>
           <button className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <FaTimes /> : <FaBars />}

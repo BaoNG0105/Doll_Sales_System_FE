@@ -142,6 +142,17 @@ export const getDollVariants = async (params) => {
     }
   };
 
+// GET Doll Variant by ID
+export const getDollVariantById = async (id) => {
+    try {
+        const response = await api.get(`/doll-variants/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching doll variant with ID ${id}:`, error);
+        throw error;
+    }
+};
+
 // GET Doll Variants by DollModel ID
 export const getDollVariantsByDollModelId = async (dollModelId) => {
     try {

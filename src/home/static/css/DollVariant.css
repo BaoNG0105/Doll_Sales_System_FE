@@ -7,7 +7,8 @@
 }
 
 /* Loading and Error States */
-.loading-container, .error-container {
+.loading-container,
+.error-container {
     text-align: center;
     padding: 50px;
     font-size: 1.2rem;
@@ -39,6 +40,12 @@
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: 12px;
+    transition: transform 0.4s ease; /* Thêm hiệu ứng chuyển động */
+    cursor: zoom-in; /* Hiệu ứng chuột */
+}
+/* Hiệu ứng phóng to khi hover */
+.doll-image-section:hover .main-doll-image {
+    transform: scale(1.2);
 }
 
 /* Info Section */
@@ -95,6 +102,11 @@
     background-color: #fff;
     cursor: pointer;
     transition: all 0.2s ease;
+    /* Thêm các thuộc tính sau */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .option-btn.selected {
@@ -103,28 +115,6 @@
     border-color: #333;
 }
 
-.quantity-selector { 
-    display: flex; 
-    align-items: center; 
-}
-.quantity-btn { 
-    width: 35px; 
-    height: 35px; 
-    border: 1px solid #ddd; 
-    background-color: #f9f9f9; 
-    font-size: 1rem; 
-    cursor: pointer; 
-}
-.quantity-display { 
-    width: 50px; 
-    height: 35px; 
-    text-align: center; 
-    font-size: 1rem; 
-    font-weight: 600; 
-    border-top: 1px solid #ddd; 
-    border-bottom: 1px solid #ddd; 
-    line-height: 35px; 
-}
 /* --- END OF MOVED STYLES --- */
 
 
@@ -132,31 +122,9 @@
 .action-buttons-container {
     display: flex;
     gap: 15px;
-    margin-top: auto; /* Pushes buttons to the bottom */
+    margin-top: auto;
+    /* Pushes buttons to the bottom */
     padding-top: 20px;
-}
-
-/* Add to Cart Button */
-.add-to-cart-button {
-    flex-grow: 1;
-    padding: 15px 20px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #333;
-    background-color: transparent;
-    border: 2px solid #333;
-    border-radius: 50px; /* Rounded pill shape */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    transition: all 0.3s ease;
-}
-
-.add-to-cart-button:hover:not(:disabled) {
-    background-color: #333;
-    color: #fff;
 }
 
 /* Buy Now Button */
@@ -168,8 +136,10 @@
     color: #fff;
     /* Gradient background */
     background: linear-gradient(45deg, #87ceeb, #5ab9ea);
-    border: none; /* Remove border */
-    border-radius: 50px; /* Rounded pill shape */
+    border: none;
+    /* Remove border */
+    border-radius: 50px;
+    /* Rounded pill shape */
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -193,6 +163,127 @@
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.modal-title {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal-product-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-product-info h3 {
+    color: #333;
+}
+
+.modal-product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.modal-product-info h3 {
+    margin: 0 0 5px;
+    font-size: 1.2rem;
+}
+
+.modal-product-info p {
+    margin: 0;
+    color: #7f8c8d;
+    font-size: 0.9rem;
+}
+
+.modal-product-price-large {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #87ceeb;
+}
+
+.modal-form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+.modal-form-group input[type="text"] {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.modal-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.modal-footer {
+    margin-top: 25px;
+}
+
+.modal-footer .buy-now-button {
+    width: 100%;
 }
 
 
@@ -232,7 +323,8 @@
         font-size: 2rem;
     }
 
-    .add-to-cart-button, .buy-now-button {
+    .add-to-cart-button,
+    .buy-now-button {
         padding: 12px 15px;
         font-size: 1rem;
     }

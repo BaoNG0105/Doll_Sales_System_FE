@@ -41,10 +41,9 @@ function Characters() {
                   <h3 className="emotion-product-name">{character.name}</h3>
                   <p className="emotion-product-description"><strong>Age:</strong> {character.ageRange}</p>
                   <p className="emotion-product-description"><strong>Personality:</strong> {character.personality}</p>
-                  <p className="emotion-product-description">{character.description}</p>
+                  {/* <p className="emotion-product-description">{character.description}</p> */}
                   <div className="emotion-card-buttons">
-                    <button className="add-to-cart-btn">Add to Cart</button>
-                    <button className="buy-now-btn">Buy Now</button>
+                    <button className="buy-now-btn">View Detail</button>
                   </div>
                 </div>
               </div>

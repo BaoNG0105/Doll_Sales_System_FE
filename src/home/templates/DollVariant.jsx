@@ -2,13 +2,14 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
-import { FaShoppingCart, FaMoneyBillWave } from 'react-icons/fa';
-import {getDollTypes ,getDollModelById, getDollVariantsByDollModelId } from '../../service/api.doll';
+import { FaMoneyBillWave, FaTimes, FaWallet } from 'react-icons/fa'; // Thêm FaTimes
+import { getDollTypes, getDollModelById, getDollVariantsByDollModelId, getDollVariantById } from '../../service/api.doll'; // Thêm getDollVariantById
 import { postDollOrder } from '../../service/api.order';
+import { postPayment } from '../../service/api.payment';
 import '../static/css/DollVariant.css';
 
 function DollDetail() {
-    const {typeId, modelId } = useParams(); // Changed from id to modelId
+    const { typeId, modelId } = useParams();
     const navigate = useNavigate();
     const { userId, isAuthenticated } = useSelector((state) => state.auth);
     const [dollModel, setDollModel] = useState(null);
@@ -19,57 +20,12 @@ function DollDetail() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const handleAddToCart = async () => {
-        if (!isAuthenticated) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Please Log In',
-                text: 'You need to be logged in to add items to your cart.',
-                confirmButtonText: 'Log In'
-            }).then(() => {
-                navigate('/login');
-            });
-            return;
-        }
+    // State cho modal mua hàng
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalVariantDetails, setModalVariantDetails] = useState(null);
+    const [shippingAddress, setShippingAddress] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-        if (!selectedVariant) {
-            Swal.fire({
-                icon: 'error',
-                title: 'No Variant Selected',
-                text: 'Please select a color and size!',
-            });
-            return;
-        }
-
-        const orderData = {
-            userID: userId,
-            shippingAddress: "User's default address", // Placeholder
-            orderItems: [
-                {
-                    dollVariantID: selectedVariant.dollVariantID,
-                    quantity: 1 // Assuming quantity is 1 for now
-                }
-            ]
-        };
-
-        try {
-            await postDollOrder(orderData);
-            Swal.fire({
-                icon: 'success',
-                title: 'Added to cart successfully!',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            navigate('/cart/:id'.replace(':id', userId)); // Navigate to the cart page
-        } catch (err) {
-            console.error("Failed to add to cart:", err);
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Failed to add to cart. Please try again.',
-            });
-        }
-    };
 
     // Group variants by color for easier selection
     const variantsByColor = useMemo(() => {
@@ -154,9 +110,90 @@ function DollDetail() {
         setSelectedSize(firstSizeForColor);
     };
 
-    if (loading) {
-        return <div className="loading-container"><p>Loading product...</p></div>;
-    }
+    const handleSizeSelect = (size) => {
+        setSelectedSize(size);
+        const variant = variants.find(v => v.color === selectedColor && v.size === size);
+        setSelectedVariant(variant);
+    };
+
+    // --- CÁC HÀM MỚI CHO MODAL ---
+
+    const handleOpenBuyModal = async () => {
+        if (!selectedVariant) {
+            Swal.fire('Please select a variant', 'You must select a color and size first.', 'warning');
+            return;
+        }
+        if (!isAuthenticated) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Please Log In',
+                text: 'You need to be logged in to make a purchase.',
+                confirmButtonText: 'Log In'
+            }).then(() => navigate('/login'));
+            return;
+        }
+
+        try {
+            // Lấy dữ liệu mới nhất của variant để hiển thị trong modal
+            const variantDetails = await getDollVariantById(selectedVariant.dollVariantID);
+            setModalVariantDetails(variantDetails);
+            setIsModalOpen(true);
+        } catch (err) {
+            setError('Could not fetch variant details. Please try again.');
+            console.error(err);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setModalVariantDetails(null);
+        // Reset state của modal
+        setShippingAddress('');
+    };
+
+    const handleConfirmPurchase = async () => {
+        if (!shippingAddress.trim()) {
+            Swal.fire('Validation Error', 'Please enter a shipping address.', 'error');
+            return;
+        }
+        setIsSubmitting(true);
+    
+        const orderData = {
+            userID: parseInt(userId, 10),
+            dollVariantID: modalVariantDetails.dollVariantID,
+            shippingAddress: shippingAddress,
+            totalAmount: modalVariantDetails.price
+        };
+    
+        try {
+            // Tạo đơn hàng
+            const orderRes = await postDollOrder(orderData);
+            if (orderRes.success && orderRes.data) {
+                // Gọi API thanh toán
+                const paymentReq = {
+                    amount: orderRes.data.totalAmount,
+                    orderId: orderRes.data.orderID
+                };
+                const paymentRes = await postPayment(paymentReq);
+                if (paymentRes.success && paymentRes.payUrl) {
+                    handleCloseModal();
+                    window.location.href = paymentRes.payUrl; // Chuyển hướng sang trang thanh toán Momo
+                    return;
+                } else {
+                    Swal.fire('Payment Error', 'Could not get payment URL.', 'error');
+                }
+            } else {
+                Swal.fire('Order Error', 'Could not create order.', 'error');
+            }
+        } catch (err) {
+            console.error('Error placing order or payment:', err);
+            Swal.fire('Order Failed', 'There was an issue placing your order. Please try again.', 'error');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (loading) return <div className="loading-container">Loading...</div>;
 
     if (error) {
         return <div className="error-container"><p>{error}</p></div>;
@@ -204,7 +241,7 @@ function DollDetail() {
                                 <p className="option-label">Size:</p>
                                 <div className="option-buttons">
                                     {availableSizes.map(size => (
-                                        <button key={size} onClick={() => setSelectedSize(size)} className={`option-btn ${selectedSize === size ? 'selected' : ''}`}>
+                                        <button key={size} onClick={() => handleSizeSelect(size)} className={`option-btn ${selectedSize === size ? 'selected' : ''}`}>
                                             {size}
                                         </button>
                                     ))}
@@ -214,14 +251,9 @@ function DollDetail() {
                     )}
 
                     <div className="action-buttons-container">
+                        {/* Nút Buy Now được cập nhật */}
                         <button
-                            className="add-to-cart-button"
-                            onClick={handleAddToCart}
-                            disabled={!selectedVariant}
-                        >
-                            <FaShoppingCart /> Add to Cart
-                        </button>
-                        <button
+                            onClick={handleOpenBuyModal}
                             className="buy-now-button"
                             disabled={!selectedVariant}
                         >
@@ -230,6 +262,66 @@ function DollDetail() {
                     </div>
                 </div>
             </div>
+
+            {/* --- MODAL MUA HÀNG --- */}
+            {isModalOpen && modalVariantDetails && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <button onClick={handleCloseModal} className="modal-close-btn"><FaTimes /></button>
+                        <h2 className="modal-title">Confirm Your Purchase</h2>
+
+                        {/* Product Details in Modal */}
+                        <div className="modal-body">
+                            <div className="modal-product-info">
+                                <img src={modalVariantDetails.image} alt={modalVariantDetails.name} className="modal-product-image" />
+                                <div>
+                                    <h3>{modalVariantDetails.name}</h3>
+                                    <p>Color: {modalVariantDetails.color}, Size: {modalVariantDetails.size}</p>
+                                </div>
+                            </div>
+
+                            {/* Shipping Address */}
+                            <div className="modal-form-group">
+                                <label htmlFor="shippingAddress">Shipping Address</label>
+                                <input
+                                    type="text"
+                                    id="shippingAddress"
+                                    value={shippingAddress}
+                                    onChange={(e) => setShippingAddress(e.target.value)}
+                                    placeholder="Enter your full shipping address"
+                                />
+                            </div>
+
+                            {/* Payment Method*/}
+                            <div className="modal-form-group">
+                                <label>Payment Method</label>
+                                <div className="option-buttons">
+                                    <button className="option-btn selected" disabled>
+                                        <FaWallet /> Momo
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Total Amount */}
+                            <div className="modal-total">
+                                <span>Total Amount:</span>
+                                <span className="modal-product-price-large">{modalVariantDetails.price.toLocaleString()} VND</span>
+                            </div>
+                        </div>
+
+                        {/* Confirm & Pay Button */}
+                        <div className="modal-footer">
+                            <button
+                                onClick={handleConfirmPurchase}
+                                className="buy-now-button"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Processing...' : 'Confirm & Pay'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
