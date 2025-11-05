@@ -9,6 +9,7 @@ import {
   Popconfirm,
   Image,
   Space,
+  Switch,
 } from "antd";
 import {
   PlusOutlined,
@@ -261,23 +262,33 @@ export default function ManageCharacters() {
         width={600}
       >
         <Form form={form} layout="vertical" onFinish={onFinish} className="mt-6">
+          {/* Name */}
           <Form.Item name="name" label="Name" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
+          {/* Image */}
           <Form.Item name="image" label="Image">
             <FormImageUpload />
           </Form.Item>
+          {/* Age Range */}
           <Form.Item name="ageRange" label="Age Range">
             <Input />
           </Form.Item>
+          {/* Personality */}
           <Form.Item name="personality" label="Personality">
             <Input.TextArea rows={3} />
           </Form.Item>
+          {/* Description */}
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={4} />
           </Form.Item>
+          {/* AI URL */}
           <Form.Item name="aiUrl" label="AI URL">
             <Input />
+          </Form.Item>
+          {/* Active Switch */}
+          <Form.Item name="isActive" label="Active" valuePropName="checked">
+            <Switch />
           </Form.Item>
         </Form>
       </Modal>

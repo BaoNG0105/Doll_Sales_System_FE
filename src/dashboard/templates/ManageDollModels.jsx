@@ -11,6 +11,7 @@ import {
     Tag,
     Space,
     Select,
+    Switch,
 } from "antd";
 import {
     PlusOutlined,
@@ -257,11 +258,13 @@ export default function ManageDollModels() {
                 onOk={() => form.submit()}
                 okText="Save"
                 width={600}
-                >
+            >
                 <Form form={form} layout="vertical" onFinish={onFinish} className="mt-6">
+                    {/* Name */}
                     <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
+                    {/* Doll Type */}
                     <Form.Item name="dollTypeID" label="Doll Type" rules={[{ required: true }]}>
                         <Select
                             placeholder="Select a doll type"
@@ -271,11 +274,17 @@ export default function ManageDollModels() {
                             }))}
                         />
                     </Form.Item>
+                    {/* Image */}
                     <Form.Item name="image" label="Image">
                         <FormImageUpload />
                     </Form.Item>
+                    {/* Description */}
                     <Form.Item name="description" label="Description">
                         <Input.TextArea rows={4} />
+                    </Form.Item>
+                    {/* Active Switch */}
+                    <Form.Item name="isActive" label="Active" valuePropName="checked">
+                        <Switch />
                     </Form.Item>
                 </Form>
             </Modal>

@@ -12,6 +12,7 @@ import {
   InputNumber,
   Select,
   Tag,
+  Switch,
 } from "antd";
 import {
   PlusOutlined,
@@ -295,6 +296,7 @@ export default function ManageDollVariants() {
         width={600}
       >
         <Form form={form} layout="vertical" onFinish={onFinish} className="mt-6">
+          {/* Doll Model */}
           <Form.Item
             name="dollModelID"
             label="Doll Model"
@@ -310,6 +312,7 @@ export default function ManageDollVariants() {
               }))}
             />
           </Form.Item>
+          {/* Doll Variant Name */}
           <Form.Item
             name="name"
             label="Variant Name"
@@ -317,23 +320,29 @@ export default function ManageDollVariants() {
           >
             <Input />
           </Form.Item>
+          {/* Price and Stock */}
           <Form.Item name="price" label="Price" rules={[{ required: true }]}>
             <InputNumber min={0} style={{ width: "100%" }} />
           </Form.Item>
-          <Form.Item name="stock" label="Stock" rules={[{ required: true }]}>
-            <InputNumber min={0} style={{ width: "100%" }} />
-          </Form.Item>
+          {/* Color */}
           <Form.Item name="color" label="Color" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
+          {/* Size */}
           <Form.Item name="size" label="Size" rules={[{ required: true }]}>
             <Input />
           </Form.Item>
+          {/* Image */}
           <Form.Item name="image" label="Image">
             <FormImageUpload />
           </Form.Item>
+          {/* Description */}
           <Form.Item name="description" label="Description">
             <Input.TextArea rows={4} />
+          </Form.Item>
+          {/* Active Switch */}
+          <Form.Item name="isActive" label="Active" valuePropName="checked">
+            <Switch />
           </Form.Item>
         </Form>
       </Modal>

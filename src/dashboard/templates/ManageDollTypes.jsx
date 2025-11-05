@@ -9,6 +9,7 @@ import {
     Popconfirm,
     Image,
     Space,
+    Switch,
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import {
@@ -219,14 +220,21 @@ export default function ManageDollTypes() {
                 width={600}
             >
                 <Form form={form} layout="vertical" onFinish={onFinish} className="mt-6">
+                    {/* Name */}
                     <Form.Item name="name" label="Name" rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
+                    {/* Image */}
                     <Form.Item name="image" label="Image">
                         <FormImageUpload />
                     </Form.Item>
+                    {/* Description */}
                     <Form.Item name="description" label="Description">
                         <Input.TextArea rows={4} />
+                    </Form.Item>
+                    {/* Active Switch */}
+                    <Form.Item name="isActive" label="Active" valuePropName="checked">
+                        <Switch />
                     </Form.Item>
                 </Form>
             </Modal>
