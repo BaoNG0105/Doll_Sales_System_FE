@@ -10,6 +10,7 @@ import {
     Tag,
     Space,
     Select,
+    Switch,
 } from "antd";
 import {
     PlusOutlined,
@@ -287,6 +288,7 @@ export default function ManageUsers() {
                     onFinish={onFinish}
                     className="mt-6"
                 >
+                    {/* Username */}
                     <Form.Item
                         name="userName"
                         label="Username"
@@ -294,6 +296,7 @@ export default function ManageUsers() {
                     >
                         <Input />
                     </Form.Item>
+                    {/* Email */}
                     <Form.Item
                         name="email"
                         label="Email"
@@ -301,6 +304,7 @@ export default function ManageUsers() {
                     >
                         <Input />
                     </Form.Item>
+                    {/* Password */}
                     <Form.Item
                         name="password"
                         label="Password"
@@ -308,12 +312,15 @@ export default function ManageUsers() {
                     >
                         <Input.Password />
                     </Form.Item>
+                    {/* Full Name */}
                     <Form.Item name="fullName" label="Full Name">
                         <Input />
                     </Form.Item>
+                    {/* Phone */}
                     <Form.Item name="phones" label="Phone">
                         <Input />
                     </Form.Item>
+                    {/* Role */}
                     <Form.Item name="role" label="Role" rules={[{ required: true }]}>
                         <Select>
                             <Select.Option value="customer">Customer</Select.Option>
@@ -321,11 +328,15 @@ export default function ManageUsers() {
                             <Select.Option value="admin">Admin</Select.Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name="status" label="Status">
+                    {/* <Form.Item name="status" label="Status">
                         <Select>
-                            <Select.Option value="Active">Active</Select.Option>
-                            <Select.Option value="Inactive">Inactive</Select.Option>
+                            <Select.Option value={1}>Active</Select.Option>
+                            <Select.Option value={0}>Inactive</Select.Option>
                         </Select>
+                    </Form.Item> */}
+                    {/* Status Switch */}
+                    <Form.Item name="status" label="Status" valuePropName="checked">
+                        <Switch />
                     </Form.Item>
                 </Form>
             </Modal>
