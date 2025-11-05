@@ -22,7 +22,6 @@ import DollType from './home/templates/DollType.jsx';
 import DollModel from './home/templates/DollModel.jsx';
 import Characters from './home/templates/Characters.jsx';
 import Profile from './home/templates/Profile.jsx';
-import Cart from './home/templates/Cart.jsx';
 import DollVariant from './home/templates/DollVariant.jsx';
 import CharacterDetail from './home/templates/CharacterDetail.jsx';
 import ScrollToTopButton from './home/components/ScrollToTopButton.jsx';
@@ -73,8 +72,6 @@ const router = createBrowserRouter([
       { path: "/characters/:id", element: <CharacterDetail />, },
       // Profile page
       { path: "/profile/:id", element: <Profile />, },
-      // Cart page
-      { path: "/cart/:id", element: <Cart />, },
       // AI page
       { path: "/ai/:characterId", element: <AI />, },
       // 404 Not Found page

@@ -128,28 +128,31 @@
     gap: 0.5rem;
 }
 
-/* Add to cart  Button */
-.add-to-cart-detail-btn {
-    background-color: #fff;
-    color: #333;
-    border: 2px solid #333;
-}
-
-.add-to-cart-detail-btn:hover {
-    background-color: #333;
-    color: #fff;
-}
-
 /* Buy now Button */
 .buy-now-detail-btn {
-    background-color: #87ceeb;
-    color: white;
-    border: 2px solid #87ceeb;
+    flex-grow: 1;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    /* Gradient background */
+    background: linear-gradient(45deg, #87ceeb, #5ab9ea);
+    border: none;
+    /* Remove border */
+    border-radius: 50px;
+    /* Rounded pill shape */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .buy-now-detail-btn:hover {
-    background-color: #76bada;
-    border-color: #76bada;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
 }
 
 .product-not-found {
@@ -183,6 +186,145 @@
 .back-to-shop-link:hover {
     background-color: #76bada;
     transform: scale(1.05);
+}
+
+/* --- MODAL STYLES --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: slide-down 0.3s ease-out;
+}
+
+@keyframes slide-down {
+    from {
+        transform: translateY(-30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+}
+
+.modal-title {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #333;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.modal-product-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 10px;
+}
+
+.modal-product-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.modal-product-info h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1.1rem;
+}
+
+.modal-product-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.modal-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.modal-product-price-large {
+    font-size: 1.5rem;
+    color: #87ceeb;
+}
+
+.modal-footer {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Re-using button styles from DollVariant */
+.buy-now-button {
+    width: 100%;
+    padding: 15px 20px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(45deg, #87ceeb, #5ab9ea);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.buy-now-button:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
+}
+
+.buy-now-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 /* Responsive Design */

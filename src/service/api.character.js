@@ -56,6 +56,20 @@ export const deleteCharacter = async (id) => {
     }
 };
 
+//------------------------------------------------------//
+// Character Packages
+//------------------------------------------------------//
+
+//Get Character Packages
+export const getCharacterPackages = async (params) => {
+    try {
+        const response = await api.get('/character-packages', { params });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching character packages:', error);
+        throw error;
+    }
+};
 
 //Get Characters packages by character ID
 export const getCharacterPackagesByCharacterId = async (characterId) => {
