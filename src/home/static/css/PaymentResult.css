@@ -1,0 +1,109 @@
+/* src/home/static/css/PaymentResult.css */
+.payment-result-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh; /* Chiều cao tối thiểu để căn giữa đẹp mắt */
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.payment-result-card {
+    background: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.payment-result-card.success .result-icon {
+    color: #28a745; /* Màu xanh lá cho thành công */
+}
+
+.payment-result-card.failed .result-icon {
+    color: #dc3545; /* Màu đỏ cho thất bại */
+}
+
+.payment-result-card h2 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 24px;
+}
+
+.result-message {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.order-details {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.order-details p {
+    margin: 8px 0;
+    color: #555;
+}
+
+.order-details .amount {
+    color: #d63031; /* Màu đỏ nổi bật cho số tiền */
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.result-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.result-actions .btn-primary,
+.result-actions .btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.result-actions .btn-primary {
+    background-color: #e84393; /* Màu hồng chủ đạo của Doll World (dự đoán) */
+    color: white;
+    border: none;
+}
+
+.result-actions .btn-primary:hover {
+    background-color: #d63083;
+    transform: translateY(-2px);
+}
+
+.result-actions .btn-secondary {
+    background-color: #dfe6e9;
+    color: #2d3436;
+}
+
+.result-actions .btn-secondary:hover {
+    background-color: #b2bec3;
+    transform: translateY(-2px);
+}

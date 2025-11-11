@@ -128,7 +128,9 @@ function AiChatPage() {
     setIsAiSpeaking(true); // Bắt đầu hiệu ứng
 
     try {
-      const response = await fetch('http://localhost:8000/api/chat', {
+      const response = await fetch('https://ai-character-service.onrender.com/api/chat', {
+        // https://ai-character-service.onrender.com/api/chat
+        // http://localhost:8000/api/chat
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
