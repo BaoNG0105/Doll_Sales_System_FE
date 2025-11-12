@@ -6,6 +6,7 @@ import { logout } from '../../redux/authSlice';
 import Swal from 'sweetalert2';
 import '../static/css/Profile.css';
 import Avatar from '../static/img/avatar.png';
+import OrderHistory from './OrderHistory';
 
 // --- Modal Component defined within the same file ---
 const EditProfileModal = ({ user, onClose, onSave }) => {
@@ -43,6 +44,7 @@ const EditProfileModal = ({ user, onClose, onSave }) => {
 
     if (!user) return null;
 
+    //Modal edit profile
     return (
         <div className="modal-overlay">
             <div className="modal-content">
@@ -215,13 +217,8 @@ const Profile = () => {
                         </div>
                     </div>
                 );
-            case 'orders':
-                return (
-                    <div>
-                        <h3>Order History</h3>
-                        <p>This feature is under development.</p>
-                    </div>
-                );
+                case 'orders':
+                    return <OrderHistory userId={user.userID} />;
             case 'characters':
                 return (
                     <>
@@ -278,7 +275,7 @@ const Profile = () => {
                             className={`tab-button ${activeTab === 'orders' ? 'active' : ''}`}
                             onClick={() => setActiveTab('orders')}
                         >
-                            Orders
+                            Doll Orders
                         </button>
                         <button
                             className={`tab-button ${activeTab === 'characters' ? 'active' : ''}`}

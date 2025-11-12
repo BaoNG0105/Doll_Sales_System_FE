@@ -1,0 +1,178 @@
+/* Tiêu đề chính của mục */
+.order-history-container h3 {
+    font-size: 1.75rem; /* Hơi nhỏ lại một chút cho tinh tế */
+    font-weight: 600; /* Đậm vừa phải */
+    color: #222; /* Đen nhạt */
+    border-bottom: 1px solid #f0f0f0; /* Đường kẻ nhạt hơn */
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+}
+
+/* Danh sách các đơn hàng */
+.order-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px; /* Tăng khoảng cách giữa các thẻ */
+}
+
+/* Thẻ (Card) cho mỗi đơn hàng */
+.order-card {
+    background-color: #fff;
+    border: 1px solid #f0f0f0; /* Border nhạt hơn */
+    border-radius: 12px; /* Bo góc nhiều hơn cho mềm mại */
+    padding: 24px;
+    /* Bóng đổ (shadow) tinh tế hơn */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-card:hover {
+    transform: translateY(-4px); /* Di chuyển ít hơn một chút */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* Shadow khi hover rõ hơn */
+}
+
+/* Phần đầu của thẻ (Tên Doll & Trạng thái) */
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    margin-bottom: 16px;
+}
+
+.order-doll-name {
+    margin: 0;
+    font-size: 1.5rem; /* Điều chỉnh lại font-size */
+    font-weight: 600;
+    color: #333;
+    flex: 1;
+    padding-right: 16px;
+}
+
+/* --- Cải tiến lớn cho Trạng thái (Status Badges) --- */
+/* * Thay vì dùng màu nền đặc, chúng ta dùng nền nhạt và chữ đậm.
+ * Trông sẽ chuyên nghiệp và dễ đọc hơn.
+ */
+.order-status {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 9999px; /* Bo tròn (pill shape) */
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Giữ nguyên màu chủ đạo nhưng với nền nhạt */
+.status-pending {
+    background-color: #fff8e1; /* Nền vàng nhạt */
+    color: #e65100; /* Chữ màu cam đậm */
+}
+
+.status-processing {
+    background-color: #e3f2fd; /* Nền xanh dương nhạt */
+    color: #0d47a1; /* Chữ xanh dương đậm */
+}
+
+.status-shipping {
+    background-color: #e0f7fa; /* Nền xanh teal nhạt */
+    color: #006064; /* Chữ xanh teal đậm */
+}
+
+.status-completed {
+    background-color: #e8f5e9; /* Nền xanh lá nhạt */
+    color: #1b5e20; /* Chữ xanh lá đậm */
+}
+/* --- Hết phần cải tiến Trạng thái --- */
+
+
+/* Thân thẻ (Chi tiết giá & ngày) */
+.order-card-body {
+    margin-bottom: 20px;
+}
+
+.order-card-body p {
+    margin: 4px 0;
+    font-size: 0.95em;
+    color: #555;
+}
+
+.order-date {
+    font-size: 0.9em;
+    color: #777;
+}
+
+.order-amount {
+    margin-top: 8px;
+}
+
+.order-amount strong {
+    color: #007bff; /* Giữ màu xanh chủ đạo */
+    font-size: 1.75rem; /* Kích thước hợp lý hơn */
+    font-weight: 700;
+}
+
+/* Phần chân thẻ (Nút bấm) */
+.order-card-footer {
+    margin-top: auto; /* Đẩy xuống dưới cùng */
+    border-top: 1px solid #f0f0f0; /* Đường kẻ phân cách nhạt */
+    padding-top: 20px; /* Tăng khoảng cách */
+}
+
+.order-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Nút bấm (Button) */
+.btn {
+    padding: 10px 20px; /* Tăng kích thước nút */
+    border: none;
+    border-radius: 8px; /* Bo góc nút */
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Nút hành động chính (Xanh dương) */
+.btn-action {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-action:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+/* === NÚT FEEDBACK ĐÃ CẬP NHẬT === */
+.btn-feedback {
+    background-color: transparent; /* Nền trong suốt */
+    color: #006064; /* Chữ đậm */
+    border: 1px solid #00bcd4; /* Border màu xanh teal sáng */
+    padding: 10px 20px; /* Giữ padding để kích thước tương đương */
+    border-radius: 8px; /* Bo góc */
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95em;
+    transition: all 0.2s ease;
+    text-decoration: none; /* Đảm bảo không có gạch chân */
+    display: inline-flex; /* Sử dụng flex để căn chỉnh nội dung */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    justify-content: center; /* Căn giữa theo chiều ngang */
+}
+
+.btn-feedback:hover {
+    background-color: #e0f7fa; /* Nền nhạt hơn khi hover */
+    color: #004d40;
+    border-color: #00838f; /* Border đậm hơn khi hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.1); /* Bóng nhẹ */
+}

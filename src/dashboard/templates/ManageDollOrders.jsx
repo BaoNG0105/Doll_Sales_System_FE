@@ -9,7 +9,11 @@ import {
   Input,
   Radio,
 } from "antd";
-import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  DeleteOutlined,
+  SendOutlined,
+} from "@ant-design/icons";
 import {
   getDollOrders,
   patchDollOrder,
@@ -17,12 +21,12 @@ import {
 } from "../../service/api.order";
 import { useDebounce } from "use-debounce";
 
+// 1:Pending, 2:Processing, 3:Shipping, 4:Completed
 const statusOptions = [
-  { value: 0, label: "Pending", color: "gold" },
-  { value: 1, label: "Processing", color: "processing" },
-  { value: 2, label: "Shipping", color: "blue" },
-  { value: 3, label: "Completed", color: "success" },
-  { value: 4, label: "Cancelled", color: "error" },
+  { value: 1, label: "Pending", color: "gold" },
+  { value: 2, label: "Processing", color: "processing" },
+  { value: 3, label: "Shipping", color: "blue" },
+  { value: 4, label: "Completed", color: "success" },
 ];
 
 export default function ManageOrders() {
@@ -48,7 +52,6 @@ export default function ManageOrders() {
         sortBy: params.sortBy,
         sortDir: params.sortDir,
       };
-      // Filter out undefined/null params
       Object.keys(queryParams).forEach(
         (key) =>
           (queryParams[key] == null || queryParams[key] === "") &&
@@ -68,7 +71,10 @@ export default function ManageOrders() {
       });
     } catch (error) {
       message.error("Failed to fetch orders.");
-      console.error(error);
+      console.error(
+        "Error fetching orders:",
+        error.response || error.message || error
+      );
     } finally {
       setLoading(false);
     }
@@ -90,10 +96,13 @@ export default function ManageOrders() {
     });
   };
 
+  // --- SỬA LỖI 1: CẬP NHẬT LOGIC BỘ LỌC (FILTER) ---
   useEffect(() => {
     if (statusFilter === "all") {
       setOrders(allOrders);
     } else {
+      // Giờ statusFilter là chữ ("Pending", "Processing"...)
+      // nên ta so sánh trực tiếp với order.status
       const filteredOrders = allOrders.filter(
         (order) => order.status === statusFilter
       );
@@ -102,7 +111,6 @@ export default function ManageOrders() {
   }, [statusFilter, allOrders]);
 
   useEffect(() => {
-    // Reset to page 1 when search changes
     const newPagination = { ...pagination, current: 1 };
     fetchOrders({
       pagination: newPagination,
@@ -118,12 +126,16 @@ export default function ManageOrders() {
 
   const updateStatus = async (id, status) => {
     try {
+      // API vẫn nhận SỐ (1, 2, 3, 4) để cập nhật
       await patchDollOrder(id, { status });
       message.success(`Order ${id} updated successfully.`);
       fetchOrders(getCurrentFetchParams());
     } catch (error) {
-      console.error(error);
       message.error(`Failed to update order ${id}.`);
+      console.error(
+        "Error updating status:",
+        error.response || error.message || error
+      );
     }
   };
 
@@ -133,8 +145,11 @@ export default function ManageOrders() {
       message.success(`Order ${id} deleted successfully.`);
       fetchOrders(getCurrentFetchParams());
     } catch (error) {
-      console.error(error);
       message.error(`Failed to delete order ${id}.`);
+      console.error(
+        "Error deleting order:",
+        error.response || error.message || error
+      );
     }
   };
 
@@ -149,9 +164,9 @@ export default function ManageOrders() {
     { title: "Customer", dataIndex: "userName", align: "center", sorter: true },
     {
       title: "Products",
-      dataIndex: "orderItems",
+      dataIndex: "dollVariantName",
       align: "center",
-      render: (orderItems) => `${orderItems.length} item(s)`,
+      render: (dollVariantName) => dollVariantName || "N/A",
     },
     {
       title: "Price",
@@ -160,30 +175,35 @@ export default function ManageOrders() {
       align: "center",
       sorter: true,
       render: (price) =>
-        `${price.toLocaleString("vi-VN", {
+        `${(price || 0).toLocaleString("vi-VN", {
           style: "currency",
           currency: "VND",
         })}`,
     },
+
+    // --- SỬA LỖI 2: CỘT STATUS ---
+    // So sánh 'status' (dạng chữ) với 'opt.label'
     {
       title: "Status",
       dataIndex: "status",
       width: 180,
       align: "center",
-      render: (status, record) => (
-        <Select
-          defaultValue={status}
-          style={{ width: 140 }}
-          onChange={(newStatus) => updateStatus(record.orderID, newStatus)}
-          bordered={false}
-        >
-          {statusOptions.map((opt) => (
-            <Select.Option key={opt.value} value={opt.value}>
-              <Tag color={opt.color}>{opt.label}</Tag>
-            </Select.Option>
-          ))}
-        </Select>
-      ),
+      render: (status) => {
+        if (status == null) {
+          return <Tag>N/A</Tag>;
+        }
+        
+        // So sánh label (chữ) thay vì value (số)
+        const statusObj = statusOptions.find(
+          (opt) => opt.label.toLowerCase() === status.toLowerCase()
+        );
+        
+        return statusObj ? (
+          <Tag color={statusObj.color}>{statusObj.label}</Tag>
+        ) : (
+          <Tag>Unknown ({status})</Tag> // Sẽ không còn lỗi này
+        );
+      },
     },
     {
       title: "Order Date",
@@ -192,22 +212,62 @@ export default function ManageOrders() {
       sorter: true,
       render: (date) => new Date(date).toLocaleDateString("vi-VN"),
     },
+
+    // --- SỬA LỖI 3: CỘT ACTIONS ---
+    // Dùng switch/case với 'status' (dạng chữ)
     {
       title: "Actions",
       key: "actions",
       width: 120,
       align: "center",
-      render: (_, record) => (
-        <Popconfirm
-          title="Delete the order"
-          description="Are you sure to delete this order?"
-          onConfirm={() => handleDelete(record.orderID)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button danger icon={<DeleteOutlined />} />
-        </Popconfirm>
-      ),
+      render: (_, record) => {
+        if (record.status == null) {
+          return null;
+        }
+
+        const { orderID, status } = record;
+
+        // Dùng 'status' (chữ) để switch
+        switch (status) { 
+          case "Pending": // 1
+            return (
+              <Popconfirm
+                title="Delete this order?"
+                description="Are you sure to delete this order?"
+                onConfirm={() => handleDelete(orderID)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger icon={<DeleteOutlined />} />
+              </Popconfirm>
+            );
+
+          case "Processing": // 2
+            return (
+              <Popconfirm
+                title="Set order to Shipping?"
+                description="This will update the status to 'Shipping'."
+                // Khi cập nhật, ta vẫn gửi SỐ 3 (Shipping) cho API
+                onConfirm={() => updateStatus(orderID, 3)} 
+                okText="Yes, Ship"
+                cancelText="No"
+              >
+                <Button type="primary" icon={<SendOutlined />}>
+                  Ship
+                </Button>
+              </Popconfirm>
+            );
+
+          case "Shipping": // 3
+            return <Tag color="blue">En route</Tag>;
+
+          case "Completed": // 4
+            return <Tag color="success">Done</Tag>;
+
+          default:
+            return null;
+        }
+      },
     },
   ];
 
@@ -234,6 +294,8 @@ export default function ManageOrders() {
             style={{ width: 320, background: "#fff" }}
           />
         </div>
+        
+        {/* --- SỬA LỖI 4: THAY ĐỔI VALUE CỦA BỘ LỌC RADIO --- */}
         <Radio.Group
           onChange={(e) => setStatusFilter(e.target.value)}
           value={statusFilter}
@@ -241,7 +303,8 @@ export default function ManageOrders() {
         >
           <Radio.Button value="all">All</Radio.Button>
           {statusOptions.map((opt) => (
-            <Radio.Button key={opt.value} value={opt.value}>
+            // Đặt value là 'opt.label' (chữ) thay vì 'opt.value' (số)
+            <Radio.Button key={opt.value} value={opt.label}>
               {opt.label}
             </Radio.Button>
           ))}
