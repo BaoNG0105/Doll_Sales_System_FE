@@ -4,7 +4,8 @@ import Swal from 'sweetalert2';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { getCharacterById, getCharacterPackagesByCharacterId } from '../../service/api.character.js';
 import { postCharacterOrder } from '../../service/api.order.js';
-import { postPayment } from '../../service/api.payment.js';
+// --- THAY ĐỔI: Đã xóa import 'postPayment' ---
+// import { postPayment } from '../../service/api.payment.js';
 import '../static/css/CharacterDetail.css';
 
 function CharacterDetail() {
@@ -94,32 +95,28 @@ function CharacterDetail() {
         setIsModalOpen(true);
     };
 
+    // --- THAY ĐỔI: Cập nhật hàm handleConfirmAndPay ---
     const handleConfirmAndPay = async () => {
         if (!selectedPackage || !character) return;
 
         setIsProcessing(true);
         try {
+            // Dữ liệu request không đổi
             const orderData = {
                 packageID: selectedPackage.packageId,
                 characterID: parseInt(id, 10),
             };
+            
+            // 1. Chỉ gọi postCharacterOrder
             const orderResponse = await postCharacterOrder(orderData);
 
-            if (orderResponse && orderResponse.data) {
-                const { characterOrderID, unitPrice } = orderResponse.data;
-                const paymentData = {
-                    amount: unitPrice,
-                    characterOrderId: characterOrderID,
-                };
-                const paymentResponse = await postPayment(paymentData);
-
-                if (paymentResponse && paymentResponse.success && paymentResponse.payUrl) {
-                    window.location.href = paymentResponse.payUrl;
-                } else {
-                    throw new Error(paymentResponse.message || 'Failed to create payment link.');
-                }
+            // 2. Kiểm tra response mới, lấy payUrl từ object 'payment'
+            if (orderResponse && orderResponse.success && orderResponse.payment && orderResponse.payment.payUrl) {
+                // 3. Chuyển hướng thanh toán
+                window.location.href = orderResponse.payment.payUrl;
             } else {
-                throw new Error(orderResponse.message || 'Failed to create character order.');
+                // Xử lý lỗi nếu không nhận được payUrl
+                throw new Error(orderResponse.message || 'Failed to create order or get payment URL.');
             }
         } catch (err) {
             console.error('Payment process failed:', err);
@@ -131,6 +128,7 @@ function CharacterDetail() {
             setIsProcessing(false);
         }
     };
+    // --- KẾT THÚC THAY ĐỔI ---
 
     const closeModal = () => {
         if (!isProcessing) {
@@ -204,7 +202,7 @@ function CharacterDetail() {
                                 <div>
                                     <h3>{character.name}</h3>
                                     <p>Package: {selectedPackage.name}</p>
-                                </div>
+                                D</div>
                             </div>
                             <div className="modal-total">
                                 <span>Total Amount:</span>
