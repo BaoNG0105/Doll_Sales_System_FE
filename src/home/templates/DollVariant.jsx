@@ -2,16 +2,15 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
-import { FaMoneyBillWave, FaTimes, FaWallet } from 'react-icons/fa'; // Thêm FaTimes
-import { getDollTypes, getDollModelById, getDollVariantsByDollModelId, getDollVariantById } from '../../service/api.doll'; // Thêm getDollVariantById
+import { FaMoneyBillWave, FaTimes, FaWallet } from 'react-icons/fa';
+import { getDollTypes, getDollModelById, getDollVariantsByDollModelId, getDollVariantById } from '../../service/api.doll';
 import { postDollOrder } from '../../service/api.order';
-import { postPayment } from '../../service/api.payment';
 import '../static/css/DollVariant.css';
 
 function DollDetail() {
     const { typeId, modelId } = useParams();
     const navigate = useNavigate();
-    const { userId, isAuthenticated } = useSelector((state) => state.auth);
+    const { isAuthenticated } = useSelector((state) => state.auth);
     const [dollModel, setDollModel] = useState(null);
     const [variants, setVariants] = useState([]);
     const [selectedColor, setSelectedColor] = useState(null);
@@ -117,7 +116,6 @@ function DollDetail() {
     };
 
     // --- CÁC HÀM MỚI CHO MODAL ---
-
     const handleOpenBuyModal = async () => {
         if (!selectedVariant) {
             Swal.fire('Please select a variant', 'You must select a color and size first.', 'warning');
@@ -151,6 +149,7 @@ function DollDetail() {
         setShippingAddress('');
     };
 
+    // --- THAY ĐỔI: Toàn bộ hàm handleConfirmPurchase đã được cập nhật ---
     const handleConfirmPurchase = async () => {
         if (!shippingAddress.trim()) {
             Swal.fire('Validation Error', 'Please enter a shipping address.', 'error');
@@ -158,40 +157,38 @@ function DollDetail() {
         }
         setIsSubmitting(true);
     
+        // Dữ liệu order mới chỉ chứa 2 trường theo yêu cầu
         const orderData = {
-            userID: parseInt(userId, 10),
             dollVariantID: modalVariantDetails.dollVariantID,
             shippingAddress: shippingAddress,
-            totalAmount: modalVariantDetails.price
         };
     
         try {
-            // Tạo đơn hàng
+            // 1. Tạo đơn hàng
             const orderRes = await postDollOrder(orderData);
-            if (orderRes.success && orderRes.data) {
-                // Gọi API thanh toán
-                const paymentReq = {
-                    amount: orderRes.data.totalAmount,
-                    orderId: orderRes.data.orderID
-                };
-                const paymentRes = await postPayment(paymentReq);
-                if (paymentRes.success && paymentRes.payUrl) {
-                    handleCloseModal();
-                    window.location.href = paymentRes.payUrl; // Chuyển hướng sang trang thanh toán Momo
-                    return;
-                } else {
-                    Swal.fire('Payment Error', 'Could not get payment URL.', 'error');
-                }
+    
+            // 2. Kiểm tra phản hồi và URL thanh toán trực tiếp
+            if (orderRes.success && orderRes.payment && orderRes.payment.payUrl) {
+                // Lấy payUrl trực tiếp từ phản hồi của postDollOrder
+                const payUrl = orderRes.payment.payUrl;
+                
+                handleCloseModal();
+                window.location.href = payUrl; // Chuyển hướng sang trang thanh toán
+                return; 
             } else {
-                Swal.fire('Order Error', 'Could not create order.', 'error');
+                // Xử lý lỗi nếu không có payUrl hoặc order thất bại
+                const errorMessage = orderRes.message || 'Could not create order or get payment URL.';
+                Swal.fire('Order Error', errorMessage, 'error');
             }
         } catch (err) {
-            console.error('Error placing order or payment:', err);
-            Swal.fire('Order Failed', 'There was an issue placing your order. Please try again.', 'error');
+            console.error('Error placing order:', err);
+            const errorMessage = err.response?.data?.message || 'There was an issue placing your order. Please try again.';
+            Swal.fire('Order Failed', errorMessage, 'error');
         } finally {
             setIsSubmitting(false);
         }
     };
+    // --- KẾT THÚC THAY ĐỔI ---
 
     if (loading) return <div className="loading-container">Loading...</div>;
 
