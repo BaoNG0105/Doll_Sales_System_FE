@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getUserById, deleteUser, pathUser, getUserCharactersByUserId } from '../../service/api.user';
+import { getUserById, deleteUser, pathUser } from '../../service/api.user';
 import { logout } from '../../redux/authSlice';
 import Swal from 'sweetalert2';
 import '../static/css/Profile.css';
 import Avatar from '../static/img/avatar.png';
 import OrderHistory from './OrderHistory';
+import UserCharacters from './UserCharacter'; // --- THÊM IMPORT MỚI ---
 
 // --- Modal Component defined within the same file ---
+// (Giữ nguyên component EditProfileModal)
 const EditProfileModal = ({ user, onClose, onSave }) => {
+    // ... (Không thay đổi gì ở đây) ...
     const [formData, setFormData] = useState({
         fullName: '',
         phones: '',
@@ -76,7 +79,6 @@ const EditProfileModal = ({ user, onClose, onSave }) => {
     );
 };
 
-
 // --- Main Profile Component ---
 const Profile = () => {
     const [user, setUser] = useState(null);
@@ -84,9 +86,7 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [userCharacters, setUserCharacters] = useState([]);
-    const [loadingCharacters, setLoadingCharacters] = useState(false);
-    const [errorCharacters, setErrorCharacters] = useState(null);
+    
 
     const { userId, username } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
@@ -120,17 +120,6 @@ const Profile = () => {
 
         fetchUserData();
     }, [userId]); // Giữ userId làm dependency
-
-    useEffect(() => {
-        if (activeTab === 'characters' && user?.userID) {
-            setLoadingCharacters(true);
-            setErrorCharacters(null);
-            getUserCharactersByUserId(user.userID)
-                .then(res => setUserCharacters(res.data))
-                .catch(() => setErrorCharacters("Không thể tải danh sách character"))
-                .finally(() => setLoadingCharacters(false));
-        }
-    }, [activeTab, user]);
 
     const handleEdit = () => {
         setIsModalOpen(true);
@@ -217,40 +206,13 @@ const Profile = () => {
                         </div>
                     </div>
                 );
-                case 'orders':
-                    return <OrderHistory userId={user.userID} />;
+            case 'orders':
+                return <OrderHistory userId={user.userID} />;
+            
             case 'characters':
-                return (
-                    <>
-                        <h3>Danh sách Character đã mua</h3>
-                        {loadingCharacters && <div className="loading-spinner"></div>}
-                        {errorCharacters && <div className="error-message">{errorCharacters}</div>}
-                        <div className="details-list">
-                            {userCharacters.map(char => (
-                                <div className="detail-item" key={char.userCharacterID}>
-                                    <span>Tên Character:</span>
-                                    <p>{char.characterName}</p>
-                                    <span>Gói:</span>
-                                    <p>{char.packageName}</p>
-                                    <span>Thời gian sử dụng:</span>
-                                    <p>{new Date(char.startAt).toLocaleDateString()} - {new Date(char.endAt).toLocaleDateString()}</p>
-                                    <span>Trạng thái:</span>
-                                    <p>{char.statusDisplay}</p>
-                                    <button
-                                        className="edit-btn"
-                                        onClick={() => navigate(`/ai/${char.characterID}`, { state: { owned: true, character: char } })}
-                                        disabled={char.statusDisplay !== "Active"}
-                                    >
-                                        Use Character
-                                    </button>
-                                </div>
-                            ))}
-                            {(!loadingCharacters && userCharacters.length === 0) && (
-                                <div>Chưa có character nào.</div>
-                            )}
-                        </div>
-                    </>
-                );
+                return <UserCharacters userId={user.userID} />;
+            // -----------------------------------
+
             default:
                 return null;
         }

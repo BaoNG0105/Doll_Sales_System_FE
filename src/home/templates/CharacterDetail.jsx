@@ -4,8 +4,6 @@ import Swal from 'sweetalert2';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { getCharacterById, getCharacterPackagesByCharacterId } from '../../service/api.character.js';
 import { postCharacterOrder } from '../../service/api.order.js';
-// --- THAY ĐỔI: Đã xóa import 'postPayment' ---
-// import { postPayment } from '../../service/api.payment.js';
 import '../static/css/CharacterDetail.css';
 
 function CharacterDetail() {

@@ -1,7 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { getDollOrdersByUserId, patchDollOrder } from '../../service/api.order.js';
 import { postNotification } from '../../service/api.notification.js';
 import { getUserById } from '../../service/api.user.js';
+// --- THÊM IMPORT ---
+import { getDollVariantById } from '../../service/api.doll.js';
+// ---------------------
 import '../static/css/OrderHistory.css';
 
 const OrderHistory = ({ userId }) => {
@@ -10,6 +13,7 @@ const OrderHistory = ({ userId }) => {
     const [error, setError] = useState(null);
 
     const handleUpdateStatus = async (orderId, dollName) => {
+        // ... (Nội dung hàm này giữ nguyên, không thay đổi)
         try {
             // 1. Cập nhật trạng thái đơn hàng
             const response = await patchDollOrder(orderId, { status: 'Completed' });
@@ -77,7 +81,6 @@ const OrderHistory = ({ userId }) => {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            // Kiểm tra userId ngay từ đầu
             if (!userId) {
                 setError('User ID not provided.');
                 setLoading(false);
@@ -85,11 +88,41 @@ const OrderHistory = ({ userId }) => {
             }
             try {
                 const response = await getDollOrdersByUserId(userId);
+                
                 if (response.success) {
-                    // Đảm bảo API trả về một mảng
-                    setOrders(response.orders || []);
+                    const baseOrders = response.orders || [];
+
+                    // --- BẮT ĐẦU THAY ĐỔI: Lấy thêm ảnh cho mỗi đơn hàng ---
+                    const ordersWithImages = await Promise.all(
+                        baseOrders.map(async (order) => {
+                            // *** GIẢ ĐỊNH: 'order' object có chứa 'dollVariantID' ***
+                            if (!order.dollVariantID) {
+                                console.error('Order object is missing dollVariantID', order);
+                                return { ...order, dollImage: null }; // Trả về order gốc nếu thiếu ID
+                            }
+                            
+                            try {
+                                // Gọi API để lấy chi tiết variant
+                                const variantData = await getDollVariantById(order.dollVariantID);
+                                // Gộp ảnh vào object order
+                                return {
+                                    ...order,
+                                    dollImage: variantData.image // Giả định variantData có trường 'image'
+                                };
+                            } catch (variantError) {
+                                console.error(`Failed to fetch variant ${order.dollVariantID}`, variantError);
+                                // Trả về order gốc nếu gọi API variant lỗi
+                                return { ...order, dollImage: null };
+                            }
+                        })
+                    );
+                    
+                    setOrders(ordersWithImages); // Set state với data đã gộp
+                    // --- KẾT THÚC THAY ĐỔI ---
+
                 } else {
                     setError('Failed to fetch orders.');
+                    setOrders([]); // Đảm bảo orders là mảng
                 }
             } catch (err) {
                 setError('An error occurred while fetching your orders.');
@@ -121,27 +154,44 @@ const OrderHistory = ({ userId }) => {
                 <div className="order-list">
                     {orders.map((order) => (
                         <div key={order.orderID} className="order-card">
-                            <div className="order-card-header">
-                                <h4 className="order-doll-name">{order.dollVariantName}</h4>
-                                <span className={`order-status status-${order.status.toLowerCase()}`}>
-                                    {order.status}
-                                </span>
+                            
+                            {/* --- BẮT ĐẦU CẤU TRÚC MỚI --- */}
+                            <div className="order-card-main-content">
+                                {/* 1. Hình ảnh Doll */}
+                                {order.dollImage && (
+                                    <img 
+                                        src={order.dollImage} 
+                                        alt={order.dollVariantName} 
+                                        className="order-doll-image"
+                                    />
+                                )}
+                                
+                                {/* 2. Wrapper cho chi tiết (header + body) */}
+                                <div className="order-card-details">
+                                    <div className="order-card-header">
+                                        <h4 className="order-doll-name">{order.dollVariantName}</h4>
+                                        <span className={`order-status status-${order.status.toLowerCase()}`}>
+                                            {order.status}
+                                        </span>
+                                    </div>
+                                    <div className="order-card-body">
+                                        <p className="order-amount">
+                                            <strong>{formatCurrency(order.totalAmount)}</strong>
+                                        </p>
+                                        <p className="order-date">
+                                            Order date: {new Date(order.orderDate).toLocaleDateString()}
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="order-card-body">
-                                <p className="order-amount">
-                                    <strong>{formatCurrency(order.totalAmount)}</strong>
-                                </p>
-                                <p className="order-date">
-                                    Order date: {new Date(order.orderDate).toLocaleDateString()}
-                                </p>
-                            </div>
+                            {/* --- KẾT THÚC CẤU TRÚC MỚI --- */}
+
                             <div className="order-card-footer">
                                 <div className="order-actions">
                                     {/* Khi trạng thái là 'Shipping' */}
                                     {order.status === 'Shipping' && (
-                                        <button 
-                                            className="btn btn-action" 
-                                            // Truyền cả orderID và dollVariantName
+                                        <button
+                                            className="btn btn-action"
                                             onClick={() => handleUpdateStatus(order.orderID, order.dollVariantName)}
                                         >
                                             Received

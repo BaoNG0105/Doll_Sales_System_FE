@@ -33,6 +33,34 @@
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08); /* Shadow khi hover rõ hơn */
 }
 
+/* --- CÁC CLASS MỚI ĐƯỢC THÊM --- */
+/* Wrapper cho ảnh và chi tiết (không bao gồm footer) */
+.order-card-main-content {
+    display: flex;
+    flex-direction: row; /* Bố cục hàng ngang */
+    gap: 20px; /* Khoảng cách giữa ảnh và text */
+    margin-bottom: 20px; /* Tách biệt với phần footer */
+}
+
+/* Ảnh của Doll */
+.order-doll-image {
+    width: 100px; /* Kích thước cố định */
+    height: 100px;
+    border-radius: 8px; /* Bo góc */
+    object-fit: cover; /* Đảm bảo ảnh vừa vặn, không bị méo */
+    border: 1px solid #f0f0f0; /* Viền nhẹ */
+    flex-shrink: 0; /* Không co lại khi text dài */
+}
+
+/* Wrapper cho header và body (phần text) */
+.order-card-details {
+    flex: 1; /* Chiếm hết không gian còn lại */
+    display: flex;
+    flex-direction: column;
+}
+/* --- KẾT THÚC CÁC CLASS MỚI --- */
+
+
 /* Phần đầu của thẻ (Tên Doll & Trạng thái) */
 .order-card-header {
     display: flex;
@@ -89,7 +117,8 @@
 
 /* Thân thẻ (Chi tiết giá & ngày) */
 .order-card-body {
-    margin-bottom: 20px;
+    /* Bỏ margin-bottom vì .order-card-main-content đã có */
+    margin-bottom: 0; 
 }
 
 .order-card-body p {
