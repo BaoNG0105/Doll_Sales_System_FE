@@ -102,7 +102,8 @@ export default function ManageUsers() {
         setEditing(record);
         form.setFieldsValue({
             ...record,
-            status: record.status === 1 ? "Active" : "Inactive",
+            // Dữ liệu đã là chuỗi, không cần chuyển đổi
+            status: record.status,
         });
         setOpen(true);
     };
@@ -119,9 +120,7 @@ export default function ManageUsers() {
     };
 
     const onFinish = async (values) => {
-        const statusValue =
-            values.status === "Active" ? 1 : values.status === "Inactive" ? 0 : values.status;
-        const finalValues = { ...values, status: statusValue };
+        const finalValues = { ...values }; // Gửi thẳng values
 
         try {
             if (editing) {
@@ -192,8 +191,8 @@ export default function ManageUsers() {
             align: "center",
             sorter: true,
             render: (status) => (
-                <Tag color={status === 1 ? "green" : "red"}>
-                    {status === 1 ? "Active" : "Inactive"}
+                <Tag color={status === "Active" ? "green" : "red"}>
+                    {status}
                 </Tag>
             ),
         },
@@ -328,15 +327,12 @@ export default function ManageUsers() {
                             <Select.Option value="admin">Admin</Select.Option>
                         </Select>
                     </Form.Item>
-                    {/* <Form.Item name="status" label="Status">
+                    {/* Status */}
+                    <Form.Item name="status" label="Status">
                         <Select>
-                            <Select.Option value={1}>Active</Select.Option>
-                            <Select.Option value={0}>Inactive</Select.Option>
+                            <Select.Option value="Active">Active</Select.Option>
+                            <Select.Option value="Inactive">Inactive</Select.Option>
                         </Select>
-                    </Form.Item> */}
-                    {/* Status Switch */}
-                    <Form.Item name="status" label="Status" valuePropName="checked">
-                        <Switch />
                     </Form.Item>
                 </Form>
             </Modal>
