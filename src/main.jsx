@@ -12,6 +12,7 @@ import AuthLayout from './home/layout/AuthLayout.jsx';
 import MainLayout from './home/layout/MainLayout.jsx';
 import Error from './home/templates/Error.jsx';
 import Home from './home/templates/Home.jsx';
+import Search from './home/templates/Search.jsx';
 import About from './home/templates/About.jsx';
 import Contact from './home/templates/Contact.jsx';
 import Privacy from './home/templates/Privacy.jsx';
@@ -51,6 +52,8 @@ const router = createBrowserRouter([
     children: [
       // Home page
       { path: "/", element: <Home />, },
+      // Search page
+      { path: "/search", element: <Search />, },
       // About page
       { path: "/about", element: <About />, },
       // Contact page

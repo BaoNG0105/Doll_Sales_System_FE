@@ -1,24 +1,39 @@
-import { useState } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { FaUser, FaSearch, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
-import '../static/css/Header.css';
+// Header.jsx (Cập nhật)
+
+import { useState } from 'react'; // Đã có
+import { NavLink, Link, useNavigate } from 'react-router-dom'; // Đã có
+import { FaUser, FaSearch, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa'; // Đã có
+import '../static/css/Header.css'; // Đã có
 // Redux
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../../redux/authSlice';
+import { useSelector, useDispatch } from 'react-redux'; // Đã có
+import { logout } from '../../redux/authSlice'; // Đã có
 
 function Header() {
-  const { isAuthenticated, username, userId } = useSelector((state) => state.auth); // Lấy thêm userId
+  const { isAuthenticated, username, userId } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Đalready imported
   const [menuOpen, setMenuOpen] = useState(false);
+  
+  // --- THÊM MỚI ---
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleLogout = () => {
     dispatch(logout());
-    setMenuOpen(false); // Close menu on logout
-    navigate('/login'); // Redirect to login page after logout
+    setMenuOpen(false);
+    navigate('/login');
   };
 
   const closeMenu = () => setMenuOpen(false);
+
+  // --- THÊM MỚI ---
+  const handleSearch = (e) => {
+    e.preventDefault(); // Ngăn form submit_load lại trang
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+      setSearchTerm(''); // Xóa nội dung tìm kiếm sau khi submit
+      setMenuOpen(false); // Đóng menu mobile (nếu đang mở)
+    }
+  };
 
   return (
     <header className="header">
@@ -36,14 +51,23 @@ function Header() {
             <NavLink to="/about" className={({ isActive }) => (isActive ? 'active' : '')}>About</NavLink>
             <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active' : '')}>Contact</NavLink>
           </nav>
-          <div className="search-container">
-            <input type="text" placeholder="Search a product ..." className="search-input" />
-            <button className="search-button"><FaSearch /></button>
-          </div>
+          
+          {/* --- CẬP NHẬT SEARCH DESKTOP --- */}
+          <form className="search-container" onSubmit={handleSearch}>
+            <input 
+              type="text" 
+              placeholder="Search product, character..." 
+              className="search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button type="submit" className="search-button"><FaSearch /></button>
+          </form>
         </div>
 
         {/* Right Actions (Desktop & Mobile) */}
         <div className="header-right-actions">
+          {/* ... (Phần user-menu không đổi) ... */}
           <div className="header-actions">
             {isAuthenticated ? (
               <div className="user-menu">
@@ -66,10 +90,18 @@ function Header() {
           <NavLink to="/characters" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeMenu}>Characters</NavLink>
           <NavLink to="/about" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeMenu}>About</NavLink>
           <NavLink to="/contact" className={({ isActive }) => (isActive ? 'active' : '')} onClick={closeMenu}>Contact</NavLink>
-          <div className="search-container-mobile">
-            <input type="text" placeholder="Search..." className="search-input" />
-            <button className="search-button"><FaSearch /></button>
-          </div>
+          
+          {/* --- CẬP NHẬT SEARCH MOBILE --- */}
+          <form className="search-container-mobile" onSubmit={handleSearch}>
+            <input 
+              type="text" 
+              placeholder="Search..." 
+              className="search-input"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <button type="submit" className="search-button"><FaSearch /></button>
+          </form>
         </div>
       </div>
     </header>
