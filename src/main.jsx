@@ -35,6 +35,7 @@ import ProtectedRoute from './home/components/ProtectedRoute.jsx'; // Đảm b�
 // Admin
 import AdminLayout from './dashboard/layouts/AdminLayout.jsx';
 import DashboardPage from './dashboard/templates/DashboardPage.jsx';
+import DashboardIndex from './dashboard/templates/DashboardIndex.jsx';
 import ManageDollTypes from './dashboard/templates/ManageDollTypes.jsx';
 import ManageDollModels from './dashboard/templates/ManageDollModels.jsx';
 import ManageDollVariants from './dashboard/templates/ManageDollVariants.jsx';
@@ -107,6 +108,12 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <AdminLayout />,
         children: [
+          // --- THAY ĐỔI: Thêm route 'index' ---
+          // Khi người dùng vào /dashboard, router sẽ render <DashboardIndex />
+          // <DashboardIndex /> sẽ tự động chuyển hướng họ đi
+          { index: true, element: <DashboardIndex /> }, 
+
+          // Các trang con
           { path: "overview", element: <DashboardPage />, },
           { path: "manage-doll-types", element: <ManageDollTypes /> },
           { path: "manage-doll-models", element: <ManageDollModels /> },

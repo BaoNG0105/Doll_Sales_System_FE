@@ -39,7 +39,8 @@ function Login() {
     }, 60 * 60 * 1000);
 
     if (response.role === 'admin' || response.role === 'manager') {
-      navigate('/dashboard/overview');
+      // Chỉ điều hướng đến trang /dashboard GỐC
+      navigate('/dashboard'); 
     } else {
       navigate('/');
     }
