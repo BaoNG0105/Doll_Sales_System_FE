@@ -211,7 +211,12 @@ const OrderHistory = ({ userId }) => {
                     ))}
                 </div>
             ) : (
-                <p>You have no orders yet.</p>
+                // --- THAY ĐỔI Ở ĐÂY ---
+                <div className="empty-list-message">
+                    <p>You haven't placed any orders yet.</p>
+                    <p>All your future purchases will appear here.</p>
+                </div>
+                // --- KẾT THÚC THAY ĐỔI ---
             )}
         </div>
     );

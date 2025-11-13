@@ -10,9 +10,8 @@ import OrderHistory from './OrderHistory';
 import UserCharacters from './UserCharacter'; // --- THÊM IMPORT MỚI ---
 
 // --- Modal Component defined within the same file ---
-// (Giữ nguyên component EditProfileModal)
 const EditProfileModal = ({ user, onClose, onSave }) => {
-    // ... (Không thay đổi gì ở đây) ...
+    // ... (State và useEffect giữ nguyên) ...
     const [formData, setFormData] = useState({
         fullName: '',
         phones: '',
@@ -36,18 +35,38 @@ const EditProfileModal = ({ user, onClose, onSave }) => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    // --- BẮT ĐẦU THAY ĐỔI LOGIC ---
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        // 1. Phân tích tuổi sang kiểu số nguyên
+        const parsedAge = parseInt(formData.age, 10) || 0;
+
+        // 2. Kiểm tra điều kiện tuổi
+        if (parsedAge < 13) {
+            // 3. Nếu tuổi không hợp lệ, hiển thị cảnh báo
+            Swal.fire({
+                title: 'Invalid Age',
+                text: 'You must be at least 13 years old to update your profile.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            // 4. Dừng hàm, không gọi onSave
+            return; 
+        }
+
+        // 5. Nếu tuổi hợp lệ (>= 13), chuẩn bị dữ liệu và gọi onSave
         const dataToSave = {
             ...formData,
-            age: parseInt(formData.age, 10) || 0,
+            age: parsedAge, // Sử dụng tuổi đã được parse
         };
         onSave(dataToSave);
     };
+    // --- KẾT THÚC THAY ĐỔI LOGIC ---
 
     if (!user) return null;
 
-    //Modal edit profile
+    //Modal edit profile (Giữ nguyên phần JSX của Modal)
     return (
         <div className="modal-overlay">
             <div className="modal-content">
@@ -80,6 +99,7 @@ const EditProfileModal = ({ user, onClose, onSave }) => {
 };
 
 // --- Main Profile Component ---
+// (Toàn bộ component Profile bên dưới được giữ nguyên, không thay đổi)
 const Profile = () => {
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState('profile');

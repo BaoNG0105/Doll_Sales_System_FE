@@ -152,7 +152,12 @@ const UserCharacters = ({ userId }) => {
                     })}
                 </div>
             ) : (
-                <p>Bạn chưa mua character nào.</p>
+                // --- THAY ĐỔI Ở ĐÂY ---
+                <div className="empty-list-message">
+                    <p>You haven't purchased any characters yet.</p>
+                    <p>Visit the store to start your collection!</p>
+                </div>
+                // --- KẾT THÚC THAY ĐỔI ---
             )}
         </div>
     );
