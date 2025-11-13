@@ -1,110 +1,181 @@
+/* === BẢNG MÀU CHỦ ĐẠO === */
+:root {
+  --sky-blue: #87ceeb; /* Màu chủ đạo Blue Sky */
+  --sky-blue-dark: #76c1e1; /* Màu đậm hơn khi hover */
+  --sky-blue-light: #b0e0e6; /* Màu nhạt khi disabled */
+  
+  --user-bg: #f3f4f6;     /* Nền tin nhắn người dùng (Xám nhạt hiện đại) */
+  --user-text: #1f2937;    /* Chữ tin nhắn người dùng (Xám đậm) */
+  
+  --background-color: #ffffff; /* Nền trắng sạch sẽ */
+  --border-color: #e5e7eb;     /* Màu viền/phân cách nhạt */
+}
+/* === KẾT THÚC BẢNG MÀU === */
+
+
 .chatbot-toggle-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 999;
-  }
-  
-  .chatbot-container {
-      position: fixed;
-      bottom: 90px; /* Adjusted to be above the toggle button */
-      right: 20px;
-      width: 350px;
-      height: 500px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      display: flex;
-      flex-direction: column;
-      background: #f9f9f9;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      z-index: 1000;
-    }
-  
-  .chatbot-header {
-    background: #007bff;
-    color: white;
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-  }
-  
-  .chatbot-close-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    line-height: 1;
-  }
-  
-  .chat-window {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .message {
-    padding: 10px 15px;
-    border-radius: 18px;
-    max-width: 80%;
-    word-wrap: break-word;
-  }
-  
-  .message.user {
-    background: #007bff;
-    color: white;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-  }
-  
-  .message.bot {
-    background: #e9e9eb;
-    color: #333;
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-  }
-  
-  .chat-input-form {
-    display: flex;
-    border-top: 1px solid #ccc;
-    padding: 10px;
-  }
-  
-  .chat-input-form input {
-    flex-grow: 1;
-    border: 1px solid #ddd;
-    border-radius: 20px;
-    padding: 10px 15px;
-    outline: none;
-  }
-  
-  .chat-input-form button {
-    margin-left: 10px;
-    border: none;
-    background: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-  }
-  
-  .chat-input-form button:disabled {
-    background: #aaa;
-  }
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--sky-blue); /* Cập nhật màu */
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Bóng đổ hiện đại hơn */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.chatbot-toggle-button:hover {
+  background-color: var(--sky-blue-dark);
+  transform: scale(1.05); /* Hiệu ứng nổi lên khi hover */
+}
+
+.chatbot-container {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  width: 350px;
+  height: 500px;
+  border: none; /* Bỏ border, dùng shadow */
+  border-radius: 12px; /* Tăng độ bo góc */
+  display: flex;
+  flex-direction: column;
+  background: var(--background-color); /* Nền trắng */
+  /* Bóng đổ tinh tế, hiện đại */
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  z-index: 1000;
+  /* Thêm font chữ hiện đại (tùy chọn) */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.chatbot-header {
+  background: var(--sky-blue); /* Cập nhật màu */
+  color: white;
+  padding: 12px 18px; /* Tăng padding 1 chút */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600; /* Dùng semi-bold thay vì bold */
+}
+
+.chatbot-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 26px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.chatbot-close-btn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.chat-window {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px; /* Tăng padding để thoáng hơn */
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Tăng khoảng cách tin nhắn */
+  background-color: var(--background-color);
+}
+
+.message {
+  padding: 10px 16px;
+  border-radius: 20px; /* Bo góc tin nhắn */
+  max-width: 85%;
+  word-wrap: break-word;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+.message.user {
+  background: var(--user-bg); /* Nền xám nhạt */
+  color: var(--user-text); /* Chữ xám đậm */
+  align-self: flex-end;
+  border-bottom-right-radius: 6px; /* Giữ kiểu dáng đặc trưng */
+}
+
+.message.bot {
+  background: var(--sky-blue); /* Nền màu chủ đạo */
+  color: white;
+  align-self: flex-start;
+  border-bottom-left-radius: 6px; /* Giữ kiểu dáng đặc trưng */
+}
+
+/* Thêm style cho tin nhắn "..." loading */
+.message.bot.loading {
+  padding: 12px 18px;
+  line-height: 1;
+}
+
+.chat-input-form {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid var(--border-color); /* Viền nhạt hơn */
+  padding: 12px;
+  background: var(--background-color);
+  gap: 10px;
+}
+
+.chat-input-form input {
+  flex-grow: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 12px 18px;
+  outline: none;
+  font-size: 0.9rem;
+  background-color: #f9fafb; /* Nền ô input hơi xám nhẹ */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hiệu ứng focus hiện đại */
+.chat-input-form input:focus {
+  border-color: var(--sky-blue);
+  box-shadow: 0 0 0 3px rgba(135, 206, 235, 0.3); /* Vòng sáng khi focus */
+}
+
+.chat-input-form button {
+  flex-shrink: 0; /* Ngăn nút bị co lại */
+  border: none;
+  background: var(--sky-blue);
+  color: white;
+  width: 44px; /* Nút hình tròn */
+  height: 44px; /* Nút hình tròn */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.chat-input-form button:hover {
+  background: var(--sky-blue-dark);
+}
+
+.chat-input-form button:disabled {
+  background: var(--sky-blue-light);
+  cursor: not-allowed;
+}
+
+/* Icon Gửi (thêm vào JSX nếu muốn, hoặc dùng text "Gửi") */
+/* Nếu muốn dùng icon SVG, bạn có thể thay thế text "Gửi" trong JSX */
+.chat-input-form button svg {
+  width: 20px;
+  height: 20px;
+  margin-left: 2px; /* Căn chỉnh icon vào giữa */
+}
