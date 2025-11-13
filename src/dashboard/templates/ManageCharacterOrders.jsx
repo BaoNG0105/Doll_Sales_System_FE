@@ -1,23 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { Table, Select, message, Button, Popconfirm, Tag, Input, Radio } from "antd";
+import React, { useState, useEffect, useMemo } from "react"; // <-- 1. THÊM useMemo
+import { Table, message, Button, Popconfirm, Tag, Input, Radio } from "antd";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
-import { getCharacterOrders, patchCharacterOrder, deleteCharacterOrder } from "../../service/api.order";
+import { getCharacterOrders, deleteCharacterOrder } from "../../service/api.order";
 import { useDebounce } from "use-debounce";
 
+// <-- 2. CẬP NHẬT statusOptions (dùng value là CHỮ)
 const statusOptions = [
-  { value: 0, label: "Pending", color: "processing" },
-  { value: 1, label: "Active", color: "successful" },
-  { value: 2, label: "Completed", color: "default" },
-  { value: 3, label: "Canceled", color: "error" },
+  { value: "Pending", label: "Pending", color: "gold" },
+  { value: "Completed", label: "Completed", color: "success" },
 ];
 
 export default function ManageCharacterOrders() {
-  const [orders, setOrders] = useState([]);
-  const [allOrders, setAllOrders] = useState([]);
+  const [orders, setOrders] = useState([]); // Đây sẽ là danh sách GỐC từ API
   const [loading, setLoading] = useState(false);
   const [q, setQ] = useState("");
   const [debouncedQ] = useDebounce(q, 500);
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all"); // Giá trị là "all", "Pending", "Completed"
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
@@ -31,24 +29,22 @@ export default function ManageCharacterOrders() {
         page: params.pagination.current,
         pageSize: params.pagination.pageSize,
         search: params.search,
-        status: params.status === "all" ? "" : params.status,
+        // status: params.status === "all" ? "" : params.status, // <-- 3. XÓA status filter khỏi API query
         sortBy: params.sortBy,
         sortDir: params.sortDir,
       };
-      // Filter out undefined/null params
       Object.keys(queryParams).forEach(
         (key) => (queryParams[key] == null || queryParams[key] === "") && delete queryParams[key]
       );
 
       const response = await getCharacterOrders(queryParams);
-      setAllOrders(response.items.map((order) => ({
-        ...order,
-        key: order.characterOrderID,
-      })));
-      setOrders(response.items.map((order) => ({
-        ...order,
-        key: order.characterOrderID,
-      })));
+      // setOrders lưu trữ danh sách GỐC (chưa filter status)
+      setOrders(
+        response.items.map((order) => ({
+          ...order,
+          key: order.characterOrderID,
+        }))
+      );
       setPagination({
         ...params.pagination,
         total: response.pagination.total,
@@ -67,55 +63,33 @@ export default function ManageCharacterOrders() {
     fetchCharacterOrders({
       pagination: newPagination,
       search: debouncedQ,
-      status: statusFilter,
+      // status: statusFilter, // <-- 4. XÓA status
       sortBy: sorter.field,
       sortDir: sortDir,
     });
   };
 
   useEffect(() => {
-    if (statusFilter === "all") {
-      setOrders(allOrders);
-    } else {
-      const filteredOrders = allOrders.filter(
-        (order) => order.status === statusFilter
-      );
-      setOrders(filteredOrders);
-    }
-  }, [statusFilter, allOrders]);
-
-  useEffect(() => {
-    // Reset to page 1 when search or filter changes
     const newPagination = { ...pagination, current: 1 };
     fetchCharacterOrders({
       pagination: newPagination,
       search: debouncedQ,
+      // status: statusFilter, // <-- 5. XÓA status
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedQ]);
+  }, [debouncedQ]); // <-- 6. XÓA statusFilter khỏi dependency array
 
   const getCurrentFetchParams = () => ({
     pagination,
     search: debouncedQ,
-    status: statusFilter,
+    // status: statusFilter, // <-- 7. XÓA status
   });
-
-  const handleStatusChange = async (orderId, newStatus) => {
-    try {
-      await patchCharacterOrder(orderId, { status: newStatus });
-      message.success("Order status updated successfully!");
-      fetchCharacterOrders(getCurrentFetchParams());
-    } catch (error) {
-      console.error(error);
-      message.error("Failed to update order status.");
-    }
-  };
 
   const handleDelete = async (orderId) => {
     try {
       await deleteCharacterOrder(orderId);
       message.success("Order deleted successfully!");
-      fetchCharacterOrders(getCurrentFetchParams());
+      fetchCharacterOrders(getCurrentFetchParams()); // Fetch lại data sau khi xóa
     } catch (error) {
       console.error(error);
       message.error("Failed to delete order.");
@@ -123,6 +97,7 @@ export default function ManageCharacterOrders() {
   };
 
   const columns = [
+    // ... (các cột Order ID, Character, Package, Price, Created At giữ nguyên)
     {
       title: "Order ID",
       dataIndex: "characterOrderID",
@@ -169,20 +144,22 @@ export default function ManageCharacterOrders() {
       dataIndex: "status",
       key: "status",
       align: "center",
-      render: (status, record) => (
-        <Select
-          defaultValue={status}
-          style={{ width: 140 }}
-          onChange={(value) => handleStatusChange(record.characterOrderID, value)}
-          bordered={false}
-        >
-          {statusOptions.map((opt) => (
-            <Select.Option key={opt.value} value={opt.value}>
-              <Tag color={opt.color}>{opt.label}</Tag>
-            </Select.Option>
-          ))}
-        </Select>
-      ),
+      render: (status) => {
+        if (status == null) {
+          return <Tag>N/A</Tag>;
+        }
+        
+        // So sánh 'status' (chữ) với 'opt.label' (chữ)
+        const statusObj = statusOptions.find(
+          (opt) => opt.label.toLowerCase() === status.toLowerCase()
+        );
+        
+        return statusObj ? (
+          <Tag color={statusObj.color}>{statusObj.label}</Tag>
+        ) : (
+          <Tag>Unknown ({status})</Tag>
+        );
+      },
     },
     {
       title: "Action",
@@ -201,6 +178,17 @@ export default function ManageCharacterOrders() {
       ),
     },
   ];
+
+  // <-- 8. DÙNG useMemo ĐỂ LỌC DATA TRÊN FRONTEND
+  const filteredOrders = useMemo(() => {
+    if (statusFilter === "all") {
+      return orders; // Trả về toàn bộ danh sách nếu filter là "all"
+    }
+    // Trả về danh sách đã lọc nếu filter là "Pending" hoặc "Completed"
+    return orders.filter(
+      (order) => order.status.toLowerCase() === statusFilter.toLowerCase()
+    );
+  }, [orders, statusFilter]); // Chỉ tính toán lại khi 'orders' (từ API) hoặc 'statusFilter' (từ Radio) thay đổi
 
   return (
     <div className="panel" style={{ padding: 16 }}>
@@ -223,6 +211,8 @@ export default function ManageCharacterOrders() {
             style={{ width: 320, background: "#fff" }}
           />
         </div>
+
+        {/* <-- 9. CẬP NHẬT Radio.Group (value là CHỮ) */}
         <Radio.Group
           onChange={(e) => setStatusFilter(e.target.value)}
           value={statusFilter}
@@ -230,6 +220,7 @@ export default function ManageCharacterOrders() {
         >
           <Radio.Button value="all">All</Radio.Button>
           {statusOptions.map((opt) => (
+            // Value là CHỮ ("Pending" hoặc "Completed")
             <Radio.Button key={opt.value} value={opt.value}>
               {opt.label}
             </Radio.Button>
@@ -238,7 +229,7 @@ export default function ManageCharacterOrders() {
       </div>
       <Table
         columns={columns}
-        dataSource={orders}
+        dataSource={filteredOrders} // <-- 10. SỬ DỤNG dataSource đã lọc
         loading={loading}
         rowKey="characterOrderID"
         pagination={{ ...pagination, showSizeChanger: true }}

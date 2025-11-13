@@ -20,10 +20,10 @@ function PaymentResult() {
 
         if (resultCode === '0') {
             setStatus('success');
-            setMessage('Payment successful!');
+            setMessage('Your payment was successful. Thank you for your purchase!');
         } else {
             setStatus('failed');
-            setMessage(decodeURIComponent(messageFromMoMo) || 'Giao dịch thất bại hoặc bị hủy.');
+            setMessage(decodeURIComponent(messageFromMoMo) || 'Payment failed. Please try again.');
         }
         
         // if (orderInfoFromMoMo) setOrderInfo(decodeURIComponent(orderInfoFromMoMo));
