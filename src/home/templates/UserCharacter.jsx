@@ -25,6 +25,7 @@ const UserCharacters = ({ userId }) => {
 
                 if (baseCharacters.length === 0) {
                     setUserCharacters([]);
+                    setLoading(false); // Cần set loading false ở đây
                     return;
                 }
 
@@ -86,52 +87,69 @@ const UserCharacters = ({ userId }) => {
             <h3>My Purchased Characters</h3>
             {userCharacters.length > 0 ? (
                 <div className="character-list">
-                    {userCharacters.map((char) => (
-                        <div key={char.userCharacterID} className="character-card">
-                            
-                            {/* --- BẮT ĐẦU CẤU TRÚC MỚI --- */}
-                            <div className="character-card-main-content">
-                                {/* 1. Thêm ảnh */}
-                                {char.image && (
-                                    <img 
-                                        src={char.image} 
-                                        alt={char.characterName} 
-                                        className="character-card-image" // Class mới cho CSS
-                                    />
-                                )}
+                    {userCharacters.map((char) => {
+                        
+                        // --- LOGIC MỚI ĐỂ KIỂM TRA VÔ HIỆU HÓA ---
+                        const now = new Date();
+                        const endDate = new Date(char.endAt);
+                        
+                        // Kiểm tra xem đã hết hạn chưa
+                        const isExpired = endDate < now; 
+                        
+                        // Nút bị vô hiệu hóa nếu:
+                        // 1. Trạng thái không phải "Active"
+                        // HOẶC 2. Đã hết hạn (endDate < thời gian hiện tại)
+                        const isDisabled = (char.statusDisplay !== "Active") || isExpired;
+                        // --- KẾT THÚC LOGIC MỚI ---
 
-                                {/* 2. Bọc details */}
-                                <div className="character-card-details">
-                                    <div className="character-card-header">
-                                        <h4 className="character-name">{char.characterName}</h4>
-                                        <span className={`character-status ${getStatusClass(char.statusDisplay)}`}>
-                                            {char.statusDisplay}
-                                        </span>
-                                    </div>
-                                    <div className="character-card-body">
-                                        <p className="character-package">
-                                            <strong>Package:</strong> {char.packageName}
-                                        </p>
-                                        <p className="character-duration">
-                                            <strong>Duration:</strong> 
-                                            {new Date(char.startAt).toLocaleDateString()} - {new Date(char.endAt).toLocaleDateString()}
-                                        </p>
+                        return (
+                            <div key={char.userCharacterID} className="character-card">
+                                
+                                {/* --- BẮT ĐẦU CẤU TRÚC MỚI --- */}
+                                <div className="character-card-main-content">
+                                    {/* 1. Thêm ảnh */}
+                                    {char.image && (
+                                        <img 
+                                            src={char.image} 
+                                            alt={char.characterName} 
+                                            className="character-card-image" // Class mới cho CSS
+                                        />
+                                    )}
+
+                                    {/* 2. Bọc details */}
+                                    <div className="character-card-details">
+                                        <div className="character-card-header">
+                                            <h4 className="character-name">{char.characterName}</h4>
+                                            <span className={`character-status ${getStatusClass(char.statusDisplay)}`}>
+                                                {char.statusDisplay}
+                                            </span>
+                                        </div>
+                                        <div className="character-card-body">
+                                            <p className="character-package">
+                                                <strong>Package:</strong> {char.packageName}
+                                            </p>
+                                            <p className="character-duration">
+                                                <strong>Duration:</strong> 
+                                                {new Date(char.startAt).toLocaleDateString()} - {new Date(char.endAt).toLocaleDateString()}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            {/* --- KẾT THÚC CẤU TRÚC MỚI --- */}
+                                {/* --- KẾT THÚC CẤU TRÚC MỚI --- */}
 
-                            <div className="character-card-footer">
-                                <button
-                                    className="btn-use-character"
-                                    onClick={() => navigate(`/ai/${char.characterID}`, { state: { owned: true, character: char } })}
-                                    disabled={char.statusDisplay !== "Active"}
-                                >
-                                    Use Character
-                                </button>
+                                <div className="character-card-footer">
+                                    <button
+                                        className="btn-use-character"
+                                        onClick={() => navigate(`/ai/${char.characterID}`, { state: { owned: true, character: char } })}
+                                        // Sử dụng biến logic mới ở đây
+                                        disabled={isDisabled}
+                                    >
+                                        Use Character
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             ) : (
                 <p>Bạn chưa mua character nào.</p>
